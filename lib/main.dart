@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/HomePage.dart';
+import 'screens/home.dart';
+import 'screens/dashboard.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,23 +10,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'lfti',
-      theme: ThemeData(
-        primaryColor: Colors.indigo,
-        accentColor: Colors.indigoAccent,
-        textTheme: TextTheme(
-          headline: TextStyle(fontSize: 35.0, color: Colors.white),
-          button: TextStyle(fontSize: 20.0, color: Colors.white),
-        ),
+      theme: ThemeData.dark().copyWith(
+        backgroundColor: Colors.black,
+        dialogBackgroundColor: Colors.white,
+        accentColor: Colors.white10,
+        textTheme: Theme.of(context).textTheme.apply(
+              fontFamily: 'SF-Pro-Compact-Rounded-Semibold',
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
+            ),
         buttonTheme: ButtonThemeData(
-          minWidth: 250.0,
-          height: 60.0,
-          buttonColor: Colors.indigo,
           shape: StadiumBorder(),
-          padding: EdgeInsets.all(10.0),
-          textTheme: ButtonTextTheme.normal,
+          minWidth: 300,
+          padding: EdgeInsets.all(15.0),
         ),
       ),
-      home: HomePage(),
+      home: Dashboard(),
     );
   }
 }
