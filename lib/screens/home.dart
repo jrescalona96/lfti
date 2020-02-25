@@ -27,6 +27,7 @@ class Home extends StatelessWidget {
                       child: RaisedButton(
                         onPressed: () {
                           // TODO: navigate to log in page
+                          Navigator.pushNamed(context, '/dashboard');
                         },
                         child: Container(
                           child: Text(

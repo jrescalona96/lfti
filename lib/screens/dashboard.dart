@@ -1,6 +1,13 @@
 import "package:flutter/material.dart";
 import "package:lfti_app/components/checklist_generator.dart";
-import "package:lfti_app/components/card_tile.dart";
+import "package:lfti_app/components/dashboard_card_tile.dart";
+
+const contentMargin = EdgeInsets.all(15.0);
+const contentPadding = EdgeInsets.all(15.0);
+const cardPadding = 20.0;
+const startButtonHeight = 85.0;
+const startButtonWidth = double.infinity;
+const startButtonColor = Colors.blueAccent;
 
 class Dashboard extends StatefulWidget {
   @override
@@ -8,6 +15,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  String username = "Mon";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,18 +33,43 @@ class _DashboardState extends State<Dashboard> {
           },
         ),
         title: Text(
-          'username',
+          "Hello $username!",
+          style: Theme.of(context).textTheme.body2,
+        ),
+      ),
+      bottomNavigationBar: GestureDetector(
+        onTap: () => Navigator.pushNamed(context, '/selectWorkout'),
+        child: Container(
+          color: startButtonColor,
+          height: startButtonHeight,
+          alignment: Alignment.center,
+          child: Text(
+            "Let's go!",
+            style: Theme.of(context).textTheme.subhead,
+          ),
         ),
       ),
       body: ListView(
         children: <Widget>[
-          CardTile('Last Workout', 'Chest', ''),
-          CardTile('Next Workout', 'Arms', ''),
-          CardTile('Nearby Gyms', "La Verne (2.0 miles)", "La Verne, CA 91768"),
+          Container(
+              margin: contentMargin,
+              child: DashboardCardTile(
+                  heading: 'Last Workout', mainInfo: 'Chest')),
+          Container(
+              margin: contentMargin,
+              child:
+                  DashboardCardTile(heading: 'Next Workout', mainInfo: 'Arms')),
+          Container(
+            margin: contentMargin,
+            child: DashboardCardTile(
+                heading: 'Nearby Gyms',
+                mainInfo: "LA Fitness (2.0 miles)",
+                details: "La Verne, CA 91768"),
+          ),
           Container(
             alignment: Alignment.centerLeft,
-            margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-            padding: EdgeInsets.all(10.0),
+            margin: contentMargin,
+            padding: contentPadding,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(
                 Radius.circular(10),
@@ -45,23 +78,9 @@ class _DashboardState extends State<Dashboard> {
             ),
             child: Column(
               children: <Widget>[
-                Text('Checklist', style: Theme.of(context).textTheme.headline),
+                Text('Checklist', style: Theme.of(context).textTheme.title),
                 ChecklistGenerator(),
               ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(10.0),
-            child: RaisedButton(
-              onPressed: () {
-                // TODO: navigate to session page
-              },
-              child: Container(
-                child: Text(
-                  "Let's Go!",
-                  style: TextStyle(fontSize: 20.0),
-                ),
-              ),
             ),
           ),
         ],

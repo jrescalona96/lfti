@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home.dart';
-import 'screens/dashboard.dart';
+import 'classes/RouteGenerator.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,22 +9,33 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'lfti',
-      theme: ThemeData.dark().copyWith(
-        backgroundColor: Colors.black,
-        dialogBackgroundColor: Colors.white,
-        accentColor: Colors.white10,
-        textTheme: Theme.of(context).textTheme.apply(
-              fontFamily: 'SF-Pro-Compact-Rounded-Semibold',
-              bodyColor: Colors.white,
-              displayColor: Colors.white,
-            ),
+      theme: ThemeData(
+        // Define the default brightness and colors.
+        brightness: Brightness.dark,
+        primaryColor: Color(0xFF0A0E21),
+        accentColor: Colors.white12,
+        scaffoldBackgroundColor: Color(0x0B0A0E21),
+        fontFamily: 'SF-Pro-Compact-Rounded-Semibold',
+
+        textTheme: TextTheme(
+          headline: TextStyle(fontSize: 64.0, fontWeight: FontWeight.bold),
+          subhead: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+          title: TextStyle(fontSize: 32.0, fontStyle: FontStyle.normal),
+          body1: TextStyle(fontSize: 14.0),
+          body2: TextStyle(fontSize: 24.0),
+          display1: TextStyle(fontSize: 12.0, fontWeight: FontWeight.normal),
+          display2: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+          display3: TextStyle(fontSize: 18.0, fontWeight: FontWeight.normal),
+          display4: TextStyle(fontSize: 24.0, fontWeight: FontWeight.normal),
+        ),
         buttonTheme: ButtonThemeData(
           shape: StadiumBorder(),
           minWidth: 300,
           padding: EdgeInsets.all(15.0),
         ),
       ),
-      home: Dashboard(),
+      initialRoute: '/',
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }
