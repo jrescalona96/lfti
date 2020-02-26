@@ -3,12 +3,12 @@ import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/components/workout_card.dart';
 import 'package:lfti_app/classes/WorkoutsGenerator.dart';
 
-class SelectWorkout extends StatefulWidget {
+class SelectWorkoutPage extends StatefulWidget {
   @override
-  _SelectWorkoutState createState() => _SelectWorkoutState();
+  _SelectWorkoutPageState createState() => _SelectWorkoutPageState();
 }
 
-class _SelectWorkoutState extends State<SelectWorkout> {
+class _SelectWorkoutPageState extends State<SelectWorkoutPage> {
   List<Workout> workoutList = WorkoutsGenerator().fetchAllWorkouts();
 
   @override

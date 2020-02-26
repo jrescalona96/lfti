@@ -9,6 +9,6 @@ class Session {
   Session({this.id, this.name, this.workout, this.totalTimeInSeconds = 0});
 
   reset() {
-    // TODO: reset everything;
+    // TODO: reset everything
   }
 }

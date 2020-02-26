@@ -9,12 +9,12 @@ const startButtonHeight = 85.0;
 const startButtonWidth = double.infinity;
 const startButtonColor = Colors.blueAccent;
 
-class Dashboard extends StatefulWidget {
+class DashboardPage extends StatefulWidget {
   @override
-  _DashboardState createState() => _DashboardState();
+  _DashboardPageState createState() => _DashboardPageState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardPageState extends State<DashboardPage> {
   String username = "Mon";
   @override
   Widget build(BuildContext context) {
