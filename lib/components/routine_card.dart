@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Routine.dart';
-
-const textGap = 5.0;
+import 'package:lfti_app/components/card_template.dart';
 
 class RoutineCard extends StatelessWidget {
   //working data TODO: update to pull for DB
@@ -11,6 +11,7 @@ class RoutineCard extends StatelessWidget {
   String _generateTarget() {
     String target = '';
     String reps = _routine.reps.toString();
+
     // TODO: refactor to have Rest as its own class to say if(_routine.exercise is Rest)
     if (_routine.exercise.name != 'Rest')
       for (int i = 0; i < _routine.sets; i++) {
@@ -32,36 +33,29 @@ class RoutineCard extends StatelessWidget {
     final exerciseBodyPart = _routine.exercise.bodyPart;
     final exerciseTarget = "Target: " + _generateTarget();
 
-    return Material(
-      child: Container(
-        // TODO: Show more information about the workout?
-        padding: EdgeInsets.all(10.0),
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(width: 1.0, color: Colors.white10),
-          ),
-        ),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    exerciseName,
-                    style: Theme.of(context).textTheme.body1,
-                  ),
-                  SizedBox(height: textGap),
-                  Text(
-                    exerciseBodyPart,
-                    style: Theme.of(context).textTheme.display1,
-                  ),
-                ],
+    return CardTemplate(
+      cardChild: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                exerciseName,
+                style: kMediumBoldTextStyle,
               ),
-            ),
-            Text(exerciseTarget, style: Theme.of(context).textTheme.display2)
-          ],
-        ),
+              SizedBox(
+                height: kSmallSizedBoxHeight,
+              ),
+              Text(
+                exerciseBodyPart,
+                style: kLabelTextStyle,
+              ),
+            ],
+          ),
+          SizedBox(height: kSizedBoxHeight),
+          Text(exerciseTarget, style: kSmallLabelTextStyle)
+        ],
       ),
     );
   }

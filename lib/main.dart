@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xFF0A0E21),
         accentColor: Colors.white12,
         scaffoldBackgroundColor: Color(0x0B0A0E21),
-        fontFamily: 'SF-Pro-Compact-Rounded-Semibold',
 
         textTheme: TextTheme(
           headline: TextStyle(fontSize: 64.0, fontWeight: FontWeight.bold),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lfti_app/classes/Constants.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -14,7 +15,7 @@ class HomePage extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'lfti',
-                    style: TextStyle(fontSize: 100.0),
+                    style: kLargeBoldTextStyle2x,
                   ),
                 ),
               ),
@@ -22,32 +23,27 @@ class HomePage extends StatelessWidget {
                 flex: 1,
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.all(10.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          // TODO: navigate to log in page
-                          Navigator.pushNamed(context, '/dashboard');
-                        },
-                        child: Container(
-                          child: Text(
-                            'Log in',
-                            style: TextStyle(fontSize: 20.0),
-                          ),
+                    RaisedButton(
+                      onPressed: () {
+                        // TODO: navigate to log in page
+                        Navigator.pushNamed(context, '/dashboard');
+                      },
+                      child: Container(
+                        child: Text(
+                          'LOG IN',
+                          style: kButtonTextFontStyle,
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.all(10.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          // TODO: navigate to sign up page
-                        },
-                        child: Container(
-                          child: Text(
-                            'Sign Up',
-                            style: TextStyle(fontSize: 20.0),
-                          ),
+                    SizedBox(height: 20.0),
+                    RaisedButton(
+                      onPressed: () {
+                        // TODO: navigate to sign up page
+                      },
+                      child: Container(
+                        child: Text(
+                          'SIGN UP',
+                          style: kButtonTextFontStyle,
                         ),
                       ),
                     ),

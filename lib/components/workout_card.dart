@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Workout.dart';
-
-const textGap = 5.0;
+import 'package:lfti_app/classes/Constants.dart';
+import 'package:lfti_app/components/card_template.dart';
 
 class WorkoutCard extends StatelessWidget {
   //working data TODO: update to pull for DB
@@ -10,38 +10,29 @@ class WorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushNamed('/viewWorkout', arguments: _workout);
-        },
-        child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 1.0, color: Colors.white10),
-            ),
-          ),
-          child: Row(
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed('/viewWorkout', arguments: _workout);
+      },
+      child: Container(
+        child: CardTemplate(
+          cardChild: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      _workout.name,
-                      style: Theme.of(context).textTheme.body2,
-                    ),
-                    SizedBox(height: textGap),
-                    Text(
-                      _workout.description,
-                      style: Theme.of(context).textTheme.display1,
-                    ),
-                  ],
-                ),
+              Text(
+                _workout.name,
+                style: kMediumBoldTextStyle,
               ),
-              Text(_workout.routines.length.toString() + ' Exercises',
-                  style: Theme.of(context).textTheme.display2)
+              Text(
+                _workout.description,
+                style: kLabelTextStyle,
+              ),
+              SizedBox(height: kSizedBoxHeight),
+              Text(
+                _workout.routines.length.toString() + ' Exercises',
+                style: kMediumBoldTextStyle,
+              )
             ],
           ),
         ),

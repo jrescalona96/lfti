@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/ChecklistItem.dart';
+import 'package:lfti_app/classes/Constants.dart';
 
-class ChecklistGenerator extends StatefulWidget {
-  ChecklistGenerator({Key key}) : super(key: key);
+class Checklist extends StatefulWidget {
+  Checklist({Key key}) : super(key: key);
 
   @override
-  _ChecklistGeneratorState createState() => _ChecklistGeneratorState();
+  _ChecklistState createState() => _ChecklistState();
 }
 
-class _ChecklistGeneratorState extends State<ChecklistGenerator> {
+class _ChecklistState extends State<Checklist> {
   final List<ChecklistItem> _checklist = [
     ChecklistItem('Shaker', false),
     ChecklistItem('Towel', false),
@@ -26,10 +27,12 @@ class _ChecklistGeneratorState extends State<ChecklistGenerator> {
       children: _checklist.map(
         (item) {
           return CheckboxListTile(
-            activeColor: Colors.green,
+            activeColor: Colors.blueAccent,
             value: item.getStatus(),
-            title: Text(item.getDescription(),
-                style: Theme.of(context).textTheme.body2),
+            title: Text(
+              item.getDescription(),
+              style: kMediumTextStyle,
+            ),
             onChanged: (bool newStatus) {
               setState(
                 () => item.setStatus(newStatus),

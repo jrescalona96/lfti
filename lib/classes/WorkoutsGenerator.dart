@@ -4,35 +4,35 @@ import 'package:lfti_app/classes/Workout.dart';
 
 class WorkoutsGenerator {
   final List<Exercise> chest = [
-    Exercise(name: 'Barbell Bench Press', bodyPart: "chest"),
-    Exercise(name: 'Dumbell Press', bodyPart: "chest"),
-    Exercise(name: 'Dumbell Fly', bodyPart: "chest"),
-    Exercise(name: 'Push Up', bodyPart: "chest"),
-    Exercise(name: 'Fly', bodyPart: "chest"),
-    Exercise(name: 'Decline dumbbell bench press', bodyPart: "chest"),
-    Exercise(name: 'Dumbell pullover', bodyPart: 'chest'),
-    Exercise(name: 'Cable Iron Cross', bodyPart: 'chest')
+    Exercise(name: 'Barbell Bench Press', bodyPart: "Chest"),
+    Exercise(name: 'Dumbell Press', bodyPart: "Chest"),
+    Exercise(name: 'Dumbell Fly', bodyPart: "Chest"),
+    Exercise(name: 'Push Up', bodyPart: "Chest"),
+    Exercise(name: 'Fly', bodyPart: "Chest"),
+    Exercise(name: 'Decline dumbbell bench press', bodyPart: "Chest"),
+    Exercise(name: 'Dumbell pullover', bodyPart: 'Chest'),
+    Exercise(name: 'Cable Iron Cross', bodyPart: 'Chest')
   ];
 
   final List<Exercise> leg = [
-    Exercise(name: 'Barbell Squat', bodyPart: 'leg'),
-    Exercise(name: 'Leg Press', bodyPart: 'leg'),
-    Exercise(name: 'Dumbbell Walking Lunge', bodyPart: 'leg'),
-    Exercise(name: 'Leg Extensions', bodyPart: 'leg'),
-    Exercise(name: 'Romanian Deadlift', bodyPart: 'leg'),
-    Exercise(name: 'Lying Leg Curls', bodyPart: 'leg'),
-    Exercise(name: 'Standing Calf Raises', bodyPart: 'leg')
+    Exercise(name: 'Barbell Squat', bodyPart: 'Leg'),
+    Exercise(name: 'Leg Press', bodyPart: 'Leg'),
+    Exercise(name: 'Dumbbell Walking Lunge', bodyPart: 'Leg'),
+    Exercise(name: 'Leg Extensions', bodyPart: 'Leg'),
+    Exercise(name: 'Romanian Deadlift', bodyPart: 'Leg'),
+    Exercise(name: 'Lying Leg Curls', bodyPart: 'Leg'),
+    Exercise(name: 'Standing Calf Raises', bodyPart: 'Leg')
   ];
 
   final List<Exercise> back = [
-    Exercise(name: 'Barbell Deadlift', bodyPart: 'back'),
-    Exercise(name: 'Pull-Ups With A Wide Grip', bodyPart: 'back'),
-    Exercise(name: 'Standing T-Bar Rowing', bodyPart: 'back'),
-    Exercise(name: 'Seated Cable Rowing With A Wide Grip', bodyPart: 'back'),
-    Exercise(name: 'Smith Machine Rowing', bodyPart: 'back'),
-    Exercise(name: 'Pull-Downs With A Narrow Grip', bodyPart: 'back'),
-    Exercise(name: 'Single-Arm Dumbbell Row', bodyPart: 'back'),
-    Exercise(name: 'Dumbbell Pull-Over On A Decline Bench', bodyPart: 'back')
+    Exercise(name: 'Barbell Deadlift', bodyPart: 'Back'),
+    Exercise(name: 'Pull-Ups With A Wide Grip', bodyPart: 'Back'),
+    Exercise(name: 'Standing T-Bar Rowing', bodyPart: 'Back'),
+    Exercise(name: 'Seated Cable Rowing With A Wide Grip', bodyPart: 'Back'),
+    Exercise(name: 'Smith Machine Rowing', bodyPart: 'Back'),
+    Exercise(name: 'Pull-Downs With A Narrow Grip', bodyPart: 'Back'),
+    Exercise(name: 'Single-Arm Dumbbell Row', bodyPart: 'Back'),
+    Exercise(name: 'Dumbbell Pull-Over On A Decline Bench', bodyPart: 'Back')
   ];
 
   Exercise rest = Exercise(name: 'Rest', bodyPart: '');

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/components/workout_card.dart';
 import 'package:lfti_app/classes/WorkoutsGenerator.dart';
+import 'package:lfti_app/classes/Constants.dart';
 
 class SelectWorkoutPage extends StatefulWidget {
   @override
@@ -16,8 +17,8 @@ class _SelectWorkoutPageState extends State<SelectWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Choose Workout",
-          style: Theme.of(context).textTheme.subhead,
+          "CHOOSE WORKOUT",
+          style: kMediumBoldTextStyle,
           textAlign: TextAlign.left,
         ),
       ),
@@ -28,7 +29,13 @@ class _SelectWorkoutPageState extends State<SelectWorkoutPage> {
               (BuildContext context, int index) {
                 Widget item;
                 if (index < workoutList.length) {
-                  item = WorkoutCard(workoutList[index]);
+                  item = Column(
+                    children: <Widget>[
+                      WorkoutCard(
+                        workoutList[index],
+                      ),
+                    ],
+                  );
                 }
                 return item;
               },

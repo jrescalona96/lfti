@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-const inactiveCardColor = Color(0xFF1D1E33);
-const activeCardColor = Color(0xFF111328);
-const textGap = 5.0;
+import 'package:lfti_app/classes/Constants.dart';
+import 'package:lfti_app/components/card_template.dart';
 
 class DashboardCardTile extends StatelessWidget {
   final String heading;
@@ -14,40 +12,32 @@ class DashboardCardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.all(15.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
-        ),
-        color: Theme.of(context).accentColor,
-      ),
-      child: Container(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                heading,
-                style: Theme.of(context).textTheme.display2,
+    return CardTemplate(
+      cardChild: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              heading,
+              style: kLabelTextStyle,
+            ),
+            SizedBox(height: 10.0),
+            Center(
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    mainInfo,
+                    style: kMediumBoldTextStyle,
+                  ),
+                  SizedBox(height: 10.0),
+                  Text(
+                    details,
+                    style: kSmallLabelTextStyle,
+                  ),
+                ],
               ),
-              SizedBox(
-                height: textGap,
-              ),
-              Text(
-                mainInfo,
-                style: Theme.of(context).textTheme.subhead,
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(
-                height: textGap,
-              ),
-              Text(
-                details,
-                style: Theme.of(context).textTheme.display3,
-              ),
-            ]),
-      ),
+            ),
+          ]),
     );
   }
 }

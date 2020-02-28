@@ -1,13 +1,8 @@
 import "package:flutter/material.dart";
-import "package:lfti_app/components/checklist_generator.dart";
+import "package:lfti_app/components/checklist.dart";
 import "package:lfti_app/components/dashboard_card_tile.dart";
-
-const contentMargin = EdgeInsets.all(15.0);
-const contentPadding = EdgeInsets.all(15.0);
-const cardPadding = 20.0;
-const startButtonHeight = 85.0;
-const startButtonWidth = double.infinity;
-const startButtonColor = Colors.blueAccent;
+import 'package:lfti_app/classes/Constants.dart';
+import 'package:lfti_app/components/card_template.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -15,7 +10,8 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  String username = "Mon";
+  String username = "Mond";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,53 +33,62 @@ class _DashboardPageState extends State<DashboardPage> {
           style: Theme.of(context).textTheme.body2,
         ),
       ),
+      body: Container(
+        child: ListView(
+          children: <Widget>[
+            Container(
+              child: DashboardCardTile(
+                heading: 'LAST SESSION',
+                mainInfo: 'Monday Chest Day',
+                details: 'Chest',
+              ),
+            ),
+            Container(
+              child: DashboardCardTile(
+                heading: 'NEXT SESSION',
+                mainInfo: 'Tuesday Arm Day',
+                details: 'Legs',
+              ),
+            ),
+            Container(
+              child: DashboardCardTile(
+                  heading: 'NEAREST GYM LOCATION',
+                  mainInfo: "LA Fitness (2.0 miles)",
+                  details: "La Verne, CA 91768"),
+            ),
+            // checklist section
+            CardTemplate(
+              cardChild: Container(
+                padding: kContentPadding,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  color: Theme.of(context).accentColor,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('CHECKLIST', style: kLabelTextStyle),
+                    Checklist(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: GestureDetector(
         onTap: () => Navigator.pushNamed(context, '/selectWorkout'),
         child: Container(
-          color: startButtonColor,
-          height: startButtonHeight,
+          color: kStartButtonColor,
+          height: kStartButtonHeight,
           alignment: Alignment.center,
           child: Text(
-            "Let's go!",
-            style: Theme.of(context).textTheme.subhead,
+            "LET'S GO!",
+            style: kButtonBoldTextFontStyle,
           ),
         ),
-      ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-              margin: contentMargin,
-              child: DashboardCardTile(
-                  heading: 'Last Workout', mainInfo: 'Chest')),
-          Container(
-              margin: contentMargin,
-              child:
-                  DashboardCardTile(heading: 'Next Workout', mainInfo: 'Arms')),
-          Container(
-            margin: contentMargin,
-            child: DashboardCardTile(
-                heading: 'Nearby Gyms',
-                mainInfo: "LA Fitness (2.0 miles)",
-                details: "La Verne, CA 91768"),
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            margin: contentMargin,
-            padding: contentPadding,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-              color: Theme.of(context).accentColor,
-            ),
-            child: Column(
-              children: <Widget>[
-                Text('Checklist', style: Theme.of(context).textTheme.title),
-                ChecklistGenerator(),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

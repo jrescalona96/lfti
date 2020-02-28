@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lfti_app/components/routine_card.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/classes/Session.dart';
-
-const startButtonHeight = 80.0;
-const startButtonColor = Colors.blueAccent;
+import 'package:lfti_app/classes/Constants.dart';
 
 class ViewWorkoutPage extends StatelessWidget {
   final Workout workout;
@@ -45,16 +43,15 @@ class ViewWorkoutPage extends StatelessWidget {
       ),
       bottomNavigationBar: GestureDetector(
         child: Container(
-          color: startButtonColor,
-          height: startButtonHeight,
+          color: kStartButtonColor,
+          height: kStartButtonHeight,
           alignment: Alignment.center,
           child: Text(
             'Start',
-            style: Theme.of(context).textTheme.subhead,
+            style: kMediumBoldTextStyle,
           ),
         ),
         onTap: () {
-          Session tempSession = createSession();
           Navigator.pushNamed(
             context,
             '/startSession',
