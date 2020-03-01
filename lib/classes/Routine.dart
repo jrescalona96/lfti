@@ -12,8 +12,16 @@ class Routine {
   Routine({
     this.id,
     this.exercise,
-    this.sets = 0,
-    this.reps = 0,
+    this.sets = 1,
+    this.reps = 1,
     this.timeToPerformInSeconds = 0,
   });
+
+  bool isCompleted(int count) {
+    if (count < sets - 1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }

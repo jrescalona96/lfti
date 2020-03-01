@@ -7,11 +7,12 @@ class Workout {
   List<Routine> routines;
   String description;
 
-  Workout(
-      {this.id,
-      @required this.name,
-      this.description = '',
-      @required this.routines});
+  Workout({
+    this.id,
+    @required this.name,
+    this.description = '',
+    @required this.routines,
+  });
 
   add(Routine routine) {
     routines.add(routine);
@@ -23,5 +24,13 @@ class Workout {
 
   reset() {
     routines.clear();
+  }
+
+  bool isCompleted(int index) {
+    if (index < routines.length - 1) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

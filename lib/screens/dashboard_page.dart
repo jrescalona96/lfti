@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:lfti_app/components/checklist.dart";
 import "package:lfti_app/components/dashboard_card_tile.dart";
 import 'package:lfti_app/classes/Constants.dart';
-import 'package:lfti_app/components/card_template.dart';
+import 'package:lfti_app/components/custom_card.dart';
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -57,15 +57,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   details: "La Verne, CA 91768"),
             ),
             // checklist section
-            CardTemplate(
+            CustomCard(
               cardChild: Container(
-                padding: kContentPadding,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  color: Theme.of(context).accentColor,
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

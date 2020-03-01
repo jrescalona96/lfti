@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/classes/Constants.dart';
-import 'package:lfti_app/components/card_template.dart';
+import 'package:lfti_app/components/custom_card.dart';
 
 class WorkoutCard extends StatelessWidget {
   //working data TODO: update to pull for DB
@@ -15,7 +15,7 @@ class WorkoutCard extends StatelessWidget {
         Navigator.of(context).pushNamed('/viewWorkout', arguments: _workout);
       },
       child: Container(
-        child: CardTemplate(
+        child: CustomCard(
           cardChild: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,

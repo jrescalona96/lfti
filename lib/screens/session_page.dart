@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Session.dart';
-import 'package:lfti_app/components/card_template.dart';
+import 'package:lfti_app/components/custom_card.dart';
+import 'package:lfti_app/classes/Routine.dart';
+import 'package:lfti_app/classes/Workout.dart';
 
 class SessionPage extends StatefulWidget {
   final Session session;
@@ -14,65 +16,214 @@ class _SessionPageState extends State<SessionPage> {
   final Session session;
   _SessionPageState({this.session});
 
-  int _currentRoutine = 0;
-  int _setCounter = 0;
+  int _routineIndex = 0;
+  int _setsCounter = 0;
+
+  _nextRoutine() {
+    setState(() {
+      _routineIndex++;
+      //TODO: reset timer
+    });
+  }
+
+  _previousRoutine() {
+    setState(() {
+      _routineIndex--;
+    });
+  }
+
+  _nextSet() {
+    setState(() {
+      _setsCounter++;
+    });
+  }
+
+  _previousSet() {
+    setState(() {
+      _setsCounter--;
+    });
+  }
+
+  _resetSetCounter() {
+    setState(() {
+      _setsCounter = 0;
+    });
+  }
+
+  _resetRoutineIndex() {
+    setState(() {
+      _routineIndex = 0;
+    });
+  }
+
+  _resetAll() {
+    _resetSetCounter();
+    _resetRoutineIndex();
+    // _resetTimer;
+  }
 
   @override
   Widget build(BuildContext context) {
+    Workout _workout = session.workout;
+    Routine _currentRoutine = _workout.routines[_routineIndex];
+    String _nextRoutineName = _routineIndex < _workout.routines.length - 1
+        ? _workout.routines[_routineIndex + 1].exercise.name
+        : 'Done';
+    String _currentExerciseName = _currentRoutine.exercise.name;
+    String _target = _currentExerciseName == 'Rest'
+        ? _currentRoutine.timeToPerformInSeconds.toString()
+        : _currentRoutine.reps.toString();
+    //TODO: Consider making separate screen for Rest periods or have the target count down
+    String _targetUnit = _currentExerciseName == 'Rest' ? ' sec' : ' reps';
+
     return SafeArea(
       child: Scaffold(
-        body: CardTemplate(
-          cardChild: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // Exercise
-              Text(
-                'EXCERCISE',
-                style: kLabelTextStyle,
-              ),
-              Text(
-                // exercise name
-                session.workout.routines[_currentRoutine].exercise.name,
-                style: Theme.of(context).textTheme.subhead,
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(
-                height: kSizedBoxHeight,
-              ),
-              // Target
-              Text(
-                'TARGET',
-                style: kLabelTextStyle,
-              ),
-              Text(
-                session.workout.routines[_currentRoutine].reps.toString() +
-                    ' reps',
-                style: kLargeBoldTextStyle1x,
-              ),
-              SizedBox(height: kSizedBoxHeight),
-              Text(
-                'SETS',
-                style: kLabelTextStyle,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            // Excercise Section
+            CustomCard(
+              cardChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  // Exercise Name Section
                   Text(
-                    _setCounter.toString(),
-                    style: kLargeBoldTextStyle2x,
+                    'EXCERCISE',
+                    style: kLabelTextStyle,
                   ),
                   Text(
-                    '/' +
-                        session.workout.routines[_currentRoutine].sets
-                            .toString(),
-                    style: kLargeBoldTextStyle2x,
+                    _currentExerciseName,
+                    style: kMediumBoldTextStyle,
                   ),
-                  Text(' sets', style: kLargeBoldTextStyle1x)
+                  SizedBox(
+                    height: kSizedBoxHeight,
+                  ),
+
+                  // Target Section
+                  Text(
+                    'TARGET',
+                    style: kLabelTextStyle,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: <Widget>[
+                      Text(_target, style: kLargeBoldTextStyle1x),
+                      Text(
+                        _targetUnit,
+                        style: kUnitLabelTextStyle,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: kSizedBoxHeight),
+
+                  // Sets Section
+                  Text(
+                    'SETS',
+                    style: kLabelTextStyle,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: <Widget>[
+                      Text(
+                        _setsCounter.toString(),
+                        style: kLargeBoldTextStyle2x,
+                      ),
+                      Text(
+                        '/' + _currentRoutine.sets.toString(),
+                        style: kLargeBoldTextStyle2x,
+                      ),
+                      Text(
+                        ' sets',
+                        style: kUnitLabelTextStyle,
+                      )
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+            // Routine Navigation Buttons Section
+            Container(
+              padding: kContentPadding,
+              child: Row(
+                children: <Widget>[
+                  // Back Button
+                  Expanded(
+                    flex: 1,
+                    child: RaisedButton(
+                        child: Text(
+                          'BACK',
+                          style: kButtonTextFontStyle,
+                        ),
+                        color: Colors.deepOrange,
+                        onPressed: () {
+                          if (_routineIndex >= 0) {
+                            if (_setsCounter > 0) {
+                              _previousSet();
+                            } else {
+                              _resetSetCounter();
+                              _previousRoutine();
+                            }
+                          }
+                        }),
+                  ),
+
+                  SizedBox(width: kSizedBoxHeight),
+                  // Next Button
+                  Expanded(
+                    flex: 2,
+                    child: RaisedButton(
+                        child: Text(
+                          'NEXT',
+                          style: kButtonTextFontStyle,
+                        ),
+                        onPressed: () {
+                          if (_workout.isCompleted(_routineIndex)) {
+                            _resetAll(); // TODO: remove after implementing navigation
+                            print('Navigate to Workout Completed Page');
+                          } else {
+                            if (_currentRoutine.isCompleted(_setsCounter)) {
+                              _resetSetCounter();
+                              _nextRoutine();
+                            } else {
+                              _nextSet();
+                            }
+                          }
+                        }),
+                  ),
+                ],
+              ),
+            ),
+
+            // Next Routine Section
+            CustomCard(
+              cardChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'NEXT',
+                    style: kLabelTextStyle,
+                  ),
+                  Text(
+                    _nextRoutineName,
+                    style: kMediumBoldTextStyle,
+                  ),
+                ],
+              ),
+            ),
+
+            // Time Section
+
+            CustomCard(
+              cardChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('ELAPSE TIME', style: kLabelTextStyle),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

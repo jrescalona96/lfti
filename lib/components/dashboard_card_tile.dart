@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
-import 'package:lfti_app/components/card_template.dart';
+import 'package:lfti_app/components/custom_card.dart';
 
 class DashboardCardTile extends StatelessWidget {
   final String heading;
@@ -12,7 +12,7 @@ class DashboardCardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardTemplate(
+    return CustomCard(
       cardChild: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,7 +32,7 @@ class DashboardCardTile extends StatelessWidget {
                   SizedBox(height: 10.0),
                   Text(
                     details,
-                    style: kSmallLabelTextStyle,
+                    style: kMediumLabelTextStyle,
                   ),
                 ],
               ),

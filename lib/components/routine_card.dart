@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Routine.dart';
-import 'package:lfti_app/components/card_template.dart';
+import 'package:lfti_app/components/custom_card.dart';
 
 class RoutineCard extends StatelessWidget {
   //working data TODO: update to pull for DB
@@ -33,7 +33,7 @@ class RoutineCard extends StatelessWidget {
     final exerciseBodyPart = _routine.exercise.bodyPart;
     final exerciseTarget = "Target: " + _generateTarget();
 
-    return CardTemplate(
+    return CustomCard(
       cardChild: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -54,7 +54,7 @@ class RoutineCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: kSizedBoxHeight),
-          Text(exerciseTarget, style: kSmallLabelTextStyle)
+          Text(exerciseTarget, style: kMediumLabelTextStyle)
         ],
       ),
     );

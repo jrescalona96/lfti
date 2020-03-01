@@ -46,17 +46,23 @@ class WorkoutsGenerator {
           description: "First workout of the week",
           routines: [
             Routine(exercise: back[0], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: back[1], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: back[2], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: back[3], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: back[4], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 120),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 120, sets: 1, reps: 1),
             Routine(exercise: back[5], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 300),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 300, sets: 1, reps: 1),
           ]),
     );
     w.add(
@@ -65,17 +71,23 @@ class WorkoutsGenerator {
           description: "Second workout of the week",
           routines: [
             Routine(exercise: leg[0], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: leg[1], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: leg[2], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: leg[3], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: leg[4], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 120),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 120, sets: 1, reps: 1),
             Routine(exercise: leg[5], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 120),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 120, sets: 1, reps: 1),
           ]),
     );
     w.add(
@@ -84,15 +96,20 @@ class WorkoutsGenerator {
           description: "Third workout of the week",
           routines: [
             Routine(exercise: chest[0], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: chest[1], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: chest[2], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: chest[3], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 90),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 90, sets: 1, reps: 1),
             Routine(exercise: chest[4], sets: 3, reps: 10),
-            Routine(exercise: rest, timeToPerformInSeconds: 120),
+            Routine(
+                exercise: rest, timeToPerformInSeconds: 120, sets: 1, reps: 1),
           ]),
     );
     return w;
