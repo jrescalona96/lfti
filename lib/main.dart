@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: kMainBackgroundColor,
         buttonTheme: ButtonThemeData(
+          minWidth: double.infinity,
           shape: StadiumBorder(),
           padding: kButtonPadding,
         ),

@@ -4,6 +4,7 @@ import 'package:lfti_app/classes/Session.dart';
 import 'package:lfti_app/components/custom_card.dart';
 import 'package:lfti_app/classes/Routine.dart';
 import 'package:lfti_app/classes/Workout.dart';
+import 'package:lfti_app/components/timer_card.dart';
 
 class SessionPage extends StatefulWidget {
   final Session session;
@@ -18,45 +19,46 @@ class _SessionPageState extends State<SessionPage> {
 
   int _routineIndex = 0;
   int _setsCounter = 0;
+  final _setsTimer = TimerCard(); //create new set timer
 
-  _nextRoutine() {
+  void _nextRoutine() {
     setState(() {
       _routineIndex++;
       //TODO: reset timer
     });
   }
 
-  _previousRoutine() {
+  void _previousRoutine() {
     setState(() {
       _routineIndex--;
     });
   }
 
-  _nextSet() {
+  void _nextSet() {
     setState(() {
       _setsCounter++;
     });
   }
 
-  _previousSet() {
+  void _previousSet() {
     setState(() {
       _setsCounter--;
     });
   }
 
-  _resetSetCounter() {
+  void _resetSetCounter() {
     setState(() {
       _setsCounter = 0;
     });
   }
 
-  _resetRoutineIndex() {
+  void _resetRoutineIndex() {
     setState(() {
       _routineIndex = 0;
     });
   }
 
-  _resetAll() {
+  void _resetAll() {
     _resetSetCounter();
     _resetRoutineIndex();
     // _resetTimer;
@@ -143,6 +145,7 @@ class _SessionPageState extends State<SessionPage> {
                 ],
               ),
             ),
+
             // Routine Navigation Buttons Section
             Container(
               padding: kContentPadding,
@@ -157,8 +160,10 @@ class _SessionPageState extends State<SessionPage> {
                           style: kButtonTextFontStyle,
                         ),
                         color: Colors.deepOrange,
+                        disabledColor: Colors.white30,
                         onPressed: () {
-                          if (_routineIndex >= 0) {
+                          // TODO: Reset Timer
+                          if (_routineIndex > 0) {
                             if (_setsCounter > 0) {
                               _previousSet();
                             } else {
@@ -179,6 +184,8 @@ class _SessionPageState extends State<SessionPage> {
                           style: kButtonTextFontStyle,
                         ),
                         onPressed: () {
+                          // TODO: Reset Timer
+
                           if (_workout.isCompleted(_routineIndex)) {
                             _resetAll(); // TODO: remove after implementing navigation
                             print('Navigate to Workout Completed Page');
@@ -213,15 +220,9 @@ class _SessionPageState extends State<SessionPage> {
               ),
             ),
 
-            // Time Section
-
+            // Timer Section
             CustomCard(
-              cardChild: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('ELAPSE TIME', style: kLabelTextStyle),
-                ],
-              ),
+              cardChild: _setsTimer,
             ),
           ],
         ),

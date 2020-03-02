@@ -21,33 +21,37 @@ class HomePage extends StatelessWidget {
               ),
               Expanded(
                 flex: 1,
-                child: Column(
-                  children: <Widget>[
-                    RaisedButton(
-                      onPressed: () {
-                        // TODO: navigate to log in page
-                        Navigator.pushNamed(context, '/dashboard');
-                      },
-                      child: Container(
-                        child: Text(
-                          'LOG IN',
-                          style: kButtonTextFontStyle,
+                child: Container(
+                  padding: kContentPadding,
+                  margin: kContentMargin,
+                  child: Column(
+                    children: <Widget>[
+                      RaisedButton(
+                        onPressed: () {
+                          // TODO: navigate to log in page
+                          Navigator.pushNamed(context, '/dashboard');
+                        },
+                        child: Container(
+                          child: Text(
+                            'LOG IN',
+                            style: kButtonTextFontStyle,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20.0),
-                    RaisedButton(
-                      onPressed: () {
-                        // TODO: navigate to sign up page
-                      },
-                      child: Container(
-                        child: Text(
-                          'SIGN UP',
-                          style: kButtonTextFontStyle,
+                      SizedBox(height: 20.0),
+                      RaisedButton(
+                        onPressed: () {
+                          // TODO: navigate to sign up page
+                        },
+                        child: Container(
+                          child: Text(
+                            'SIGN UP',
+                            style: kButtonTextFontStyle,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
