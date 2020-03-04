@@ -4,59 +4,73 @@ import 'dart:async';
 
 class TimerCard extends StatefulWidget {
   @override
+  final String cardLabel;
+  TimerCard({this.cardLabel});
+
+  final _timerCardState = _TimerCardState();
   _TimerCardState createState() {
-    final _timerCardState = _TimerCardState();
-
-    void resetTimer() {
-      _timerCardState.resetTimer();
-    }
-
+    _timerCardState.setCardLabel(cardLabel);
     return _timerCardState;
+  }
+
+  void restart() {
+    _timerCardState.resetStopwatch();
+    _timerCardState.startStopWatch();
+  }
+
+  void pause() {
+    _timerCardState.pauseStopwatch();
+  }
+
+  void start() {
+    _timerCardState.startStopWatch();
+  }
+
+  String getCurrentTime() {
+    return _timerCardState.getTime();
   }
 }
 
 class _TimerCardState extends State<TimerCard> {
   Stopwatch _stopwatch = Stopwatch();
   String _timerString = '00:00';
-  final duration = const Duration(seconds: 1);
+  final _duration = const Duration(seconds: 1);
+  var label = 'Elapse Time';
 
-  // immediately start timer once Time Card is created
-  _TimerCardState() {
-    startTimer();
+  void setCardLabel(String l) {
+    this.label = l;
   }
 
   void _startTimer() {
-    Timer(duration, _keepRunning);
+    Timer(_duration, _keepRunning);
   }
 
   void _keepRunning() {
     if (_stopwatch.isRunning) {
       _startTimer();
     }
-    setState(() {
-      _updatedTimeString();
-    });
+    _updatedTimeString();
   }
 
-  void startTimer() {
-    print('Start');
+  void startStopWatch() {
     _stopwatch.start();
     _startTimer();
   }
 
-  void pauseTimer() {
-    print('Pause');
-    print(_stopwatch.isRunning);
+  void pauseStopwatch() {
     setState(() {
       _stopwatch.stop();
     });
   }
 
-  void resetTimer() {
-    print('Reset');
+  void resetStopwatch() {
     setState(() {
       _stopwatch = Stopwatch();
     });
+  }
+
+  String getTime() {
+    return _timerString;
   }
 
   void _updatedTimeString() {
@@ -72,35 +86,12 @@ class _TimerCardState extends State<TimerCard> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text('ELAPSE TIME', style: kLabelTextStyle),
+          Text(label, style: kLabelTextStyle),
           Text(
             _timerString,
             style: kMediumBoldTextStyle,
           ),
-          // RaisedButton(
-          //   color: Colors.green,
-          //   child: Text('START'),
-          //   onPressed: () {
-          //     startTimer();
-          //     _updatedTimeString();
-          //   },
-          // ),
-          // RaisedButton(
-          //   color: Colors.blue,
-          //   child: Text('PAUSE'),
-          //   onPressed: () {
-          //     pauseTimer();
-          //   },
-          // ),
-          // RaisedButton(
-          //   color: Colors.red,
-          //   child: Text('RESET'),
-          //   onPressed: () {
-          //     resetTimer();
-          //   },
-          // )
         ],
       ),
     );

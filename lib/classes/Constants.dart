@@ -11,6 +11,9 @@ const kMainBackgroundColor = Color(0x0B0A0E21);
 const kInactiveCardColor = Color(0xFF1f1f22);
 const kCardBackground = Color(0xFF1f1f22);
 const kActiveCardColor = Color(0xFF111328);
+const kGreenButtonColor = Color(0xFF32D74B);
+const kBlueButtonColor = Colors.blue;
+const kRedButtonColor = Colors.red;
 
 const kLabelTextStyle = TextStyle(
   fontSize: 16.0,

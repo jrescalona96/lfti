@@ -42,7 +42,7 @@ class WorkoutsGenerator {
 
     w.add(
       Workout(
-          name: "Monday Workout",
+          name: "Chestday Monday",
           description: "First workout of the week",
           routines: [
             Routine(exercise: back[0], sets: 3, reps: 10),
@@ -67,7 +67,7 @@ class WorkoutsGenerator {
     );
     w.add(
       Workout(
-          name: "Tuesday Workout",
+          name: "Taco Tuesday",
           description: "Second workout of the week",
           routines: [
             Routine(exercise: leg[0], sets: 3, reps: 10),
@@ -92,7 +92,7 @@ class WorkoutsGenerator {
     );
     w.add(
       Workout(
-          name: "Friday Workout",
+          name: "Leyggg dey",
           description: "Third workout of the week",
           routines: [
             Routine(exercise: chest[0], sets: 3, reps: 10),

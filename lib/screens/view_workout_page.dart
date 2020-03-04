@@ -9,11 +9,12 @@ class ViewWorkoutPage extends StatelessWidget {
   ViewWorkoutPage({Key key, @required this.workout}) : super(key: key);
 
   Session createSession() {
+    DateTime now = DateTime.now();
+    String formattedDate = now.toString().substring(0, 10);
     return new Session(
       id: 1,
-      name: workout.name + " #1",
+      name: formattedDate,
       workout: workout,
-      totalTimeInSeconds: 0,
     );
   }
 
@@ -21,10 +22,7 @@ class ViewWorkoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          workout.name,
-          style: Theme.of(context).textTheme.subhead,
-        ),
+        title: Text(workout.name, style: kMediumBoldTextStyle),
       ),
       body: SafeArea(
         child: CustomScrollView(

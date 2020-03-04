@@ -4,11 +4,27 @@ class Session {
   int id;
   String name;
   Workout workout;
-  int totalTimeInSeconds;
+  String totalElapsetime;
+  bool isPaused = false;
 
-  Session({this.id, this.name, this.workout, this.totalTimeInSeconds = 0});
-
-  reset() {
-    // TODO: reset everything
+  bool isFinished(int index) {
+    int lastRoutineIndex = workout.routines.length - 1;
+    return index >= lastRoutineIndex ? true : false;
   }
+
+  void pause() {
+    this.isPaused = true;
+  }
+
+  void start() {
+    this.isPaused = false;
+  }
+
+  Session({
+    this.id,
+    this.name,
+    this.workout,
+    this.totalElapsetime = '00:00',
+    this.isPaused,
+  });
 }

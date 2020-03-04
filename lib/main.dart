@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'classes/RouteGenerator.dart';
+import 'classes/RouteController.dart';
 import 'package:lfti_app/classes/Constants.dart';
 
 void main() => runApp(MyApp());
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute: '/',
-      onGenerateRoute: RouteGenerator.generateRoute,
+      onGenerateRoute: RouteController.generateRoute,
     );
   }
 }

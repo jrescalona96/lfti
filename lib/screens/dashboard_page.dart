@@ -30,7 +30,7 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         title: Text(
           "Hello $username!",
-          style: Theme.of(context).textTheme.body2,
+          style: kMediumBoldTextStyle,
         ),
       ),
       body: Container(

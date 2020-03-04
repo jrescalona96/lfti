@@ -19,12 +19,13 @@ class _SessionPageState extends State<SessionPage> {
 
   int _routineIndex = 0;
   int _setsCounter = 0;
-  final _setsTimer = TimerCard(); //create new set timer
+  final _routineTimerController = TimerCard(cardLabel: 'ROUTINE TIME');
+  final _sessionTimerController = TimerCard(cardLabel: 'SESSION TIME');
+  bool _sessionIsPaused = false;
 
   void _nextRoutine() {
     setState(() {
       _routineIndex++;
-      //TODO: reset timer
     });
   }
 
@@ -46,9 +47,10 @@ class _SessionPageState extends State<SessionPage> {
     });
   }
 
-  void _resetSetCounter() {
+  // reset functions
+  void _resetSetCounterTo(int sets) {
     setState(() {
-      _setsCounter = 0;
+      _setsCounter = sets;
     });
   }
 
@@ -59,13 +61,22 @@ class _SessionPageState extends State<SessionPage> {
   }
 
   void _resetAll() {
-    _resetSetCounter();
+    _resetSetCounterTo(0);
     _resetRoutineIndex();
-    // _resetTimer;
+    _routineTimerController.restart();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Run Timer at navigate
+    _routineTimerController.start();
+    _sessionTimerController.start();
+    // Timer Pause/Run
+    _sessionIsPaused
+        ? _routineTimerController.pause()
+        : _routineTimerController.start();
+
+    // Session Page Initialization
     Workout _workout = session.workout;
     Routine _currentRoutine = _workout.routines[_routineIndex];
     String _nextRoutineName = _routineIndex < _workout.routines.length - 1
@@ -84,65 +95,79 @@ class _SessionPageState extends State<SessionPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             // Excercise Section
-            CustomCard(
-              cardChild: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  // Exercise Name Section
-                  Text(
-                    'EXCERCISE',
-                    style: kLabelTextStyle,
-                  ),
-                  Text(
-                    _currentExerciseName,
-                    style: kMediumBoldTextStyle,
-                  ),
-                  SizedBox(
-                    height: kSizedBoxHeight,
-                  ),
+            Expanded(
+              child: CustomCard(
+                cardChild: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    // Exercise Name Section
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'EXERCISE',
+                          style: kLabelTextStyle,
+                        ),
+                        Text(
+                          _currentExerciseName,
+                          style: kLargeBoldTextStyle1x,
+                        ),
+                      ],
+                    ),
 
-                  // Target Section
-                  Text(
-                    'TARGET',
-                    style: kLabelTextStyle,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: <Widget>[
-                      Text(_target, style: kLargeBoldTextStyle1x),
-                      Text(
-                        _targetUnit,
-                        style: kUnitLabelTextStyle,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: kSizedBoxHeight),
+                    // Target Section
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'TARGET',
+                          style: kLabelTextStyle,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: <Widget>[
+                            Text(_target, style: kLargeBoldTextStyle1x),
+                            Text(
+                              _targetUnit,
+                              style: kUnitLabelTextStyle,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
 
-                  // Sets Section
-                  Text(
-                    'SETS',
-                    style: kLabelTextStyle,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: <Widget>[
-                      Text(
-                        _setsCounter.toString(),
-                        style: kLargeBoldTextStyle2x,
-                      ),
-                      Text(
-                        '/' + _currentRoutine.sets.toString(),
-                        style: kLargeBoldTextStyle2x,
-                      ),
-                      Text(
-                        ' sets',
-                        style: kUnitLabelTextStyle,
-                      )
-                    ],
-                  ),
-                ],
+                    // Sets Section
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'SETS',
+                          style: kLabelTextStyle,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: <Widget>[
+                            Text(
+                              _setsCounter.toString(),
+                              style: kLargeBoldTextStyle2x,
+                            ),
+                            Text(
+                              ' / ' + _currentRoutine.sets.toString(),
+                              style: kLargeBoldTextStyle2x,
+                            ),
+                            Text(
+                              ' sets',
+                              style: kUnitLabelTextStyle,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
 
@@ -150,6 +175,7 @@ class _SessionPageState extends State<SessionPage> {
             Container(
               padding: kContentPadding,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   // Back Button
                   Expanded(
@@ -159,51 +185,64 @@ class _SessionPageState extends State<SessionPage> {
                           'BACK',
                           style: kButtonTextFontStyle,
                         ),
-                        color: Colors.deepOrange,
-                        disabledColor: Colors.white30,
-                        onPressed: () {
-                          // TODO: Reset Timer
-                          if (_routineIndex > 0) {
-                            if (_setsCounter > 0) {
-                              _previousSet();
-                            } else {
-                              _resetSetCounter();
-                              _previousRoutine();
-                            }
-                          }
-                        }),
+                        color: kRedButtonColor,
+                        onPressed: _sessionIsPaused ||
+                                _routineIndex == 0 && _setsCounter == 0
+                            ? null
+                            : () {
+                                _routineTimerController.restart();
+                                // TODO: Simplify logic here
+                                if (_routineIndex >= 0) {
+                                  if (_setsCounter > 0) {
+                                    _previousSet();
+                                  } else if (_routineIndex > 0) {
+                                    // fist excercise but sets != 0
+                                    _resetSetCounterTo(_currentRoutine.sets);
+                                    _previousRoutine();
+                                  } else {
+                                    // sets and exercise at beginning
+                                    _resetSetCounterTo(0);
+                                  }
+                                }
+                              }),
                   ),
 
+                  // TODO: rename constant to "spacer"
                   SizedBox(width: kSizedBoxHeight),
+
                   // Next Button
                   Expanded(
                     flex: 2,
                     child: RaisedButton(
+                        color: kGreenButtonColor,
                         child: Text(
                           'NEXT',
                           style: kButtonTextFontStyle,
                         ),
-                        onPressed: () {
-                          // TODO: Reset Timer
+                        onPressed: _sessionIsPaused ||
+                                _routineIndex >= _workout.routines.length - 1
+                            ? null
+                            : () {
+                                _routineTimerController.restart();
+                                if (_workout.isCompleted(_routineIndex)) {
+                                  _resetAll(); // TODO: remove after implementing navigation
 
-                          if (_workout.isCompleted(_routineIndex)) {
-                            _resetAll(); // TODO: remove after implementing navigation
-                            print('Navigate to Workout Completed Page');
-                          } else {
-                            if (_currentRoutine.isCompleted(_setsCounter)) {
-                              _resetSetCounter();
-                              _nextRoutine();
-                            } else {
-                              _nextSet();
-                            }
-                          }
-                        }),
+                                } else {
+                                  if (_currentRoutine
+                                      .isCompleted(_setsCounter)) {
+                                    _resetSetCounterTo(0);
+                                    _nextRoutine();
+                                  } else {
+                                    _nextSet();
+                                  }
+                                }
+                              }),
                   ),
                 ],
               ),
             ),
 
-            // Next Routine Section
+            // Next Routine View Section
             CustomCard(
               cardChild: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,8 +260,59 @@ class _SessionPageState extends State<SessionPage> {
             ),
 
             // Timer Section
-            CustomCard(
-              cardChild: _setsTimer,
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: CustomCard(
+                    cardChild: _routineTimerController,
+                  ),
+                ),
+                Expanded(
+                  child: CustomCard(
+                    cardChild: _sessionTimerController,
+                  ),
+                ),
+              ],
+            ),
+
+            Container(
+              padding: kContentPadding,
+              child: GestureDetector(
+                onLongPress: () {
+                  session.totalElapsetime =
+                      _sessionTimerController.getCurrentTime();
+                  Navigator.pushNamed(context, '/endSession',
+                      arguments: session);
+                },
+                child: session.isFinished(_routineIndex)
+                    ? RaisedButton(
+                        child: Text(
+                          'END',
+                          style: kButtonTextFontStyle,
+                        ),
+                        color: kRedButtonColor,
+                        onPressed: () {
+                          session.totalElapsetime =
+                              _sessionTimerController.getCurrentTime();
+                          Navigator.pushNamed(context, '/endSession',
+                              arguments: session);
+                        })
+                    : RaisedButton(
+                        child: Text(
+                          _sessionIsPaused ? 'GO' : 'PAUSE',
+                          style: kButtonTextFontStyle,
+                        ),
+                        color: _sessionIsPaused
+                            ? kGreenButtonColor
+                            : kBlueButtonColor,
+                        onPressed: () {
+                          setState(() {
+                            _sessionIsPaused
+                                ? _sessionIsPaused = false
+                                : _sessionIsPaused = true;
+                          });
+                        }),
+              ),
             ),
           ],
         ),

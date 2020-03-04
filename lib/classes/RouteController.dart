@@ -6,8 +6,9 @@ import 'package:lfti_app/screens/select_workout_page.dart';
 import 'package:lfti_app/screens/session_page.dart';
 import 'package:lfti_app/screens/view_workout_page.dart';
 import 'package:lfti_app/classes/Session.dart';
+import 'package:lfti_app/screens/session_end_page.dart';
 
-class RouteGenerator {
+class RouteController {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args =
         settings.arguments; // Hold arguments passed from previous screen
@@ -34,6 +35,16 @@ class RouteGenerator {
         if (args is Session) {
           return MaterialPageRoute(
             builder: (_) => SessionPage(session: args),
+          );
+        } else {
+          print(args);
+          return _errorRoute();
+        }
+        break;
+      case '/endSession':
+        if (args is Session) {
+          return MaterialPageRoute(
+            builder: (_) => SessionEndPage(session: args),
           );
         } else {
           print(args);

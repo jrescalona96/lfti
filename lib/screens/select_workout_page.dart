@@ -19,7 +19,6 @@ class _SelectWorkoutPageState extends State<SelectWorkoutPage> {
         title: Text(
           "CHOOSE WORKOUT",
           style: kMediumBoldTextStyle,
-          textAlign: TextAlign.left,
         ),
       ),
       body: SafeArea(
