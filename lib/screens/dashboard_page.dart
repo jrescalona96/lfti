@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import "package:flutter/material.dart";
 import "package:lfti_app/components/checklist.dart";
 import "package:lfti_app/components/dashboard_card_tile.dart";
@@ -5,15 +7,41 @@ import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/components/custom_card.dart';
 
 class DashboardPage extends StatefulWidget {
+  final FirebaseUser _user;
+  DashboardPage(this._user);
+
   @override
-  _DashboardPageState createState() => _DashboardPageState();
+  _DashboardPageState createState() {
+    return _DashboardPageState(_user);
+  }
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  String username = "Mond";
+  FirebaseUser _user;
+  _DashboardPageState(this._user);
+
+  String _username;
+  String _lastWorkoutName;
+  String _lastWorkoutDescription;
+
+  DatabaseReference _db = FirebaseDatabase.instance.reference();
+
+  void getUserData() {
+    _db.child('/users/' + _user.uid).once().then((ds) {
+      setState(() {
+        _username = ds.value['firstName'];
+        _lastWorkoutName = ds.value['lastSession']['workout']['name'];
+        _lastWorkoutDescription =
+            ds.value['lastSession']['workout']['description'];
+      });
+    }).catchError((e) {
+      print('error getting user data => ' + e.toString());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    getUserData();
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -29,7 +57,7 @@ class _DashboardPageState extends State<DashboardPage> {
           },
         ),
         title: Text(
-          "Hello $username!",
+          "Hello $_username!",
           style: kMediumBoldTextStyle,
         ),
       ),
@@ -39,8 +67,8 @@ class _DashboardPageState extends State<DashboardPage> {
             Container(
               child: DashboardCardTile(
                 heading: 'LAST SESSION',
-                mainInfo: 'Monday Chest Day',
-                details: 'Chest',
+                mainInfo: _lastWorkoutName,
+                details: _lastWorkoutDescription,
               ),
             ),
             Container(

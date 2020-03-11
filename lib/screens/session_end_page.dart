@@ -107,30 +107,30 @@ class SessionEndPage extends StatelessWidget {
                     (getTotalNumberOfSets()).toString() + ' Sets',
                     style: kMediumBoldTextStyle,
                   )
-                  // Done Button
                 ],
               ),
             ),
           ],
         ),
       ),
+
+      // Done Button
       bottomNavigationBar: GestureDetector(
-        child: Container(
-          color: kStartButtonColor,
-          height: kStartButtonHeight,
-          alignment: Alignment.center,
-          child: Text(
-            'Done',
-            style: kMediumBoldTextStyle,
+          child: Container(
+            color: kStartButtonColor,
+            height: kStartButtonHeight,
+            alignment: Alignment.center,
+            child: Text(
+              'Done',
+              style: kMediumBoldTextStyle,
+            ),
           ),
-        ),
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            '/dashboard',
-          );
-        },
-      ),
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              '/dashboard',
+            );
+          }),
     );
   }
 }

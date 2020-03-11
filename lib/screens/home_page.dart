@@ -28,8 +28,7 @@ class HomePage extends StatelessWidget {
                     children: <Widget>[
                       RaisedButton(
                         onPressed: () {
-                          // TODO: navigate to log in page
-                          Navigator.pushNamed(context, '/dashboard');
+                          Navigator.pushNamed(context, '/login');
                         },
                         child: Container(
                           child: Text(
@@ -41,7 +40,7 @@ class HomePage extends StatelessWidget {
                       SizedBox(height: 20.0),
                       RaisedButton(
                         onPressed: () {
-                          // TODO: navigate to sign up page
+                          Navigator.pushNamed(context, '/register');
                         },
                         child: Container(
                           child: Text(

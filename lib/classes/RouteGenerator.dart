@@ -1,14 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/screens/home_page.dart';
 import 'package:lfti_app/screens/dashboard_page.dart';
+import 'package:lfti_app/screens/login_page.dart';
 import 'package:lfti_app/screens/select_workout_page.dart';
 import 'package:lfti_app/screens/session_page.dart';
 import 'package:lfti_app/screens/view_workout_page.dart';
 import 'package:lfti_app/classes/Session.dart';
 import 'package:lfti_app/screens/session_end_page.dart';
+import 'package:lfti_app/screens/register_page.dart';
 
-class RouteController {
+class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args =
         settings.arguments; // Hold arguments passed from previous screen
@@ -16,8 +20,18 @@ class RouteController {
       case '/':
         return MaterialPageRoute(builder: (_) => HomePage());
         break;
+      case '/login':
+        return MaterialPageRoute(builder: (_) => LoginPage());
+        break;
+      case '/register':
+        return MaterialPageRoute(builder: (_) => RegisterPage());
+        break;
       case '/dashboard':
-        return MaterialPageRoute(builder: (_) => DashboardPage());
+        if (args is FirebaseUser) {
+          return MaterialPageRoute(builder: (_) => DashboardPage(args));
+        } else {
+          return _errorRoute();
+        }
         break;
       case '/selectWorkout':
         return MaterialPageRoute(builder: (_) => SelectWorkoutPage());
@@ -78,6 +92,7 @@ class RouteController {
         body: Center(
           child: Text(
             'Something went wrong!',
+            style: kMediumBoldTextStyle,
           ),
         ),
       );

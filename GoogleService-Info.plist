@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>71720248781-u6qteak3k1pv78r7i6jade7t835kno9c.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.71720248781-u6qteak3k1pv78r7i6jade7t835kno9c</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDHwqB6YKWx0djrlg2tJK1OmY_84jWG0Vk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>71720248781</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.johnescalona.lftiApp</string>
+	<key>PROJECT_ID</key>
+	<string>lfti-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>lfti-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:71720248781:ios:d1d550e03c1d85fab01084</string>
+	<key>DATABASE_URL</key>
+	<string>https://lfti-app.firebaseio.com</string>
+</dict>
+</plist>
