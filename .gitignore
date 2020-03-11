@@ -9,6 +9,7 @@
 .history
 .svn/
 design/
+GoogleService-Info.plist
 
 # IntelliJ related
 *.iml
