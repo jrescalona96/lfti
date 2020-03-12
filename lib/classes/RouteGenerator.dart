@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Workout.dart';
@@ -27,7 +28,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => RegisterPage());
         break;
       case '/dashboard':
-        if (args is FirebaseUser) {
+        if (args is DataSnapshot) {
           return MaterialPageRoute(builder: (_) => DashboardPage(args));
         } else {
           return _errorRoute();

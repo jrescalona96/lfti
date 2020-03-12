@@ -1,9 +1,9 @@
 class Exercise {
   int id;
   String name = '';
-  String bodyPart = '';
+  String focus = '';
 
-  Exercise({this.id, this.name, this.bodyPart});
+  Exercise({this.id, this.name, this.focus});
 
   rename(String name) {
     this.name = name;

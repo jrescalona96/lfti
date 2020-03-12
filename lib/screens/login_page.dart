@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 
 class LoginPage extends StatefulWidget {
@@ -13,15 +14,21 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance; // init firebase _auth
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  DatabaseReference _db = FirebaseDatabase.instance.reference();
 
-  void _signInThenNavigateToNextPage(
-      {@required String email, @required String pw}) {
-    _auth.signInWithEmailAndPassword(email: email, password: pw).then((value) {
-      print('User successcully Signed In!');
-      Navigator.pushNamed(context, '/dashboard', arguments: value.user);
+  void _loginAndNavigate() {
+    _auth
+        .signInWithEmailAndPassword(
+            email: _emailTextController.text.toString().trim(),
+            password: _passwordTextController.text.toString())
+        .then((value) async {
+      DataSnapshot _userDataSnapShot =
+          await _db.child('/users/' + value.user.uid).once();
+      Navigator.pushNamed(context, '/dashboard', arguments: _userDataSnapShot);
     }).catchError((e) {
-      print('Sign In Failed! ==> ' + e.toString());
+      print('Sign In Failed!');
+      _passwordTextController.clear();
     });
   }
 
@@ -63,10 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   onPressed: () {
                     if (_emailTextController.text.isNotEmpty) {
-                      _signInThenNavigateToNextPage(
-                          email:
-                              _emailTextController.text.toString().trimRight(),
-                          pw: _passwordTextController.text.toString());
+                      _loginAndNavigate();
                     } else {
                       // TODO: implement input verifications
                       print('Alert: Empty Fields');

@@ -7,41 +7,32 @@ import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/components/custom_card.dart';
 
 class DashboardPage extends StatefulWidget {
-  final FirebaseUser _user;
-  DashboardPage(this._user);
+  final DataSnapshot _ds;
+  DashboardPage(this._ds);
 
   @override
   _DashboardPageState createState() {
-    return _DashboardPageState(_user);
+    return _DashboardPageState(_ds);
   }
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  FirebaseUser _user;
-  _DashboardPageState(this._user);
+  DataSnapshot _userDataSnapshot;
+  _DashboardPageState(this._userDataSnapshot);
 
-  String _username;
-  String _lastWorkoutName;
-  String _lastWorkoutDescription;
+  int _lastWorkoutIndex;
+  int _nextWorkoutIndex;
 
-  DatabaseReference _db = FirebaseDatabase.instance.reference();
-
-  void getUserData() {
-    _db.child('/users/' + _user.uid).once().then((ds) {
-      setState(() {
-        _username = ds.value['firstName'];
-        _lastWorkoutName = ds.value['lastSession']['workout']['name'];
-        _lastWorkoutDescription =
-            ds.value['lastSession']['workout']['description'];
-      });
-    }).catchError((e) {
-      print('error getting user data => ' + e.toString());
+  void _init() {
+    setState(() {
+      _lastWorkoutIndex = _userDataSnapshot.value['lastSession']['index'];
+      _nextWorkoutIndex = _userDataSnapshot.value['nextSession']['index'];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    getUserData();
+    _init();
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -57,7 +48,7 @@ class _DashboardPageState extends State<DashboardPage> {
           },
         ),
         title: Text(
-          "Hello $_username!",
+          "Hello " + _userDataSnapshot.value['firstName'] + '!',
           style: kMediumBoldTextStyle,
         ),
       ),
@@ -66,18 +57,22 @@ class _DashboardPageState extends State<DashboardPage> {
           children: <Widget>[
             Container(
               child: DashboardCardTile(
-                heading: 'LAST SESSION',
-                mainInfo: _lastWorkoutName,
-                details: _lastWorkoutDescription,
-              ),
+                  heading: 'LAST SESSION',
+                  mainInfo: _userDataSnapshot.value['workouts']
+                      [_lastWorkoutIndex]['name'],
+                  details: _userDataSnapshot.value['workouts']
+                      [_lastWorkoutIndex]['description']),
             ),
             Container(
               child: DashboardCardTile(
                 heading: 'NEXT SESSION',
-                mainInfo: 'Tuesday Arm Day',
-                details: 'Legs',
+                mainInfo: _userDataSnapshot.value['workouts'][_nextWorkoutIndex]
+                    ['name'],
+                details: _userDataSnapshot.value['workouts'][_nextWorkoutIndex]
+                    ['description'],
               ),
             ),
+            // TODO: implement google maps
             Container(
               child: DashboardCardTile(
                   heading: 'NEAREST GYM LOCATION',

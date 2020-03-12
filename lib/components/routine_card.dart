@@ -30,7 +30,7 @@ class RoutineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exerciseName = _routine.exercise.name;
-    final exerciseBodyPart = _routine.exercise.bodyPart;
+    final exerciseFocus = _routine.exercise.focus;
     final exerciseTarget = "Target: " + _generateTarget();
 
     return CustomCard(
@@ -48,7 +48,7 @@ class RoutineCard extends StatelessWidget {
                 height: kSmallSizedBoxHeight,
               ),
               Text(
-                exerciseBodyPart,
+                exerciseFocus,
                 style: kLabelTextStyle,
               ),
             ],
