@@ -3,23 +3,20 @@ import 'package:lfti_app/classes/ChecklistItem.dart';
 import 'package:lfti_app/classes/Constants.dart';
 
 class Checklist extends StatefulWidget {
-  Checklist({Key key}) : super(key: key);
-
+  final List _checklist;
+  Checklist(this._checklist);
   @override
-  _ChecklistState createState() => _ChecklistState();
+  _ChecklistState createState() => _ChecklistState(_checklist);
 }
 
 class _ChecklistState extends State<Checklist> {
-  final List<ChecklistItem> _checklist = [
-    ChecklistItem('Shaker', false),
-    ChecklistItem('Towel', false),
-    ChecklistItem('Shoes', false),
-    ChecklistItem('Protein Shake', false),
-    ChecklistItem('BCAA', false),
-    ChecklistItem('Earphones', false),
-    ChecklistItem('Wrist Wrap', false),
-    ChecklistItem('Shaker', false),
-  ];
+  var _checklist = List<ChecklistItem>();
+
+  _ChecklistState(var _list) {
+    for (var item in _list) {
+      _checklist.add(ChecklistItem(item, false));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

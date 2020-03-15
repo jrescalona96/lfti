@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
                       SizedBox(height: 20.0),
                       RaisedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/register');
+                          Navigator.pushNamed(context, '/signup');
                         },
                         child: Container(
                           child: Text(

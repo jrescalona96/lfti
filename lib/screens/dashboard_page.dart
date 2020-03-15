@@ -1,32 +1,34 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 import "package:lfti_app/components/checklist.dart";
 import "package:lfti_app/components/dashboard_card_tile.dart";
-import 'package:lfti_app/classes/Constants.dart';
-import 'package:lfti_app/components/custom_card.dart';
+import "package:lfti_app/classes/Constants.dart";
+import "package:lfti_app/components/custom_card.dart";
 
 class DashboardPage extends StatefulWidget {
-  final DataSnapshot _ds;
-  DashboardPage(this._ds);
+  final DocumentReference _dr;
+  DashboardPage(this._dr);
 
   @override
   _DashboardPageState createState() {
-    return _DashboardPageState(_ds);
+    return _DashboardPageState(_dr);
   }
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  DataSnapshot _userDataSnapshot;
-  _DashboardPageState(this._userDataSnapshot);
+  DocumentReference _userDocumentRef;
+  DocumentSnapshot _userDocumentSnapshot;
+  var _lastWorkoutIndex;
+  var _nextWorkoutIndex;
 
-  int _lastWorkoutIndex;
-  int _nextWorkoutIndex;
+  _DashboardPageState(this._userDocumentRef);
 
-  void _init() {
+  void _init() async {
+    var ds = await _userDocumentRef.get();
     setState(() {
-      _lastWorkoutIndex = _userDataSnapshot.value['lastSession']['index'];
-      _nextWorkoutIndex = _userDataSnapshot.value['nextSession']['index'];
+      _userDocumentSnapshot = ds;
+      _lastWorkoutIndex = _userDocumentSnapshot.data["lastSession"]["index"];
+      _nextWorkoutIndex = _userDocumentSnapshot.data["nextSession"]["index"];
     });
   }
 
@@ -48,7 +50,7 @@ class _DashboardPageState extends State<DashboardPage> {
           },
         ),
         title: Text(
-          "Hello " + _userDataSnapshot.value['firstName'] + '!',
+          "Hello " + _userDocumentSnapshot.data["firstName"] + "!",
           style: kMediumBoldTextStyle,
         ),
       ),
@@ -57,36 +59,36 @@ class _DashboardPageState extends State<DashboardPage> {
           children: <Widget>[
             Container(
               child: DashboardCardTile(
-                  heading: 'LAST SESSION',
-                  mainInfo: _userDataSnapshot.value['workouts']
-                      [_lastWorkoutIndex]['name'],
-                  details: _userDataSnapshot.value['workouts']
-                      [_lastWorkoutIndex]['description']),
+                  heading: "LAST SESSION",
+                  mainInfo: _userDocumentSnapshot.data["workouts"]
+                      [_lastWorkoutIndex]["name"],
+                  details: _userDocumentSnapshot.data["workouts"]
+                      [_lastWorkoutIndex]["description"]),
             ),
             Container(
               child: DashboardCardTile(
-                heading: 'NEXT SESSION',
-                mainInfo: _userDataSnapshot.value['workouts'][_nextWorkoutIndex]
-                    ['name'],
-                details: _userDataSnapshot.value['workouts'][_nextWorkoutIndex]
-                    ['description'],
+                heading: "NEXT SESSION",
+                mainInfo: _userDocumentSnapshot.data["workouts"]
+                    [_nextWorkoutIndex]["name"],
+                details: _userDocumentSnapshot.data["workouts"]
+                    [_nextWorkoutIndex]["description"],
               ),
             ),
             // TODO: implement google maps
-            Container(
-              child: DashboardCardTile(
-                  heading: 'NEAREST GYM LOCATION',
-                  mainInfo: "LA Fitness (2.0 miles)",
-                  details: "La Verne, CA 91768"),
-            ),
+            // Container(
+            //   child: DashboardCardTile(
+            //       heading: "NEAREST GYM LOCATION",
+            //       mainInfo: "LA Fitness (2.0 miles)",
+            //       details: "La Verne, CA 91768"),
+            // ),
             // checklist section
             CustomCard(
               cardChild: Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('CHECKLIST', style: kLabelTextStyle),
-                    Checklist(),
+                    Text("CHECKLIST", style: kLabelTextStyle),
+                    Checklist(_userDocumentSnapshot.data["checklist"]),
                   ],
                 ),
               ),
@@ -95,7 +97,7 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
       ),
       bottomNavigationBar: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, '/selectWorkout'),
+        onTap: () => Navigator.pushNamed(context, "/selectWorkout"),
         child: Container(
           color: kStartButtonColor,
           height: kStartButtonHeight,

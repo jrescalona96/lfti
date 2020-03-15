@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+// class & component imports
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/screens/home_page.dart';
@@ -8,10 +8,13 @@ import 'package:lfti_app/screens/dashboard_page.dart';
 import 'package:lfti_app/screens/login_page.dart';
 import 'package:lfti_app/screens/select_workout_page.dart';
 import 'package:lfti_app/screens/session_page.dart';
+import 'package:lfti_app/screens/signup_page.dart';
 import 'package:lfti_app/screens/view_workout_page.dart';
 import 'package:lfti_app/classes/Session.dart';
 import 'package:lfti_app/screens/session_end_page.dart';
-import 'package:lfti_app/screens/register_page.dart';
+
+// firebase imports
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -24,11 +27,12 @@ class RouteGenerator {
       case '/login':
         return MaterialPageRoute(builder: (_) => LoginPage());
         break;
-      case '/register':
-        return MaterialPageRoute(builder: (_) => RegisterPage());
+      case '/signup':
+        return MaterialPageRoute(builder: (_) => SignUpPage());
         break;
       case '/dashboard':
-        if (args is DataSnapshot) {
+        print("dashboard args: $args");
+        if (args is DocumentReference) {
           return MaterialPageRoute(builder: (_) => DashboardPage(args));
         } else {
           return _errorRoute();
@@ -38,6 +42,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SelectWorkoutPage());
         break;
       case '/viewWorkout':
+        print("viewWorkout args: $args");
         if (args is Workout) {
           return MaterialPageRoute(
             builder: (_) => ViewWorkoutPage(workout: args),
@@ -47,6 +52,7 @@ class RouteGenerator {
         }
         break;
       case '/startSession':
+        print("startSession args: $args");
         if (args is Session) {
           return MaterialPageRoute(
             builder: (_) => SessionPage(session: args),
@@ -57,6 +63,7 @@ class RouteGenerator {
         }
         break;
       case '/endSession':
+        print("endSession args: $args");
         if (args is Session) {
           return MaterialPageRoute(
             builder: (_) => SessionEndPage(session: args),

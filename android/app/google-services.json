@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "71720248781",
+    "firebase_url": "https://lfti-app.firebaseio.com",
+    "project_id": "lfti-app",
+    "storage_bucket": "lfti-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71720248781:android:c22e2b3d9ef496a7b01084",
+        "android_client_info": {
+          "package_name": "com.johnescalona.lfti_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71720248781-e1q129o3092ujth6hi14d1qr5p42avaj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZoLWwhUislDrk07lxil95m3956f2ndhY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71720248781-e1q129o3092ujth6hi14d1qr5p42avaj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "71720248781-u6qteak3k1pv78r7i6jade7t835kno9c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.johnescalona.lftiApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
