@@ -1,14 +1,12 @@
 import "package:flutter/material.dart";
 import "package:lfti_app/classes/Constants.dart";
 
-class LoaderPage extends StatelessWidget {
-  const LoaderPage({Key key}) : super(key: key);
-
+class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        child: Text("Loading...", style: kMediumBoldTextStyle),
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
       ),
     );
   }

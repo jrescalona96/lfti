@@ -12,6 +12,7 @@ import 'package:lfti_app/screens/signup_page.dart';
 import 'package:lfti_app/screens/view_workout_page.dart';
 import 'package:lfti_app/classes/Session.dart';
 import 'package:lfti_app/screens/session_end_page.dart';
+import "package:lfti_app/screens/loading_screen.dart";
 
 // firebase imports
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,6 +30,9 @@ class RouteGenerator {
         break;
       case '/signup':
         return MaterialPageRoute(builder: (_) => SignUpPage());
+        break;
+      case "/loading":
+        return MaterialPageRoute(builder: (_) => LoadingScreen());
         break;
       case '/dashboard':
         print("dashboard args: $args");
