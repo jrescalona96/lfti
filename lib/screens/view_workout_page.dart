@@ -3,10 +3,11 @@ import 'package:lfti_app/components/routine_card.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/classes/Session.dart';
 import 'package:lfti_app/classes/Constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViewWorkoutPage extends StatelessWidget {
-  final Workout workout;
-  ViewWorkoutPage({Key key, @required this.workout}) : super(key: key);
+  final Workout _workout;
+  ViewWorkoutPage(this._workout);
 
   Session createSession() {
     DateTime now = DateTime.now();
@@ -14,7 +15,7 @@ class ViewWorkoutPage extends StatelessWidget {
     return new Session(
       id: 1,
       name: formattedDate,
-      workout: workout,
+      workout: _workout,
     );
   }
 
@@ -22,7 +23,7 @@ class ViewWorkoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(workout.name, style: kMediumBoldTextStyle),
+        title: Text(_workout.name, style: kMediumBoldTextStyle),
       ),
       body: SafeArea(
         child: CustomScrollView(
@@ -30,8 +31,8 @@ class ViewWorkoutPage extends StatelessWidget {
             SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
                 Widget item;
-                if (index < workout.routines.length) {
-                  item = RoutineCard(workout.routines[index]);
+                if (index < _workout.routines.length) {
+                  item = RoutineCard(_workout.routines[index]);
                 }
                 return item;
               }),

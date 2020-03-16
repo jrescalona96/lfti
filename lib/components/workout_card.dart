@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/components/custom_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WorkoutCard extends StatelessWidget {
   //working data TODO: update to pull for DB
@@ -30,7 +31,9 @@ class WorkoutCard extends StatelessWidget {
               ),
               SizedBox(height: kSizedBoxHeight),
               Text(
-                _workout.routines.length.toString() + ' Exercises',
+                _workout == null
+                    ? "No Exercises"
+                    : _workout.routines.length.toString() + ' Exercises',
                 style: kMediumBoldTextStyle,
               )
             ],

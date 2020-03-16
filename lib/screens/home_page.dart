@@ -28,7 +28,11 @@ class HomePage extends StatelessWidget {
                     children: <Widget>[
                       RaisedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/login');
+                          Navigator.pushNamed(
+                            context,
+                            '/login',
+                            arguments: {"email": "", "pw": ""},
+                          );
                         },
                         child: Container(
                           child: Text(
@@ -40,7 +44,10 @@ class HomePage extends StatelessWidget {
                       SizedBox(height: 20.0),
                       RaisedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/signup');
+                          Navigator.pushNamed(
+                            context,
+                            '/signup',
+                          );
                         },
                         child: Container(
                           child: Text(

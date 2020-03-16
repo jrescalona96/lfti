@@ -28,9 +28,17 @@ class _DashboardPageState extends State<DashboardPage> {
     var ds = await _userDocumentRef.get();
     setState(() {
       _userDocumentSnapshot = ds;
-      _lastWorkoutIndex = _userDocumentSnapshot.data["lastSession"]["index"];
-      _nextWorkoutIndex = _userDocumentSnapshot.data["nextSession"]["index"];
+      _lastWorkoutIndex = _userDocumentSnapshot.data["lastSessionIndex"];
+      _nextWorkoutIndex = _userDocumentSnapshot.data["nextSessionIndex"];
     });
+  }
+
+  bool _isNotEmpty(String key) {
+    return _userDocumentSnapshot.data[key].length > 0;
+  }
+
+  bool _isValidIndex(int index) {
+    return index >= 0;
   }
 
   @override
@@ -54,7 +62,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 },
               ),
               title: Text(
-                "Hello " + _userDocumentSnapshot.data["firstName"] + "!",
+                _userDocumentSnapshot.data["firstName"],
                 style: kMediumBoldTextStyle,
               ),
             ),
@@ -64,36 +72,43 @@ class _DashboardPageState extends State<DashboardPage> {
                   Container(
                     child: DashboardCardTile(
                         heading: "LAST SESSION",
-                        mainInfo: _userDocumentSnapshot.data["workouts"]
-                            [_lastWorkoutIndex]["name"],
-                        details: _userDocumentSnapshot.data["workouts"]
-                            [_lastWorkoutIndex]["description"]),
+                        mainInfo: _isValidIndex(_lastWorkoutIndex)
+                            ? _userDocumentSnapshot.data["workouts"]
+                                [_lastWorkoutIndex]["name"]
+                            : "Nothing here yet!",
+                        details: _isValidIndex(_lastWorkoutIndex)
+                            ? _userDocumentSnapshot.data["workouts"]
+                                [_lastWorkoutIndex]["description"]
+                            : "You have not done anyting yet."),
                   ),
                   Container(
                     child: DashboardCardTile(
                       heading: "NEXT SESSION",
-                      mainInfo: _userDocumentSnapshot.data["workouts"]
-                          [_nextWorkoutIndex]["name"],
-                      details: _userDocumentSnapshot.data["workouts"]
-                          [_nextWorkoutIndex]["description"],
+                      mainInfo: _isValidIndex(_nextWorkoutIndex)
+                          ? _userDocumentSnapshot.data["workouts"]
+                              [_nextWorkoutIndex]["name"]
+                          : "Nothing here yet!",
+                      details: _isValidIndex(_nextWorkoutIndex)
+                          ? _userDocumentSnapshot.data["workouts"]
+                              [_nextWorkoutIndex]["name"]
+                          : "Add new workout routines.",
                     ),
                   ),
                   CustomCard(
-                    cardChild: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("CHECKLIST", style: kLabelTextStyle),
-                          Checklist(_userDocumentSnapshot.data["checklist"]),
-                        ],
-                      ),
-                    ),
+                    cardChild: _isNotEmpty("checklist")
+                        ? _buildChecklist()
+                        : DashboardCardTile(
+                            heading: "CHECKLIST",
+                            mainInfo: "Nothing here yet.",
+                            details: "Create your checklist!",
+                          ),
                   ),
                 ],
               ),
             ),
             bottomNavigationBar: GestureDetector(
-              onTap: () => Navigator.pushNamed(context, "/selectWorkout"),
+              onTap: () => Navigator.pushNamed(context, "/selectWorkout",
+                  arguments: _userDocumentRef),
               child: Container(
                 color: kStartButtonColor,
                 height: kStartButtonHeight,
@@ -106,13 +121,16 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           );
   }
-}
 
-// TODO: implement google maps
-// Container(
-//   child: DashboardCardTile(
-//       heading: "NEAREST GYM LOCATION",
-//       mainInfo: "LA Fitness (2.0 miles)",
-//       details: "La Verne, CA 91768"),
-// ),
-// checklist section
+  Widget _buildChecklist() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(child: Text("CHECKLIST", style: kLabelTextStyle)),
+          Checklist(_userDocumentSnapshot.data["checklist"])
+        ],
+      ),
+    );
+  }
+}

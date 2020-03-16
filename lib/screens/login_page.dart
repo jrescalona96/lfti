@@ -6,11 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
+  final Map<String, String> _emailAndPassword;
+  LoginPage(this._emailAndPassword);
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState(_emailAndPassword);
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Map<String, String> _emailAndPassword;
+  _LoginPageState(this._emailAndPassword);
+
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
@@ -19,8 +24,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<AuthResult> _login() async {
     return _auth.signInWithEmailAndPassword(
-        email: _emailTextController.text.toString().trim(),
-        password: _passwordTextController.text.toString());
+        email: _emailTextController.text.trim(),
+        password: _passwordTextController.text);
   }
 
   DocumentReference _fetchUserData(AuthResult res) {
@@ -36,8 +41,14 @@ class _LoginPageState extends State<LoginPage> {
       return false;
   }
 
+  void _init() {
+    _emailTextController.text = _emailAndPassword["email"];
+    _passwordTextController.text = _emailAndPassword["pw"];
+  }
+
   @override
   Widget build(BuildContext context) {
+    _init();
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
@@ -59,11 +70,17 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextFormField(
                   controller: _emailTextController,
+                  // initialValue: _emailAndPassword["email"] == null
+                  //     ? _emailTextController.text
+                  //     : _emailAndPassword["email"],
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(labelText: "Email Address")),
               SizedBox(height: kSizedBoxHeight),
               TextFormField(
                   controller: _passwordTextController,
+                  // initialValue: _emailAndPassword["pw"] == null
+                  //     ? _passwordTextController.text
+                  //     : _emailAndPassword["pw"],
                   obscureText: true,
                   decoration: InputDecoration(labelText: "Password")),
               SizedBox(height: kSizedBoxHeight),

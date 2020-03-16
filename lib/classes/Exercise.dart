@@ -1,9 +1,10 @@
-class Exercise {
-  int id;
-  String name = '';
-  String focus = '';
+import 'package:flutter/material.dart';
 
-  Exercise({this.id, this.name, this.focus});
+class Exercise {
+  String name = "exercise";
+  String focus = " ";
+
+  Exercise({@required this.name, this.focus});
 
   rename(String name) {
     this.name = name;

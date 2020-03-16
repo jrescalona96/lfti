@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
-// class & component imports
+// class util imports
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Workout.dart';
+import 'package:lfti_app/classes/Session.dart';
+// screen imports
 import 'package:lfti_app/screens/home_page.dart';
 import 'package:lfti_app/screens/dashboard_page.dart';
 import 'package:lfti_app/screens/login_page.dart';
@@ -10,10 +11,8 @@ import 'package:lfti_app/screens/select_workout_page.dart';
 import 'package:lfti_app/screens/session_page.dart';
 import 'package:lfti_app/screens/signup_page.dart';
 import 'package:lfti_app/screens/view_workout_page.dart';
-import 'package:lfti_app/classes/Session.dart';
 import 'package:lfti_app/screens/session_end_page.dart';
 import "package:lfti_app/screens/loading_screen.dart";
-
 // firebase imports
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -26,7 +25,11 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => HomePage());
         break;
       case '/login':
-        return MaterialPageRoute(builder: (_) => LoginPage());
+        if (args is Map<String, String>) {
+          return MaterialPageRoute(builder: (_) => LoginPage(args));
+        } else {
+          return _errorRoute();
+        }
         break;
       case '/signup':
         return MaterialPageRoute(builder: (_) => SignUpPage());
@@ -43,13 +46,18 @@ class RouteGenerator {
         }
         break;
       case '/selectWorkout':
-        return MaterialPageRoute(builder: (_) => SelectWorkoutPage());
+        print("selectWorkout args: $args");
+        if (args is DocumentReference) {
+          return MaterialPageRoute(builder: (_) => SelectWorkoutPage(args));
+        } else {
+          return _errorRoute();
+        }
         break;
       case '/viewWorkout':
         print("viewWorkout args: $args");
         if (args is Workout) {
           return MaterialPageRoute(
-            builder: (_) => ViewWorkoutPage(workout: args),
+            builder: (_) => ViewWorkoutPage(args),
           );
         } else {
           return _errorRoute();
