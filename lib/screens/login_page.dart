@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
+import "package:lfti_app/classes/User.dart";
 
 // firebase imports
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,20 +19,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  final _usersRef = Firestore.instance.collection("users");
-
-  Future<AuthResult> _login() async {
-    return _auth.signInWithEmailAndPassword(
-        email: _emailTextController.text.trim(),
-        password: _passwordTextController.text);
-  }
-
-  DocumentReference _fetchUserData(AuthResult res) {
-    print("Fetching Data.");
-    return _usersRef.document(res.user.uid);
-  }
+  final _currentUser = User();
 
   bool _isInputNotEmpty() {
     if (_emailTextController.text.isNotEmpty &&
@@ -50,58 +38,72 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     _init();
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           "Log In",
           style: kMediumBoldTextStyle,
         ),
       ),
-      body: SafeArea(
-        child: Padding(
+      body: Center(
+        child: SingleChildScrollView(
           padding: kContentPadding,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Center(
-                    child: Text('Welcome Back!', style: kLargeBoldTextStyle1x)),
-              ),
-              TextFormField(
-                  controller: _emailTextController,
-                  // initialValue: _emailAndPassword["email"] == null
-                  //     ? _emailTextController.text
-                  //     : _emailAndPassword["email"],
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(labelText: "Email Address")),
-              SizedBox(height: kSizedBoxHeight),
-              TextFormField(
-                  controller: _passwordTextController,
-                  // initialValue: _emailAndPassword["pw"] == null
-                  //     ? _passwordTextController.text
-                  //     : _emailAndPassword["pw"],
-                  obscureText: true,
-                  decoration: InputDecoration(labelText: "Password")),
-              SizedBox(height: kSizedBoxHeight),
-              SizedBox(height: kSizedBoxHeight),
-              RaisedButton(
-                  child: Text(
-                    "LOGIN",
-                    style: kButtonTextFontStyle,
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                Text('Welcome Back!', style: kMediumBoldTextStyle),
+                Center(
+                  child: SingleChildScrollView(
+                    padding: kContentPadding,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        TextFormField(
+                            controller: _emailTextController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration:
+                                InputDecoration(labelText: "Email Address")),
+                        SizedBox(height: kSizedBoxHeight),
+                        TextFormField(
+                            controller: _passwordTextController,
+                            obscureText: true,
+                            decoration: InputDecoration(labelText: "Password")),
+                        SizedBox(height: kSizedBoxHeight),
+                        SizedBox(height: kSizedBoxHeight),
+                        RaisedButton(
+                            child: Text(
+                              "LOGIN",
+                              style: kButtonTextFontStyle,
+                            ),
+                            onPressed: () async {
+                              if (_isInputNotEmpty()) {
+                                await _currentUser.login(
+                                    _emailTextController.text.trim(),
+                                    _passwordTextController.text);
+                                if (_currentUser.isLoggedIn()) {
+                                  print("Login Successfull: Logged in as " +
+                                      _currentUser.getFirstName() +
+                                      _currentUser.getLastName() +
+                                      ", uid : " +
+                                      _currentUser.getAuth().user.uid);
+                                  Navigator.pushNamed(context, '/dashboard',
+                                      arguments: _currentUser);
+                                } else {
+                                  // TODO: create an alert to tell the user of errror
+                                  _passwordTextController.clear();
+                                }
+                              } else {
+                                // TODO: implement alert dialog box
+                                print('Alert: Empty Fields');
+                              }
+                            }),
+                      ],
+                    ),
                   ),
-                  onPressed: () {
-                    if (_isInputNotEmpty()) {
-                      _login().then((res) {
-                        Navigator.pushNamed(context, '/dashboard',
-                            arguments: _fetchUserData(res));
-                      });
-                    } else {
-                      // TODOL: implement alert dialog box
-                      print('Alert: Empty Fields');
-                    }
-                  }),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

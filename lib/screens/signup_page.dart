@@ -62,8 +62,8 @@ class _SignUpPageState extends State<SignUpPage> {
         "year": _yearTextController.text
       },
       "email": _emailTextController.text,
-      "lastSessionIndex": -1,
-      "nextSessionIndex": -1,
+      "lastSessionIndex": {"name": null, "description": null, "date": null},
+      "nextSessionIndex": {"name": null, "description": null, "date": null},
       "workouts": [],
       "checklist": []
     }).then((res) {
@@ -97,97 +97,90 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text("Hello Stranger!", style: kMediumBoldTextStyle),
       ),
-      body: Stack(
-        children: <Widget>[
-          SafeArea(
-            child: Padding(
-              padding: kContentPadding,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    flex: 2,
-                    child: Center(
-                      child:
-                          Text("Welcome Back!", style: kLargeBoldTextStyle1x),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: kContentPadding,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: Text("Sign Up!", style: kMediumBoldTextStyle),
+                ),
+                TextFormField(
+                    controller: _firstNameTextController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(labelText: "First Name")),
+                SizedBox(height: kSizedBoxHeight),
+                TextFormField(
+                    controller: _lastNameTextController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(labelText: "Last Name")),
+                SizedBox(height: kSizedBoxHeight),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Birthday", style: kLabelTextStyle),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextFormField(
+                              controller: _dayTextController,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(labelText: "Month")),
+                        ),
+                        SizedBox(width: kSizedBoxHeight),
+                        Expanded(
+                          child: TextFormField(
+                              controller: _monthTextController,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(labelText: "Day")),
+                        ),
+                        SizedBox(width: kSizedBoxHeight),
+                        Expanded(
+                          flex: 2,
+                          child: TextFormField(
+                              controller: _yearTextController,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(labelText: "Year")),
+                        ),
+                      ],
                     ),
-                  ),
-                  TextFormField(
-                      controller: _firstNameTextController,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(labelText: "First Name")),
-                  SizedBox(height: kSizedBoxHeight),
-                  TextFormField(
-                      controller: _lastNameTextController,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(labelText: "Last Name")),
-                  SizedBox(height: kSizedBoxHeight),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text("Birthday", style: kLabelTextStyle),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                                controller: _dayTextController,
-                                keyboardType: TextInputType.text,
-                                decoration:
-                                    InputDecoration(labelText: "Month")),
-                          ),
-                          SizedBox(width: kSizedBoxHeight),
-                          Expanded(
-                            child: TextFormField(
-                                controller: _monthTextController,
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(labelText: "Day")),
-                          ),
-                          SizedBox(width: kSizedBoxHeight),
-                          Expanded(
-                            flex: 2,
-                            child: TextFormField(
-                                controller: _yearTextController,
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(labelText: "Year")),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: kSizedBoxHeight),
-                  TextFormField(
-                      controller: _emailTextController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(labelText: "Email Address")),
-                  SizedBox(height: kSizedBoxHeight),
-                  TextFormField(
-                      controller: _passwordTextController,
-                      obscureText: true,
-                      decoration: InputDecoration(labelText: "Password")),
-                  SizedBox(height: kSizedBoxHeight),
-                  SizedBox(height: kSizedBoxHeight),
-                  RaisedButton(
-                      child: Text(
-                        "SIGN UP",
-                        style: kButtonTextFontStyle,
-                      ),
-                      onPressed: () async {
-                        if (_isAllInputNotEmpty()) {
-                          _signUp();
-                        } else {
-                          // TODO: implement alert dialog box
-                          print("Alert: Empty Fields");
-                        }
-                      }),
-                ],
-              ),
+                  ],
+                ),
+                SizedBox(height: kSizedBoxHeight),
+                TextFormField(
+                    controller: _emailTextController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(labelText: "Email Address")),
+                SizedBox(height: kSizedBoxHeight),
+                TextFormField(
+                    controller: _passwordTextController,
+                    obscureText: true,
+                    decoration: InputDecoration(labelText: "Password")),
+                SizedBox(height: kSizedBoxHeight),
+                SizedBox(height: kSizedBoxHeight),
+                RaisedButton(
+                    child: Text(
+                      "SIGN UP",
+                      style: kButtonTextFontStyle,
+                    ),
+                    onPressed: () async {
+                      if (_isAllInputNotEmpty()) {
+                        _signUp();
+                      } else {
+                        // TODO: implement alert dialog box
+                        print("Alert: Empty Fields");
+                      }
+                    }),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

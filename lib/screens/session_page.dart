@@ -5,23 +5,31 @@ import 'package:lfti_app/components/custom_card.dart';
 import 'package:lfti_app/classes/Routine.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/components/timer_card.dart';
+import "package:lfti_app/classes/User.dart";
 
 class SessionPage extends StatefulWidget {
-  final Session session;
-  SessionPage({Key key, @required this.session}) : super(key: key);
+  SessionPage(Map args) {
+    this._session = args["session"];
+    this._user = args["user"];
+  }
+
+  Session _session;
+  User _user;
+
   @override
-  _SessionPageState createState() => _SessionPageState(session: session);
+  _SessionPageState createState() => _SessionPageState(_session, _user);
 }
 
 class _SessionPageState extends State<SessionPage> {
-  final Session session;
-  _SessionPageState({this.session});
+  final User _currentUser;
+  final Session _session;
+  _SessionPageState(this._session, this._currentUser);
 
   int _routineIndex = 0;
   int _setsCounter = 0;
+  bool _sessionIsPaused = false;
   final _routineTimerController = TimerCard(cardLabel: 'ROUTINE TIME');
   final _sessionTimerController = TimerCard(cardLabel: 'SESSION TIME');
-  bool _sessionIsPaused = false;
 
   void _nextRoutine() {
     setState(() {
@@ -66,6 +74,11 @@ class _SessionPageState extends State<SessionPage> {
     _routineTimerController.restart();
   }
 
+  void _navigateToDashboard() {
+    Navigator.pushNamed(context, '/endSession',
+        arguments: {"user": _currentUser, "session": _session});
+  }
+
   @override
   Widget build(BuildContext context) {
     // Run Timer at navigate
@@ -77,7 +90,7 @@ class _SessionPageState extends State<SessionPage> {
         : _routineTimerController.start();
 
     // Session Page Initialization
-    Workout _workout = session.workout;
+    Workout _workout = _session.workout;
     Routine _currentRoutine = _workout.routines[_routineIndex];
     String _nextRoutineName = _routineIndex < _workout.routines.length - 1
         ? _workout.routines[_routineIndex + 1].exercise.name
@@ -111,11 +124,10 @@ class _SessionPageState extends State<SessionPage> {
                         ),
                         Text(
                           _currentExerciseName,
-                          style: kLargeBoldTextStyle1x,
+                          style: kMediumBoldTextStyle,
                         ),
                       ],
                     ),
-
                     // Target Section
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,11 +164,11 @@ class _SessionPageState extends State<SessionPage> {
                           children: <Widget>[
                             Text(
                               _setsCounter.toString(),
-                              style: kLargeBoldTextStyle2x,
+                              style: kLargeBoldTextStyle1_5x,
                             ),
                             Text(
                               ' / ' + _currentRoutine.sets.toString(),
-                              style: kLargeBoldTextStyle2x,
+                              style: kLargeBoldTextStyle1_5x,
                             ),
                             Text(
                               ' sets',
@@ -279,12 +291,11 @@ class _SessionPageState extends State<SessionPage> {
               padding: kContentPadding,
               child: GestureDetector(
                 onLongPress: () {
-                  session.totalElapsetime =
+                  _session.totalElapsetime =
                       _sessionTimerController.getCurrentTime();
-                  Navigator.pushNamed(context, '/endSession',
-                      arguments: session);
+                  _navigateToDashboard();
                 },
-                child: session.isFinished(_routineIndex)
+                child: _session.isFinished(_routineIndex)
                     ? RaisedButton(
                         child: Text(
                           'END',
@@ -292,10 +303,9 @@ class _SessionPageState extends State<SessionPage> {
                         ),
                         color: kRedButtonColor,
                         onPressed: () {
-                          session.totalElapsetime =
+                          _session.totalElapsetime =
                               _sessionTimerController.getCurrentTime();
-                          Navigator.pushNamed(context, '/endSession',
-                              arguments: session);
+                          _navigateToDashboard();
                         })
                     : RaisedButton(
                         child: Text(

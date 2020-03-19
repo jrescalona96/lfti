@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/classes/Constants.dart';
+import 'package:lfti_app/classes/User.dart';
 import 'package:lfti_app/components/custom_card.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WorkoutCard extends StatelessWidget {
   //working data TODO: update to pull for DB
-  final Workout _workout;
-  WorkoutCard(this._workout);
+  final int _index;
+  final User _currentUser;
+  Workout _workout;
+  WorkoutCard(this._currentUser, this._index) {
+    _setWorkout();
+  }
+
+  void _setWorkout() {
+    this._workout = _currentUser.getWorkoutAt(_index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('/viewWorkout', arguments: _workout);
+        Navigator.of(context).pushNamed('/viewWorkout',
+            arguments: {"user": _currentUser, "workout": _workout});
       },
       child: Container(
         child: CustomCard(

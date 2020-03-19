@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/components/routine_card.dart';
 import 'package:lfti_app/classes/Workout.dart';
+import "package:lfti_app/classes/User.dart";
 import 'package:lfti_app/classes/Session.dart';
 import 'package:lfti_app/classes/Constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViewWorkoutPage extends StatelessWidget {
-  final Workout _workout;
-  ViewWorkoutPage(this._workout);
+  User _currentUser;
+  Workout _workout;
 
-  Session createSession() {
+  ViewWorkoutPage(Map args) {
+    this._currentUser = args["user"];
+    this._workout = args["workout"];
+  }
+
+  Session _createSession() {
     DateTime now = DateTime.now();
-    String formattedDate = now.toString().substring(0, 10);
     return new Session(
-      id: 1,
-      name: formattedDate,
-      workout: _workout,
-    );
+        id: 1,
+        date: now.toString(),
+        name: now.toString().substring(0, 10) + _workout.name,
+        workout: _workout);
   }
 
   @override
@@ -54,7 +58,7 @@ class ViewWorkoutPage extends StatelessWidget {
           Navigator.pushNamed(
             context,
             '/startSession',
-            arguments: createSession(),
+            arguments: {"user": _currentUser, "session": _createSession()},
           );
         },
       ),

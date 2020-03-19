@@ -1,28 +1,53 @@
-import 'package:flutter/material.dart';
-import 'package:lfti_app/components/custom_card.dart';
-import 'package:lfti_app/classes/Constants.dart';
-import 'package:lfti_app/classes/Session.dart';
-import 'package:lfti_app/classes/Routine.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import "package:flutter/material.dart";
+import "package:lfti_app/components/custom_card.dart";
+import "package:lfti_app/classes/Constants.dart";
+import "package:lfti_app/classes/Session.dart";
+import "package:lfti_app/classes/Routine.dart";
+import "package:lfti_app/classes/User.dart";
 
-class SessionEndPage extends StatelessWidget {
-  final String username = "Mond";
-  final Session session;
-  SessionEndPage({@required this.session});
+class SessionSummaryPage extends StatelessWidget {
+  User _currentUser;
+  Session _session;
+  SessionSummaryPage(Map args) {
+    this._currentUser = args["user"];
+    this._session = args["session"];
+  }
 
   int getTotalNumberOfSets() {
     int sumOfSets = 0;
-    for (Routine r in session.workout.routines) {
-      if (r.exercise.name != 'Rest') sumOfSets += r.sets;
+    for (Routine r in _session.workout.routines) {
+      if (r.exercise.name != "Rest") sumOfSets += r.sets;
     }
     return sumOfSets;
   }
 
   int getTotalNumberOfExercices() {
     int sumOfSets = 0;
-    for (Routine r in session.workout.routines) {
-      if (r.exercise.name != 'Rest') sumOfSets++;
+    for (Routine r in _session.workout.routines) {
+      if (r.exercise.name != "Rest") sumOfSets++;
     }
     return sumOfSets;
+  }
+
+  void _updateUserData() {
+    try {
+      _currentUser.setLastSession({
+        "name": _session.name,
+        "description": _session.workout.name,
+        "date": _session.date
+      });
+      print("Success: Updated user data!");
+    } catch (e) {
+      print("Error: Failed to updated user data! " + e.toString());
+    }
+  }
+
+  void _updateDatabase() async {
+    var ref = _currentUser.getFirestoreReference();
+    var data = _currentUser.getLastSession();
+    //TODO: update lastSessionData
   }
 
   @override
@@ -42,7 +67,7 @@ class SessionEndPage extends StatelessWidget {
           },
         ),
         title: Text(
-          "Hello $username!",
+          "Hello" + _currentUser.getFirstName() + "!",
           style: kMediumBoldTextStyle,
         ),
       ),
@@ -54,7 +79,7 @@ class SessionEndPage extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                'All done!',
+                "All done!",
                 style: kLargeBoldTextStyle1_5x,
                 textAlign: TextAlign.center,
               ),
@@ -63,18 +88,18 @@ class SessionEndPage extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Text(
-                    'TIME',
+                    "TIME",
                     style: kMediumBoldTextStyle,
                   ),
                   Column(
                     children: <Widget>[
                       Text(
-                        session.totalElapsetime,
+                        _session.totalElapsetime,
                         style: kLargeBoldTextStyle2x,
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        'min : sec',
+                        "min : sec",
                         style: kMediumLabelTextStyle,
                       )
                     ],
@@ -89,22 +114,22 @@ class SessionEndPage extends StatelessWidget {
                 children: <Widget>[
                   // Session Name
                   Text(
-                    session.name,
+                    _session.name,
                     style: kMediumBoldTextStyle,
                   ),
                   // Workout Name
                   Text(
-                    session.workout.name,
+                    _session.workout.name,
                     style: kMediumBoldTextStyle,
                   ),
                   // Total number of Excercises
                   Text(
-                    getTotalNumberOfExercices().toString() + ' Exercices',
+                    getTotalNumberOfExercices().toString() + " Exercices",
                     style: kMediumBoldTextStyle,
                   ),
                   // Total number of Sets
                   Text(
-                    (getTotalNumberOfSets()).toString() + ' Sets',
+                    (getTotalNumberOfSets()).toString() + " Sets",
                     style: kMediumBoldTextStyle,
                   )
                 ],
@@ -113,22 +138,22 @@ class SessionEndPage extends StatelessWidget {
           ],
         ),
       ),
-
-      // Done Button
       bottomNavigationBar: GestureDetector(
           child: Container(
             color: kStartButtonColor,
             height: kStartButtonHeight,
             alignment: Alignment.center,
             child: Text(
-              'Done',
+              "Done",
               style: kMediumBoldTextStyle,
             ),
           ),
           onTap: () {
+            _updateUserData();
             Navigator.pushNamed(
               context,
-              '/dashboard',
+              "/dashboard",
+              arguments: _currentUser,
             );
           }),
     );
