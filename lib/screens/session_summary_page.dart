@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:lfti_app/components/custom_card.dart";
 import "package:lfti_app/classes/Constants.dart";
@@ -31,23 +32,34 @@ class SessionSummaryPage extends StatelessWidget {
     return sumOfSets;
   }
 
-  void _updateUserData() {
+  // update session obj and database
+  void _updateLastSession() async {
     try {
       _currentUser.setLastSession({
         "name": _session.name,
-        "description": _session.workout.name,
+        "description": "Session on " +
+            _session.date +
+            " for " +
+            _session.totalElapsetime +
+            " sec",
         "date": _session.date
       });
-      print("Success: Updated user data!");
+      print("Success: Updated Session Object!");
     } catch (e) {
-      print("Error: Failed to updated user data! " + e.toString());
+      print("Error: Unable to update user session object! " + e.toString());
     }
-  }
 
-  void _updateDatabase() async {
-    var ref = _currentUser.getFirestoreReference();
-    var data = _currentUser.getLastSession();
-    //TODO: update lastSessionData
+    try {
+      await Firestore.instance.runTransaction((transaction) {
+        transaction.update(
+          _currentUser.getFirestoreReference(),
+          {"lastSession": _currentUser.getLastSession()},
+        );
+      });
+      print("Success: Updated lastSession in database!");
+    } catch (e) {
+      print("Error: Unable to update user session object! " + e.toString());
+    }
   }
 
   @override
@@ -149,7 +161,7 @@ class SessionSummaryPage extends StatelessWidget {
             ),
           ),
           onTap: () {
-            _updateUserData();
+            _updateLastSession();
             Navigator.pushNamed(
               context,
               "/dashboard",

@@ -1,5 +1,11 @@
+// flutter & dart imports
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+// component imports
 import 'package:lfti_app/components/routine_card.dart';
+
+// class imports
 import 'package:lfti_app/classes/Workout.dart';
 import "package:lfti_app/classes/User.dart";
 import 'package:lfti_app/classes/Session.dart';
@@ -15,12 +21,10 @@ class ViewWorkoutPage extends StatelessWidget {
   }
 
   Session _createSession() {
-    DateTime now = DateTime.now();
+    String id = "S" + DateFormat('yyyyMMdd-kk:mm:ss:ms').format(DateTime.now());
+    String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     return new Session(
-        id: 1,
-        date: now.toString(),
-        name: now.toString().substring(0, 10) + _workout.name,
-        workout: _workout);
+        id: id, date: formattedDate, name: _workout.name, workout: _workout);
   }
 
   @override

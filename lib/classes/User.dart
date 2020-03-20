@@ -69,7 +69,7 @@ class User {
     this._authRes = res;
   }
 
-  void _setDatabaseReference() async {
+  void _setDatabaseReference() {
     try {
       this._firestoreReference =
           Firestore.instance.collection("users").document(_authRes.user.uid);

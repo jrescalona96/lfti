@@ -1,7 +1,7 @@
 import 'package:lfti_app/classes/Workout.dart';
 
 class Session {
-  int id;
+  String id;
   String name;
   Workout workout;
   String totalElapsetime;
