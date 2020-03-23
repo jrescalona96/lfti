@@ -1,5 +1,6 @@
 import 'package:lfti_app/classes/Workout.dart';
 
+// TODO: Redo Session Class to encapsulate proper methods and attributes
 class Session {
   String id;
   String name;
@@ -7,11 +8,11 @@ class Session {
   String totalElapsetime;
   bool isPaused = false;
   String date = "01/01/2020";
-  // var date = {"month": 1, "day": 1, "year": 2020, "weekday": "Monday"};
 
-  bool isFinished(int index) {
-    int lastRoutineIndex = workout.routines.length - 1;
-    return index >= lastRoutineIndex ? true : false;
+  bool isFinished(int index, int sets) {
+    int routineIndex = workout.routines.length - 1;
+    int routineSets = workout.routines[index].sets - 1;
+    return index >= routineIndex && sets >= routineSets;
   }
 
   Session(

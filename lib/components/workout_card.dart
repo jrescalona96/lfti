@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+// class imports
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/User.dart';
+
+// component imports
 import 'package:lfti_app/components/custom_card.dart';
 
 class WorkoutCard extends StatelessWidget {

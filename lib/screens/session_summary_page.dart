@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:lfti_app/components/custom_card.dart";
@@ -7,6 +5,8 @@ import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/Session.dart";
 import "package:lfti_app/classes/Routine.dart";
 import "package:lfti_app/classes/User.dart";
+import "package:lfti_app/components/custom_card.dart";
+import "dart:core";
 
 class SessionSummaryPage extends StatelessWidget {
   User _currentUser;
@@ -62,24 +62,20 @@ class SessionSummaryPage extends StatelessWidget {
     }
   }
 
+  void _formatTime() {
+    String str = _session.totalElapsetime;
+    RegExp exp = new RegExp(r"(\d\d)");
+    Iterable<RegExpMatch> matches = exp.allMatches(str);
+    print(matches.elementAt(0).group(0));
+  }
+
   @override
   Widget build(BuildContext context) {
+    _formatTime();
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                // TODO: implement navbar drawer
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
-        ),
         title: Text(
-          "Hello" + _currentUser.getFirstName() + "!",
+          "Session Summary",
           style: kMediumBoldTextStyle,
         ),
       ),
@@ -88,14 +84,6 @@ class SessionSummaryPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             SizedBox(height: 100.0),
-            Expanded(
-              flex: 1,
-              child: Text(
-                "All done!",
-                style: kLargeBoldTextStyle1_5x,
-                textAlign: TextAlign.center,
-              ),
-            ),
             Expanded(
               child: Column(
                 children: <Widget>[
@@ -107,15 +95,12 @@ class SessionSummaryPage extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         _session.totalElapsetime,
-                        style: kLargeBoldTextStyle2x,
+                        style: kLargeBoldTextStyle1_5x,
                         textAlign: TextAlign.center,
                       ),
-                      Text(
-                        "min : sec",
-                        style: kMediumLabelTextStyle,
-                      )
+                      Text("min : sec", style: kMediumLabelTextStyle)
                     ],
-                  ),
+                  )
                 ],
               ),
             ),
@@ -156,8 +141,8 @@ class SessionSummaryPage extends StatelessWidget {
             height: kStartButtonHeight,
             alignment: Alignment.center,
             child: Text(
-              "Done",
-              style: kMediumBoldTextStyle,
+              "DONE!",
+              style: kButtonBoldTextFontStyle,
             ),
           ),
           onTap: () {

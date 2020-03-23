@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                         child: Container(
                           child: Text(
                             'LOG IN',
-                            style: kButtonTextFontStyle,
+                            style: kButtonBoldTextFontStyle,
                           ),
                         ),
                       ),
@@ -53,7 +53,7 @@ class HomePage extends StatelessWidget {
                         child: Container(
                           child: Text(
                             'SIGN UP',
-                            style: kButtonTextFontStyle,
+                            style: kButtonBoldTextFontStyle,
                           ),
                         ),
                       ),

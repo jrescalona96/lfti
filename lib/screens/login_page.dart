@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                         RaisedButton(
                             child: Text(
                               "LOGIN",
-                              style: kButtonTextFontStyle,
+                              style: kButtonBoldTextFontStyle,
                             ),
                             onPressed: () async {
                               if (_isInputNotEmpty()) {

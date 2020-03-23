@@ -57,15 +57,11 @@ class _SignUpPageState extends State<SignUpPage> {
       "firstName": _firstNameTextController.text,
       "lastName": _lastNameTextController.text,
       "dob": {
-        "month": _monthTextController.text,
-        "day": _dayTextController.text,
-        "year": _yearTextController.text
+        "month": int.parse(_monthTextController.text),
+        "day": int.parse(_dayTextController.text),
+        "year": int.parse(_yearTextController.text)
       },
-      "email": _emailTextController.text,
-      "lastSessionIndex": {"name": null, "description": null, "date": null},
-      "nextSessionIndex": {"name": null, "description": null, "date": null},
-      "workouts": [],
-      "checklist": []
+      "email": _emailTextController.text.trim(),
     }).then((res) {
       print("User Added!");
     }).catchError((e) {
@@ -167,7 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 RaisedButton(
                     child: Text(
                       "SIGN UP",
-                      style: kButtonTextFontStyle,
+                      style: kButtonBoldTextFontStyle,
                     ),
                     onPressed: () async {
                       if (_isAllInputNotEmpty()) {

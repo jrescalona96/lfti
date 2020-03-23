@@ -11,7 +11,7 @@ const kMainBackgroundColor = Color(0x0B0A0E21);
 const kInactiveCardColor = Color(0xFF1f1f22);
 const kCardBackground = Color(0xFF1f1f22);
 const kActiveCardColor = Color(0xFF111328);
-const kGreenButtonColor = Color(0xFF32D74B);
+const kGreenButtonColor = Color(0xFF00C11D);
 const kBlueButtonColor = Colors.blue;
 const kRedButtonColor = Colors.red;
 
@@ -70,5 +70,5 @@ const kLargeBoldTextStyle2x = TextStyle(
 const kButtonTextFontStyle = TextStyle(
     fontSize: 18.0, color: Color(0xFF0A0E21), fontWeight: FontWeight.w700);
 
-const kButtonBoldTextFontStyle =
-    TextStyle(fontSize: 25.0, fontWeight: FontWeight.w900);
+const kButtonBoldTextFontStyle = TextStyle(
+    fontSize: 24.0, color: Color(0xFF0A0E21), fontWeight: FontWeight.w900);

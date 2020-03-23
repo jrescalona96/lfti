@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 // component imports
 import 'package:lfti_app/components/routine_card.dart';
+import "package:lfti_app/components/bottom_navigation_button.dart";
 
 // class imports
 import 'package:lfti_app/classes/Workout.dart';
@@ -29,43 +30,37 @@ class ViewWorkoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _navigate() {
+      Navigator.pushNamed(
+        context,
+        '/startSession',
+        arguments: {"user": _currentUser, "session": _createSession()},
+      );
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_workout.name, style: kMediumBoldTextStyle),
-      ),
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                Widget item;
-                if (index < _workout.routines.length) {
-                  item = RoutineCard(_workout.routines[index]);
-                }
-                return item;
-              }),
-            ),
-          ],
+        appBar: AppBar(
+          title: Text(_workout.name, style: kMediumBoldTextStyle),
         ),
-      ),
-      bottomNavigationBar: GestureDetector(
-        child: Container(
-          color: kStartButtonColor,
-          height: kStartButtonHeight,
-          alignment: Alignment.center,
-          child: Text(
-            'Start',
-            style: kMediumBoldTextStyle,
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  Widget item;
+                  if (index < _workout.routines.length) {
+                    item = RoutineCard(_workout.routines[index]);
+                  }
+                  return item;
+                }),
+              ),
+            ],
           ),
         ),
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            '/startSession',
-            arguments: {"user": _currentUser, "session": _createSession()},
-          );
-        },
-      ),
-    );
+        bottomNavigationBar: BottomNavigationButton(
+          label: "START SESSION!",
+          action: _navigate,
+          color: kGreenButtonColor,
+        ));
   }
 }

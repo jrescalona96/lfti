@@ -13,6 +13,7 @@ import "package:lfti_app/screens/session_page.dart";
 import "package:lfti_app/screens/signup_page.dart";
 import "package:lfti_app/screens/view_workout_page.dart";
 import "package:lfti_app/screens/session_summary_page.dart";
+import "package:lfti_app/screens/edit_workouts_page.dart";
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -41,9 +42,17 @@ class RouteGenerator {
         }
         break;
       case "/selectWorkout":
-        print("selectWorkout args: $args");
+        print("selectWorkout args: $args ");
         if (args is User) {
           return MaterialPageRoute(builder: (_) => SelectWorkoutPage(args));
+        } else {
+          return _errorRoute();
+        }
+        break;
+      case "/editWorkouts":
+        print("editWorkouts args: $args");
+        if (args is User) {
+          return MaterialPageRoute(builder: (_) => EditWorkoutPage(args));
         } else {
           return _errorRoute();
         }

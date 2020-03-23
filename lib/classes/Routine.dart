@@ -17,7 +17,7 @@ class Routine {
     this.timeToPerformInSeconds = 0,
   });
 
-  bool isCompleted(int count) {
+  bool isFinished(int count) {
     if (count < sets - 1) {
       return false;
     } else {

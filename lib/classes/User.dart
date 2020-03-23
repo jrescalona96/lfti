@@ -24,9 +24,8 @@ class User {
   int _age = 29;
   // TODO: set up date formatter or create own class
   Map<String, int> _dob = {"month": 9, "day": 6, "year": 1990};
-  Map _lastSession = {"name": null, "description": null, "date": null};
-  Map _nextSession = {"name": null, "description": null, "date": null};
-  bool _isLoggedIn = false;
+  Map _lastSession = null;
+  Map _nextSession = null;
 
   void login(String email, String password) async {
     try {
@@ -56,10 +55,8 @@ class User {
       this._lastSession = getDocument().data["lastSession"];
       this._nextSession = getDocument().data["nextSession"];
       this._checklist = getDocument().data["checklist"];
-      this._isLoggedIn = true;
       print("Success: User Initialized!");
     } catch (e) {
-      this._isLoggedIn = false;
       print("Error: Failed to initialize user! " + e.toString());
     }
   }
@@ -100,6 +97,10 @@ class User {
     this._lastSession = data;
   }
 
+  bool isLoggedIn() {
+    return getDocument() != null && getAuth() != null;
+  }
+
   /// getters
   AuthResult getAuth() {
     return _authRes;
@@ -111,14 +112,6 @@ class User {
 
   DocumentSnapshot getDocument() {
     return _document;
-  }
-
-  bool isLoggedIn() {
-    return _isLoggedIn;
-  }
-
-  Workout getWorkout() {
-    return _buildWorkout(getDocument().data["workouts"]);
   }
 
   String getFirstName() {
@@ -138,18 +131,18 @@ class User {
   }
 
   Map getLastSession() {
-    return _lastSession["name"] == null && _lastSession["description"] == null
+    return _lastSession == null
         ? getDocument().data["lastSession"]
         : _lastSession;
   }
 
   Map getNextSession() {
-    return _lastSession["name"] == null && _lastSession["description"] == null
+    return _lastSession != null
         ? getDocument().data["nextSession"]
         : _lastSession;
   }
 
-  List<String> getChecklist() {
+  List getChecklist() {
     return _checklist == null ? getDocument().data["checklist"] : _checklist;
   }
 
@@ -170,7 +163,7 @@ class User {
   Session _buildSession() {
     return Session(
       name: "Session Name",
-      workout: getWorkout(),
+      workout: _buildWorkout(getDocument().data["workouts"]),
     );
   }
 

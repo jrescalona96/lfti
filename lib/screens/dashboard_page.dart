@@ -1,11 +1,15 @@
 import "package:flutter/material.dart";
 // class imports
+
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
+
 // component imports
 import "package:lfti_app/components/checklist.dart";
 import "package:lfti_app/components/dashboard_card_tile.dart";
 import "package:lfti_app/components/custom_card.dart";
+import "package:lfti_app/components/bottom_navigation_button.dart";
+
 // screen imports
 import "package:lfti_app/screens/loading_screen.dart";
 
@@ -23,12 +27,8 @@ class _DashboardPageState extends State<DashboardPage> {
   User _currentUser;
   _DashboardPageState(this._currentUser);
 
-  bool _isNotEmpty(String key) {
-    return _currentUser.getDocument().data[key].length > 0;
-  }
-
-  bool _isDataSet(Map sessionData) {
-    return (sessionData["name"] != null && sessionData["description"] != null);
+  void _navigate() {
+    Navigator.pushNamed(context, "/selectWorkout", arguments: _currentUser);
   }
 
   @override
@@ -39,6 +39,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Scaffold _buildDashboardPage(BuildContext context) {
+    print(_currentUser.getNextSession());
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -64,26 +65,26 @@ class _DashboardPageState extends State<DashboardPage> {
             Container(
               child: DashboardCardTile(
                   heading: "LAST SESSION",
-                  mainInfo: _isDataSet(_currentUser.getLastSession())
+                  mainInfo: _currentUser.getLastSession() != null
                       ? _currentUser.getLastSession()["name"]
                       : "Nothing here yet!",
-                  details: _isDataSet(_currentUser.getLastSession())
+                  details: _currentUser.getLastSession() != null
                       ? _currentUser.getLastSession()["description"]
                       : "You have not done anyting yet."),
             ),
             Container(
               child: DashboardCardTile(
                 heading: "NEXT SESSION",
-                mainInfo: _isDataSet(_currentUser.getNextSession())
+                mainInfo: _currentUser.getNextSession() != null
                     ? _currentUser.getNextSession()["name"]
                     : "Nothing here yet!",
-                details: _isDataSet(_currentUser.getNextSession())
+                details: _currentUser.getNextSession() != null
                     ? _currentUser.getNextSession()["name"]
                     : "Add new workout routines.",
               ),
             ),
             CustomCard(
-              cardChild: _isNotEmpty("checklist")
+              cardChild: _currentUser.getChecklist() != null
                   ? _buildChecklist()
                   : DashboardCardTile(
                       heading: "CHECKLIST",
@@ -94,19 +95,8 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
       ),
-      bottomNavigationBar: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, "/selectWorkout",
-            arguments: _currentUser),
-        child: Container(
-          color: kStartButtonColor,
-          height: kStartButtonHeight,
-          alignment: Alignment.center,
-          child: Text(
-            "LET'S GO!",
-            style: kButtonBoldTextFontStyle,
-          ),
-        ),
-      ),
+      bottomNavigationBar: BottomNavigationButton(
+          label: "LET'S GO!", action: _navigate, color: kGreenButtonColor),
     );
   }
 
@@ -116,7 +106,7 @@ class _DashboardPageState extends State<DashboardPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Center(child: Text("CHECKLIST", style: kLabelTextStyle)),
-          Checklist(_currentUser.getDocument().data["checklist"])
+          Checklist(_currentUser.getChecklist())
         ],
       ),
     );
