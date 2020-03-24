@@ -8,7 +8,7 @@ class RoutineCard extends StatelessWidget {
   final Routine _routine;
   RoutineCard(this._routine);
 
-  String _generateTarget() {
+  String _generateTargetString() {
     String target = '';
     String reps = _routine.reps.toString();
 
@@ -31,7 +31,7 @@ class RoutineCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final exerciseName = _routine.exercise.name;
     final exerciseFocus = _routine.exercise.focus;
-    final exerciseTarget = "Target: " + _generateTarget();
+    final exerciseTarget = "Target: " + _generateTargetString();
 
     return CustomCard(
       cardChild: Column(

@@ -1,12 +1,18 @@
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
-import "package:lfti_app/components/custom_card.dart";
+import "dart:core";
+
+// component imports
+import "package:lfti_app/components/bottom_navigation_button.dart";
+import "package:lfti_app/components/summary_card.dart";
+
+// class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/Session.dart";
 import "package:lfti_app/classes/Routine.dart";
 import "package:lfti_app/classes/User.dart";
-import "package:lfti_app/components/custom_card.dart";
-import "dart:core";
+
+// firestore imports
+import "package:cloud_firestore/cloud_firestore.dart";
 
 class SessionSummaryPage extends StatelessWidget {
   User _currentUser;
@@ -24,7 +30,7 @@ class SessionSummaryPage extends StatelessWidget {
     return sumOfSets;
   }
 
-  int getTotalNumberOfExercices() {
+  int getTotalNumberOfExercises() {
     int sumOfSets = 0;
     for (Routine r in _session.workout.routines) {
       if (r.exercise.name != "Rest") sumOfSets++;
@@ -36,7 +42,7 @@ class SessionSummaryPage extends StatelessWidget {
   void _updateLastSession() async {
     try {
       _currentUser.setLastSession({
-        "name": _session.name,
+        "name": _session.workout.name,
         "description": "Session on " +
             _session.date +
             " for " +
@@ -62,16 +68,24 @@ class SessionSummaryPage extends StatelessWidget {
     }
   }
 
-  void _formatTime() {
-    String str = _session.totalElapsetime;
+  void _formatElapseTime() {
     RegExp exp = new RegExp(r"(\d\d)");
-    Iterable<RegExpMatch> matches = exp.allMatches(str);
+    Iterable<RegExpMatch> matches = exp.allMatches(_session.totalElapsetime);
     print(matches.elementAt(0).group(0));
   }
 
   @override
   Widget build(BuildContext context) {
-    _formatTime();
+    void _navigate() {
+      _updateLastSession();
+      Navigator.pushNamed(
+        context,
+        "/dashboard",
+        arguments: _currentUser,
+      );
+    }
+
+    _formatElapseTime();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -79,80 +93,65 @@ class SessionSummaryPage extends StatelessWidget {
           style: kMediumBoldTextStyle,
         ),
       ),
-      body: CustomCard(
-        cardChild: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Padding(
+        padding: kContentPadding,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 100.0),
-            Expanded(
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    "TIME",
-                    style: kMediumBoldTextStyle,
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        _session.totalElapsetime,
-                        style: kLargeBoldTextStyle1_5x,
-                        textAlign: TextAlign.center,
-                      ),
-                      Text("min : sec", style: kMediumLabelTextStyle)
-                    ],
-                  )
-                ],
-              ),
+            SummaryCard(
+              label: "NAME",
+              data: _session.workout.name,
+              style: kMediumBoldTextStyle,
             ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  // Session Name
-                  Text(
-                    _session.name,
-                    style: kMediumBoldTextStyle,
-                  ),
-                  // Workout Name
-                  Text(
-                    _session.workout.name,
-                    style: kMediumBoldTextStyle,
-                  ),
-                  // Total number of Excercises
-                  Text(
-                    getTotalNumberOfExercices().toString() + " Exercices",
-                    style: kMediumBoldTextStyle,
-                  ),
-                  // Total number of Sets
-                  Text(
-                    (getTotalNumberOfSets()).toString() + " Sets",
-                    style: kMediumBoldTextStyle,
-                  )
-                ],
-              ),
+            SummaryCard(
+              label: "DESCRIPTION",
+              data: _session.workout.description,
+              style: kMediumBoldTextStyle,
+            ),
+            SummaryCard(label: "TIME", data: _session.totalElapsetime),
+            // TODO: Compute for performed and skipped exercises
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SummaryCard(
+                      label: "PERFORMED",
+                      data: getTotalNumberOfExercises().toString(),
+                      sub: "EXERCISES",
+                    ),
+                    SizedBox(height: kSizedBoxHeight * 3),
+                    SummaryCard(
+                        label: "SKIPPED",
+                        data: getTotalNumberOfSets().toString(),
+                        sub: "SETS"),
+                  ],
+                ),
+                SizedBox(width: kSizedBoxHeight * 4),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SummaryCard(
+                        label: "PERFORMED",
+                        data: getTotalNumberOfSets().toString(),
+                        sub: "SETS"),
+                    SizedBox(height: kSizedBoxHeight * 3),
+                    SummaryCard(
+                      label: "SKIPPED",
+                      data: "20",
+                      sub: "EXERCISES",
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
       ),
-      bottomNavigationBar: GestureDetector(
-          child: Container(
-            color: kStartButtonColor,
-            height: kStartButtonHeight,
-            alignment: Alignment.center,
-            child: Text(
-              "DONE!",
-              style: kButtonBoldTextFontStyle,
-            ),
-          ),
-          onTap: () {
-            _updateLastSession();
-            Navigator.pushNamed(
-              context,
-              "/dashboard",
-              arguments: _currentUser,
-            );
-          }),
+      bottomNavigationBar: BottomNavigationButton(
+          label: "DONE", action: _navigate, color: kBlueButtonColor),
     );
   }
 }

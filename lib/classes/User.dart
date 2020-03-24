@@ -1,3 +1,4 @@
+import "dart:core";
 // firebase imports
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -162,7 +163,7 @@ class User {
 
   Session _buildSession() {
     return Session(
-      name: "Session Name",
+      id: "Session Name",
       workout: _buildWorkout(getDocument().data["workouts"]),
     );
   }

@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:lfti_app/classes/Routine.dart';
 
 class Workout {
-  int id = 0;
+  String id;
   String name;
   List routines;
   String description;
 
   Workout({
-    this.id,
+    @required this.id,
     @required this.name,
     this.description = '',
     @required this.routines,

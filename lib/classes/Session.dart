@@ -3,7 +3,6 @@ import 'package:lfti_app/classes/Workout.dart';
 // TODO: Redo Session Class to encapsulate proper methods and attributes
 class Session {
   String id;
-  String name;
   Workout workout;
   String totalElapsetime;
   bool isPaused = false;
@@ -17,7 +16,6 @@ class Session {
 
   Session(
       {this.id,
-      this.name,
       this.workout,
       this.totalElapsetime = '00:00',
       this.isPaused,

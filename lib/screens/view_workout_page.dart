@@ -24,8 +24,7 @@ class ViewWorkoutPage extends StatelessWidget {
   Session _createSession() {
     String id = "S" + DateFormat('yyyyMMdd-kk:mm:ss:ms').format(DateTime.now());
     String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    return new Session(
-        id: id, date: formattedDate, name: _workout.name, workout: _workout);
+    return new Session(id: id, date: formattedDate, workout: _workout);
   }
 
   @override
