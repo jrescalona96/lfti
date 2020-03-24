@@ -23,30 +23,30 @@ class SessionSummaryPage extends StatelessWidget {
   }
 
   int getTotalNumberOfSets() {
-    int sumOfSets = 0;
-    for (Routine r in _session.workout.routines) {
-      if (r.exercise.name != "Rest") sumOfSets += r.sets;
+    int sum = 0;
+    for (Routine r in _session.getWorkout().routines) {
+      if (r.exercise.name != "Rest") sum += r.sets;
     }
-    return sumOfSets;
+    return sum;
   }
 
   int getTotalNumberOfExercises() {
-    int sumOfSets = 0;
-    for (Routine r in _session.workout.routines) {
-      if (r.exercise.name != "Rest") sumOfSets++;
+    int sum = 0;
+    for (Routine r in _session.getWorkout().routines) {
+      if (r.exercise.name != "Rest") sum++;
     }
-    return sumOfSets;
+    return sum;
   }
 
   // update session obj and database
-  void _updateLastSession() async {
+  void _updateLastSession() {
     try {
       _currentUser.setLastSession({
-        "name": _session.workout.name,
+        "name": _session.getWorkout().name,
         "description": "Session on " +
             _session.date +
             " for " +
-            _session.totalElapsetime +
+            _session.getElapseTime() +
             " sec",
         "date": _session.date
       });
@@ -56,11 +56,9 @@ class SessionSummaryPage extends StatelessWidget {
     }
 
     try {
-      await Firestore.instance.runTransaction((transaction) {
-        transaction.update(
-          _currentUser.getFirestoreReference(),
-          {"lastSession": _currentUser.getLastSession()},
-        );
+      Firestore.instance.runTransaction((transaction) async {
+        await transaction.update(_currentUser.getFirestoreReference(),
+            {"lastSession": _currentUser.getLastSession()});
       });
       print("Success: Updated lastSession in database!");
     } catch (e) {
@@ -70,7 +68,7 @@ class SessionSummaryPage extends StatelessWidget {
 
   void _formatElapseTime() {
     RegExp exp = new RegExp(r"(\d\d)");
-    Iterable<RegExpMatch> matches = exp.allMatches(_session.totalElapsetime);
+    Iterable<RegExpMatch> matches = exp.allMatches(_session.getElapseTime());
     print(matches.elementAt(0).group(0));
   }
 
@@ -101,15 +99,15 @@ class SessionSummaryPage extends StatelessWidget {
           children: <Widget>[
             SummaryCard(
               label: "NAME",
-              data: _session.workout.name,
+              data: _session.getWorkout().name,
               style: kMediumBoldTextStyle,
             ),
             SummaryCard(
               label: "DESCRIPTION",
-              data: _session.workout.description,
+              data: _session.getWorkout().description,
               style: kMediumBoldTextStyle,
             ),
-            SummaryCard(label: "TIME", data: _session.totalElapsetime),
+            SummaryCard(label: "TIME", data: _session.getElapseTime()),
             // TODO: Compute for performed and skipped exercises
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,13 +117,13 @@ class SessionSummaryPage extends StatelessWidget {
                   children: <Widget>[
                     SummaryCard(
                       label: "PERFORMED",
-                      data: getTotalNumberOfExercises().toString(),
+                      data: _session.getPerformedRoutines().length.toString(),
                       sub: "EXERCISES",
                     ),
                     SizedBox(height: kSizedBoxHeight * 3),
                     SummaryCard(
                         label: "SKIPPED",
-                        data: getTotalNumberOfSets().toString(),
+                        data: _session.getSkippedSets().toString(),
                         sub: "SETS"),
                   ],
                 ),
@@ -135,12 +133,12 @@ class SessionSummaryPage extends StatelessWidget {
                   children: <Widget>[
                     SummaryCard(
                         label: "PERFORMED",
-                        data: getTotalNumberOfSets().toString(),
+                        data: _session.getPerformedSets().toString(),
                         sub: "SETS"),
                     SizedBox(height: kSizedBoxHeight * 3),
                     SummaryCard(
                       label: "SKIPPED",
-                      data: "20",
+                      data: _session.getSkippedRoutines().length.toString(),
                       sub: "EXERCISES",
                     ),
                   ],

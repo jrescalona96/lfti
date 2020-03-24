@@ -69,7 +69,7 @@ class RouteGenerator {
         break;
       case "/startSession":
         print("startSession args: $args");
-        if (args is Map) {
+        if (args is User) {
           return MaterialPageRoute(
             builder: (_) => SessionPage(args),
           );

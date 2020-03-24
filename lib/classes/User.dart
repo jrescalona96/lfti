@@ -25,6 +25,7 @@ class User {
   int _age = 29;
   // TODO: set up date formatter or create own class
   Map<String, int> _dob = {"month": 9, "day": 6, "year": 1990};
+  Session _currentSession = null;
   Map _lastSession = null;
   Map _nextSession = null;
 
@@ -98,6 +99,13 @@ class User {
     this._lastSession = data;
   }
 
+  void setSession(Session s) {
+    if (s != null)
+      this._currentSession = s;
+    else
+      print("Assigning an empty Session");
+  }
+
   bool isLoggedIn() {
     return getDocument() != null && getAuth() != null;
   }
@@ -159,14 +167,11 @@ class User {
     return this._workouts[index];
   }
 
-  /// helper methods
-
-  Session _buildSession() {
-    return Session(
-      id: "Session Name",
-      workout: _buildWorkout(getDocument().data["workouts"]),
-    );
+  Session getSession() {
+    return this._currentSession;
   }
+
+  /// helper methods
 
   List<Workout> _buildWorkoutList() {
     try {
@@ -183,6 +188,7 @@ class User {
 
   Workout _buildWorkout(Map w) {
     return Workout(
+      id: w["id"],
       name: w["name"],
       description: w["description"],
       routines: _buildRoutineList(

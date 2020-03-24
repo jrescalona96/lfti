@@ -16,12 +16,4 @@ class Routine {
     this.reps = 1,
     this.timeToPerformInSeconds = 0,
   });
-
-  bool isFinished(int count) {
-    if (count < sets - 1) {
-      return false;
-    } else {
-      return true;
-    }
-  }
 }

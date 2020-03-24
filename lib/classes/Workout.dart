@@ -4,7 +4,7 @@ import 'package:lfti_app/classes/Routine.dart';
 class Workout {
   String id;
   String name;
-  List routines;
+  List<Routine> routines;
   String description;
 
   Workout({

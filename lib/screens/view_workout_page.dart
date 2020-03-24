@@ -21,19 +21,14 @@ class ViewWorkoutPage extends StatelessWidget {
     this._workout = args["workout"];
   }
 
-  Session _createSession() {
-    String id = "S" + DateFormat('yyyyMMdd-kk:mm:ss:ms').format(DateTime.now());
-    String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    return new Session(id: id, date: formattedDate, workout: _workout);
-  }
-
   @override
   Widget build(BuildContext context) {
     void _navigate() {
+      _currentUser.setSession(new Session(_workout));
       Navigator.pushNamed(
         context,
         '/startSession',
-        arguments: {"user": _currentUser, "session": _createSession()},
+        arguments: _currentUser,
       );
     }
 

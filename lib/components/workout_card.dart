@@ -12,16 +12,21 @@ class WorkoutCard extends StatelessWidget {
   final int _index;
   final User _currentUser;
   Workout _workout;
-  WorkoutCard(this._currentUser, this._index) {
-    _setWorkout();
-  }
 
-  void _setWorkout() {
+  WorkoutCard(this._currentUser, this._index) {
     this._workout = _currentUser.getWorkoutAt(_index);
   }
 
   @override
   Widget build(BuildContext context) {
+    String _getNumberOfRoutines() {
+      int sum = 0;
+      for (var item in _workout.routines) {
+        if (item.exercise.name != "Rest") sum++;
+      }
+      return sum.toString();
+    }
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed('/viewWorkout',
@@ -45,8 +50,8 @@ class WorkoutCard extends StatelessWidget {
               Text(
                 _workout == null
                     ? "No Exercises"
-                    : _workout.routines.length.toString() + ' Exercises',
-                style: kMediumBoldTextStyle,
+                    : _getNumberOfRoutines() + ' Routines',
+                style: kMediumTextStyle,
               )
             ],
           ),
