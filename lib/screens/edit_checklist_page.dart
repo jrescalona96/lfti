@@ -19,12 +19,47 @@ class EditChecklistPage extends StatefulWidget {
 class _EditChecklistPageState extends State<EditChecklistPage> {
   final User _currentUser;
   List _checklist;
+
   _EditChecklistPageState(this._currentUser) {
     this._checklist = this._currentUser.getChecklist();
   }
 
-  void _addChecklistItem() {
-    print("add action");
+  Future<void> _addChecklistItem() async {
+    final _descriptionTextController = TextEditingController();
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Description'),
+          content: TextFormField(
+            controller: _descriptionTextController,
+            keyboardType: TextInputType.text,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("CANCEL"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("ADD"),
+              onPressed: () {
+                print("Item Added!");
+                _currentUser
+                    .getChecklist()
+                    .add(_descriptionTextController.text);
+                setState(() {
+                  _checklist = _currentUser.getChecklist();
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _editChecklistItem() {
@@ -32,22 +67,20 @@ class _EditChecklistPageState extends State<EditChecklistPage> {
   }
 
   void _deleteChecklistItem(int index) {
-    print("delete action : $index");
+    _currentUser.getChecklist().removeAt(index);
     setState(() {
-      _checklist.removeAt(index);
+      _checklist = _currentUser.getChecklist();
     });
-    _currentUser.setChecklist(_checklist);
   }
 
   void _saveChanges() {
-    print("Saving checklist changes");
-
     try {
       Firestore.instance.runTransaction((transaction) async {
         await transaction.update(_currentUser.getFirestoreReference(),
             {"checklist": _currentUser.getChecklist()});
       });
       print("Success: Checklist Updated!");
+      Navigator.pushNamed(context, "/dashboard", arguments: _currentUser);
     } catch (e) {
       print("Error: Failed to update Checklist :" + e.toString());
     }
@@ -85,7 +118,10 @@ class _EditChecklistPageState extends State<EditChecklistPage> {
                   item = buildChecklistItemCard(index);
                 } else if (index == _checklist.length) {
                   item = CustomCard(
-                    cardChild: Icon(FontAwesomeIcons.plus),
+                    cardChild: Icon(
+                      FontAwesomeIcons.plus,
+                      size: 24.0,
+                    ),
                     cardAction: _addChecklistItem,
                   );
                 }
