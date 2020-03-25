@@ -106,6 +106,10 @@ class User {
       print("Assigning an empty Session");
   }
 
+  void setChecklist(List<String> l) {
+    this._checklist = l;
+  }
+
   bool isLoggedIn() {
     return getDocument() != null && getAuth() != null;
   }

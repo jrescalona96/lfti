@@ -9,6 +9,7 @@ import "package:lfti_app/components/checklist.dart";
 import "package:lfti_app/components/dashboard_card_tile.dart";
 import "package:lfti_app/components/custom_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
+import "package:lfti_app/components/menu.dart";
 
 // screen imports
 import "package:lfti_app/screens/loading_screen.dart";
@@ -47,7 +48,6 @@ class _DashboardPageState extends State<DashboardPage> {
             return IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                // TODO: implement navbar drawer
                 Scaffold.of(context).openDrawer();
               },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
@@ -59,6 +59,7 @@ class _DashboardPageState extends State<DashboardPage> {
           style: kMediumBoldTextStyle,
         ),
       ),
+      drawer: Menu(_currentUser),
       body: Container(
         child: ListView(
           children: <Widget>[

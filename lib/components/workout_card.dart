@@ -51,7 +51,7 @@ class WorkoutCard extends StatelessWidget {
                 _workout == null
                     ? "No Exercises"
                     : _getNumberOfRoutines() + ' Routines',
-                style: kMediumTextStyle,
+                style: kSmallTextStyle,
               )
             ],
           ),

@@ -282,8 +282,9 @@ class _SessionPageState extends State<SessionPage> {
                 : BottomNavigationButton(
                     label: _session.isPaused ? "CONTINUE" : "PAUSE",
                     action: _togglePause,
-                    color:
-                        _sessionIsPaused ? kGreenButtonColor : kBlueButtonColor,
+                    color: _session.isPaused
+                        ? kGreenButtonColor
+                        : kBlueButtonColor,
                   )),
       ),
     );

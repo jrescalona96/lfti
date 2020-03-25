@@ -68,7 +68,7 @@ const kLargeBoldTextStyle2x = TextStyle(
 );
 
 const kButtonTextFontStyle = TextStyle(
-    fontSize: 18.0, color: Color(0xFF0A0E21), fontWeight: FontWeight.w700);
+    fontSize: 20.0, color: Color(0xFF0A0E21), fontWeight: FontWeight.w700);
 
 const kButtonBoldTextFontStyle = TextStyle(
     fontSize: 24.0, color: Color(0xFF0A0E21), fontWeight: FontWeight.w900);

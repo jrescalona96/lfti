@@ -19,15 +19,9 @@ class BottomNavigationButton extends StatelessWidget {
         color: color,
         height: kStartButtonHeight,
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                label,
-                style: kButtonBoldTextFontStyle,
-              ),
-              SizedBox(height: kSizedBoxHeight)
-            ],
+          child: Text(
+            label,
+            style: kButtonTextFontStyle,
           ),
         ),
       ),

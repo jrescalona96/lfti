@@ -43,9 +43,9 @@ class SessionSummaryPage extends StatelessWidget {
     try {
       _currentUser.setLastSession({
         "name": _session.getWorkout().name,
-        "description": "Session on " +
+        "description": "Date: " +
             _session.date +
-            " for " +
+            " Time: " +
             _session.getElapseTime() +
             " sec",
         "date": _session.date
@@ -133,12 +133,12 @@ class SessionSummaryPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SummaryCard(
-                        label: "PERFORMED",
+                        label: "",
                         data: _session.getPerformedSets().toString(),
                         sub: "SETS"),
                     SizedBox(height: kSizedBoxHeight * 3),
                     SummaryCard(
-                        label: "SKIPPED",
+                        label: "",
                         data: _session.getSkippedSets().toString(),
                         sub: "SETS"),
                   ],

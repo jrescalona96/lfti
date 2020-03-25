@@ -52,7 +52,7 @@ class ViewWorkoutPage extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: BottomNavigationButton(
-          label: "START SESSION!",
+          label: "START",
           action: _navigate,
           color: kGreenButtonColor,
         ));
