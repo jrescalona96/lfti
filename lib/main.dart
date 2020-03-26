@@ -16,8 +16,10 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: kMainBackgroundColor,
         buttonTheme: ButtonThemeData(
           minWidth: double.infinity,
-          shape: StadiumBorder(),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           padding: kButtonPadding,
+          buttonColor: kBlueButtonColor,
         ),
       ),
       initialRoute: '/',

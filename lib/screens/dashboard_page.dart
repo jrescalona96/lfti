@@ -73,17 +73,6 @@ class _DashboardPageState extends State<DashboardPage> {
                       ? _currentUser.getLastSession()["description"]
                       : "You have not done anyting yet."),
             ),
-            Container(
-              child: DashboardCardTile(
-                heading: "NEXT SESSION",
-                mainInfo: _currentUser.getNextSession() != null
-                    ? _currentUser.getNextSession()["name"]
-                    : "Nothing here yet!",
-                details: _currentUser.getNextSession() != null
-                    ? _currentUser.getNextSession()["name"]
-                    : "Add new workout routines.",
-              ),
-            ),
             CustomCard(
               cardChild: _currentUser.getChecklist() != null
                   ? _buildChecklist()

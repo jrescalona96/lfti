@@ -5,7 +5,7 @@ import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
 
 class Menu extends StatelessWidget {
-  User _currentUser;
+  final User _currentUser;
   Menu(this._currentUser);
 
   @override
@@ -42,38 +42,52 @@ class Menu extends StatelessWidget {
               ),
               ListTile(
                 title: Text(
-                  "DASHBOARD",
+                  "Dashboard",
                   style: kSmallTextStyle,
                 ),
                 onTap: () {
-                  _navigateTo("/dashboard");
+                  Navigator.pushNamed(context, "/dashboard",
+                      arguments: _currentUser);
                 },
               ),
               ListTile(
                 title: Text(
-                  "CHECKLIST",
+                  "Checklist",
                   style: kSmallTextStyle,
                 ),
                 onTap: () {
-                  _navigateTo("/editChecklist");
+                  Navigator.pushNamed(context, "/editChecklist",
+                      arguments: _currentUser);
                 },
               ),
               ListTile(
                 title: Text(
-                  "WORKOUTS",
+                  "Workouts",
                   style: kSmallTextStyle,
                 ),
                 onTap: () {
-                  _navigateTo("/editWorkouts");
+                  Navigator.pushNamed(context, "/editWorkouts",
+                      arguments: _currentUser);
                 },
               ),
+              // TODO: Create Settings for email, password, and profile pic changes
               ListTile(
                 title: Text(
-                  "SETTINGS",
+                  "Settings",
                   style: kSmallTextStyle,
                 ),
                 onTap: () {
                   print("Implement Settings Tab.");
+                },
+              ),
+              ListTile(
+                title: Text(
+                  "Log out",
+                  style: kSmallTextStyle,
+                ),
+                onTap: () {
+                  // TODO: Add alert dialog box
+                  Navigator.pushNamed(context, "/");
                 },
               ),
             ],

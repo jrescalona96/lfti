@@ -30,8 +30,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _init() {
-    _emailTextController.text = _emailAndPassword["email"];
-    _passwordTextController.text = _emailAndPassword["pw"];
+    // _emailTextController.text = _emailAndPassword["email"];
+    // _passwordTextController.text = _emailAndPassword["pw"];
+    // TODO: DELETE BEFORE PUBLISH
+    _emailTextController.text = "jrescalona@gmail.com";
+    _passwordTextController.text = "thisisatest";
   }
 
   @override
@@ -74,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                         RaisedButton(
                             child: Text(
                               "LOGIN",
-                              style: kButtonBoldTextFontStyle,
+                              style: kButtonTextFontStyle,
                             ),
                             onPressed: () async {
                               if (_isInputNotEmpty()) {

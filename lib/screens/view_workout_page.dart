@@ -1,16 +1,17 @@
 // flutter & dart imports
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import "package:flutter/material.dart";
+import "package:intl/intl.dart";
 
 // component imports
-import 'package:lfti_app/components/routine_card.dart';
+import "package:lfti_app/components/routine_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
+import "package:lfti_app/components/menu.dart";
 
 // class imports
-import 'package:lfti_app/classes/Workout.dart';
+import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/User.dart";
-import 'package:lfti_app/classes/Session.dart';
-import 'package:lfti_app/classes/Constants.dart';
+import "package:lfti_app/classes/Session.dart";
+import "package:lfti_app/classes/Constants.dart";
 
 class ViewWorkoutPage extends StatelessWidget {
   User _currentUser;
@@ -34,8 +35,20 @@ class ViewWorkoutPage extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(_workout.name, style: kMediumBoldTextStyle),
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          title: Text(_workout.name, style: kMediumTextStyle),
         ),
+        drawer: Menu(_currentUser),
         body: SafeArea(
           child: CustomScrollView(
             slivers: <Widget>[

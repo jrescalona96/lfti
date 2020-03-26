@@ -88,6 +88,7 @@ class _TimerCardState extends State<TimerCard> {
       child: Column(
         children: <Widget>[
           Text(label, style: kLabelTextStyle),
+          SizedBox(height: kSmallSizedBoxHeight),
           Text(
             _timerString,
             style: kMediumBoldTextStyle,

@@ -1,12 +1,18 @@
 import "package:flutter/material.dart";
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
+import "package:lfti_app/classes/Workout.dart";
 
 // component imports
 import "package:lfti_app/components/custom_card.dart";
-import "package:lfti_app/components/bottom_navigation_button.dart";
+import "package:lfti_app/components/workout_card.dart";
+import "package:lfti_app/components/menu.dart";
+
+// firestore import
+import "package:cloud_firestore/cloud_firestore.dart";
 
 class EditWorkoutPage extends StatefulWidget {
   final User _currentUser;
@@ -17,15 +23,16 @@ class EditWorkoutPage extends StatefulWidget {
 }
 
 class _EditWorkoutPageState extends State<EditWorkoutPage> {
-  User _currentUser;
-  _EditWorkoutPageState(this._currentUser);
+  final User _currentUser;
+  List<Workout> _workoutList;
 
-  void _save() {
-    Navigator.pushNamed(context, "/viewWorkouts", arguments: _currentUser);
+  _EditWorkoutPageState(this._currentUser) {
+    this._workoutList = _currentUser.getWorkoutList();
   }
 
-  void _cancel() {
-    Navigator.pop(context);
+  void _addNewWorkout() {
+    // Navigator.pushNamed(context, "/viewWorkouts", arguments: _currentUser);
+    print("Add a new workout");
   }
 
   @override
@@ -37,7 +44,6 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
             return IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                // TODO: implement navbar drawer
                 Scaffold.of(context).openDrawer();
               },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
@@ -45,30 +51,51 @@ class _EditWorkoutPageState extends State<EditWorkoutPage> {
           },
         ),
         title: Text(
-          _currentUser.getFirstName(),
-          style: kMediumBoldTextStyle,
+          "Workouts",
+          style: kMediumTextStyle,
         ),
       ),
+      drawer: Menu(_currentUser),
       body: SafeArea(
-        child: Container(
-          child: CustomCard(
-            cardChild: Text("Create shite"),
-          ),
-        ),
-      ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(
-            child: BottomNavigationButton(
-                label: "CANCEL", action: _cancel, color: kRedButtonColor),
-          ),
-          Expanded(
-            flex: 2,
-            child: BottomNavigationButton(
-                label: "SAVE", action: _save, color: kGreenButtonColor),
-          )
-        ],
+        child: _workoutList != null
+            ? CustomScrollView(
+                slivers: <Widget>[
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      Widget item;
+                      if (index < _currentUser.getWorkoutList().length) {
+                        item = WorkoutCard(_currentUser, index);
+                      } else if (index ==
+                          _currentUser.getWorkoutList().length) {
+                        item = CustomCard(
+                          cardChild: Icon(
+                            FontAwesomeIcons.plus,
+                            size: 24.0,
+                          ),
+                          cardAction: _addNewWorkout,
+                        );
+                      }
+                      return item;
+                    }),
+                  ),
+                ],
+              )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Nothing here yet!",
+                      style: kMediumBoldTextStyle,
+                    ),
+                    Text(
+                      "Create workout routines first.",
+                      style: kMediumLabelTextStyle,
+                    )
+                  ],
+                ),
+              ),
       ),
     );
   }

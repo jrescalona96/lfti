@@ -4,6 +4,7 @@ import "dart:core";
 // component imports
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/summary_card.dart";
+import "package:lfti_app/components/menu.dart";
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
@@ -74,23 +75,26 @@ class SessionSummaryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _navigate() {
-      _updateLastSession();
-      Navigator.pushNamed(
-        context,
-        "/dashboard",
-        arguments: _currentUser,
-      );
-    }
-
     _formatElapseTime();
     return Scaffold(
       appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
         title: Text(
           "Session Summary",
-          style: kMediumBoldTextStyle,
+          style: kMediumTextStyle,
         ),
       ),
+      drawer: Menu(_currentUser),
       body: Padding(
         padding: kContentPadding,
         child: Column(
@@ -108,7 +112,6 @@ class SessionSummaryPage extends StatelessWidget {
               style: kMediumBoldTextStyle,
             ),
             SummaryCard(label: "TIME", data: _session.getElapseTime()),
-            // TODO: Compute for performed and skipped exercises
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -149,7 +152,16 @@ class SessionSummaryPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationButton(
-          label: "DONE", action: _navigate, color: kBlueButtonColor),
+          label: "DONE",
+          action: () {
+            _updateLastSession();
+            Navigator.pushNamed(
+              context,
+              "/dashboard",
+              arguments: _currentUser,
+            );
+          },
+          color: kBlueButtonColor),
     );
   }
 }

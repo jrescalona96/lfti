@@ -24,6 +24,8 @@ class _SessionPageState extends State<SessionPage> {
   Session _session;
   int _currentSet;
   Routine _currentRoutine;
+  final _routineTimerController = TimerCard(cardLabel: "ROUTINE TIME");
+  final _sessionTimerController = TimerCard(cardLabel: "SESSION TIME");
 
   _SessionPageState(this._currentUser) {
     this._session = _currentUser.getSession();
@@ -31,25 +33,50 @@ class _SessionPageState extends State<SessionPage> {
     this._currentRoutine = _session.getCurrentRoutine();
   }
 
-  bool _sessionIsPaused = false;
-  final _routineTimerController = TimerCard(cardLabel: "ROUTINE TIME");
-  final _sessionTimerController = TimerCard(cardLabel: "SESSION TIME");
-
-  void _navigateToDashboard() {
-    Navigator.pushNamed(context, "/endSession",
-        arguments: {"user": _currentUser, "session": _session});
-  }
-
-  void _endSession() {
-    setState(() {
-      _session.end(_sessionTimerController.getCurrentTime());
-      _navigateToDashboard();
-    });
+  Future<void> _showSessionConfirmationDialogBox() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("End Session?"),
+          content: Text("You are about to end this session!"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          backgroundColor: kCardBackground.withOpacity(0.9),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "Cancel",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Confirm",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                print("Ending Session!");
+                setState(() {
+                  _session.end(_sessionTimerController.getCurrentTime());
+                });
+                Navigator.pushNamed(context, "/endSession",
+                    arguments: {"user": _currentUser, "session": _session});
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   bool _isFirstRoutineAndSet() {
     return _session.getCurrentRoutineIndex() == 0 &&
-        _session.getCurrentSet() == 1;
+        _session.getCurrentSet() < 2;
   }
 
   void _next() {
@@ -121,6 +148,7 @@ class _SessionPageState extends State<SessionPage> {
                             "EXERCISE",
                             style: kLabelTextStyle,
                           ),
+                          SizedBox(height: kSmallSizedBoxHeight),
                           Text(
                             _session.getCurrentRoutine().exercise.name,
                             style: kMediumBoldTextStyle,
@@ -204,9 +232,9 @@ class _SessionPageState extends State<SessionPage> {
                             : _back,
                         child: Text(
                           "BACK",
-                          style: kButtonBoldTextFontStyle,
+                          style: kButtonTextFontStyle,
                         ),
-                        color: kRedButtonColor,
+                        color: kOrangeButtonColor,
                       ),
                     ),
 
@@ -224,7 +252,7 @@ class _SessionPageState extends State<SessionPage> {
                             : _skipRoutine,
                         child: Text(
                           "NEXT",
-                          style: kButtonBoldTextFontStyle,
+                          style: kButtonTextFontStyle,
                         ),
                         color: kGreenButtonColor,
                       ),
@@ -242,6 +270,7 @@ class _SessionPageState extends State<SessionPage> {
                       "NEXT ROUTINE",
                       style: kLabelTextStyle,
                     ),
+                    SizedBox(height: kSmallSizedBoxHeight),
                     Text(
                       _session.getNextRoutine().exercise.name,
                       style: kMediumBoldTextStyle,
@@ -274,11 +303,13 @@ class _SessionPageState extends State<SessionPage> {
       bottomNavigationBar: Container(
         child: GestureDetector(
             onLongPress: () {
-              _endSession();
+              _showSessionConfirmationDialogBox();
             },
             child: _session.isFinished()
                 ? BottomNavigationButton(
-                    label: "END", action: _endSession, color: kRedButtonColor)
+                    label: "END",
+                    action: _showSessionConfirmationDialogBox,
+                    color: kRedButtonColor)
                 : BottomNavigationButton(
                     label: _session.isPaused ? "CONTINUE" : "PAUSE",
                     action: _togglePause,
