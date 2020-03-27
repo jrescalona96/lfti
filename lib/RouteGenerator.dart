@@ -8,13 +8,13 @@ import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/screens/home_page.dart";
 import "package:lfti_app/screens/dashboard_page.dart";
 import "package:lfti_app/screens/login_page.dart";
-import "package:lfti_app/screens/select_workout_page.dart";
+import "package:lfti_app/screens/workouts_page.dart";
 import "package:lfti_app/screens/session_page.dart";
 import "package:lfti_app/screens/signup_page.dart";
-import "package:lfti_app/screens/view_workout_page.dart";
+import "package:lfti_app/screens/view_routines_page.dart";
 import "package:lfti_app/screens/session_summary_page.dart";
-import "package:lfti_app/screens/edit_workouts_page.dart";
-import "package:lfti_app/screens/edit_checklist_page.dart";
+import "package:lfti_app/screens/update_workout_page.dart";
+import "package:lfti_app/screens/update_checklist_page.dart";
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -42,26 +42,26 @@ class RouteGenerator {
           return _errorRoute();
         }
         break;
-      case "/selectWorkout":
-        print("selectWorkout args: $args ");
+      case "/workouts":
+        print("workouts args: $args ");
         if (args is User) {
-          return MaterialPageRoute(builder: (_) => SelectWorkoutPage(args));
+          return MaterialPageRoute(builder: (_) => WorkoutsPage(args));
         } else {
           return _errorRoute();
         }
         break;
-      case "/editWorkouts":
-        print("editWorkouts args: $args");
-        if (args is User) {
-          return MaterialPageRoute(builder: (_) => EditWorkoutPage(args));
+      case "/updateWorkout":
+        print("updateWorkout args: $args");
+        if (args is Map) {
+          return MaterialPageRoute(builder: (_) => UpdateWorkoutPage(args));
         } else {
           return _errorRoute();
         }
         break;
-      case "/editChecklist":
-        print("editChecklist args: $args");
+      case "/updateChecklist":
+        print("updateChecklist args: $args");
         if (args is User) {
-          return MaterialPageRoute(builder: (_) => EditChecklistPage(args));
+          return MaterialPageRoute(builder: (_) => UpdateChecklistPage(args));
         } else {
           return _errorRoute();
         }
@@ -70,7 +70,7 @@ class RouteGenerator {
         print("viewWorkout args: $args");
         if (args is Map) {
           return MaterialPageRoute(
-            builder: (_) => ViewWorkoutPage(args),
+            builder: (_) => ViewRoutinesPage(args),
           );
         } else {
           return _errorRoute();

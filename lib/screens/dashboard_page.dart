@@ -28,10 +28,6 @@ class _DashboardPageState extends State<DashboardPage> {
   User _currentUser;
   _DashboardPageState(this._currentUser);
 
-  void _navigate() {
-    Navigator.pushNamed(context, "/selectWorkout", arguments: _currentUser);
-  }
-
   @override
   Widget build(BuildContext context) {
     return _currentUser.getDocument() == null
@@ -56,7 +52,7 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         title: Text(
           _currentUser.getFirstName(),
-          style: kMediumBoldTextStyle,
+          style: kSmallTextStyle,
         ),
       ),
       drawer: Menu(_currentUser),
@@ -68,25 +64,31 @@ class _DashboardPageState extends State<DashboardPage> {
                   heading: "LAST SESSION",
                   mainInfo: _currentUser.getLastSession() != null
                       ? _currentUser.getLastSession()["name"]
-                      : "Nothing here yet!",
+                      : "Nothing here!",
                   details: _currentUser.getLastSession() != null
                       ? _currentUser.getLastSession()["description"]
                       : "You have not done anyting yet."),
             ),
             CustomCard(
-              cardChild: _currentUser.getChecklist() != null
+              // short circuit evaluation
+              cardChild: _currentUser.getChecklist() != null &&
+                      _currentUser.getChecklist().length > 0
                   ? _buildChecklist()
                   : DashboardCardTile(
                       heading: "CHECKLIST",
-                      mainInfo: "Nothing here yet.",
-                      details: "Create your checklist!",
+                      mainInfo: "Nothing here.",
+                      details: "Add items to your checklist!",
                     ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationButton(
-          label: "LET'S GO!", action: _navigate, color: kGreenButtonColor),
+          label: "LET'S GO!",
+          action: () {
+            Navigator.pushNamed(context, "/workouts", arguments: _currentUser);
+          },
+          color: kGreenButtonColor),
     );
   }
 

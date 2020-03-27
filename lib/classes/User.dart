@@ -103,11 +103,15 @@ class User {
     if (s != null)
       this._currentSession = s;
     else
-      print("Assigning an empty Session");
+      print("Setting an empty Session!");
   }
 
   void setChecklist(List<String> l) {
     this._checklist = l;
+  }
+
+  void setWorkoutList(List<Workout> l) {
+    this._workouts = l;
   }
 
   bool isLoggedIn() {
@@ -176,7 +180,6 @@ class User {
   }
 
   /// helper methods
-
   List<Workout> _buildWorkoutList() {
     try {
       List<Workout> w = List<Workout>();

@@ -91,7 +91,7 @@ class SessionSummaryPage extends StatelessWidget {
         ),
         title: Text(
           "Session Summary",
-          style: kMediumTextStyle,
+          style: kSmallTextStyle,
         ),
       ),
       drawer: Menu(_currentUser),

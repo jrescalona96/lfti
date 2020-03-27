@@ -2,6 +2,7 @@ import 'package:lfti_app/classes/Exercise.dart';
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Routine.dart";
 import "package:intl/intl.dart";
+import "package:lfti_app/classes/Constants.dart";
 
 class Session {
   Workout _workout;
@@ -19,8 +20,8 @@ class Session {
       List<Routine>(); // List implemented as a Stack, no Stack class in Dart
 
   Session(this._workout) {
-    this.id = "S" + DateFormat('yyyyMMdd-kk:mm:ss:ms').format(DateTime.now());
-    this.date = DateFormat('MM/dd/yyyy').format(DateTime.now());
+    this.id = "S" + DateFormat(kFormatDateId).format(DateTime.now());
+    this.date = DateFormat(kFormatDateMMddyyyy).format(DateTime.now());
   }
 
   // getters

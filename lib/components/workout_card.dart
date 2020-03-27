@@ -14,7 +14,7 @@ class WorkoutCard extends StatelessWidget {
   Workout _workout;
 
   WorkoutCard(this._currentUser, this._index) {
-    this._workout = _currentUser.getWorkoutAt(_index);
+    this._workout = this._currentUser.getWorkoutAt(_index);
   }
 
   @override
@@ -30,31 +30,33 @@ class WorkoutCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed('/viewWorkout',
-            arguments: {"user": _currentUser, "workout": _workout});
+            arguments: {"user": this._currentUser, "workout": this._workout});
       },
-      child: Container(
-        child: CustomCard(
-          cardChild: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Text(
-                _workout.name,
-                style: kMediumBoldTextStyle,
-              ),
-              Text(
-                _workout.description,
-                style: kLabelTextStyle,
-              ),
-              SizedBox(height: kSizedBoxHeight),
-              Text(
-                _workout == null
-                    ? "No Exercises"
-                    : _getNumberOfRoutines() + ' Routines',
-                style: kSmallTextStyle,
-              )
-            ],
-          ),
+      onLongPress: () {
+        Navigator.of(context).pushNamed('/updateWorkout',
+            arguments: {"user": this._currentUser, "index": this._index});
+      },
+      child: CustomCard(
+        cardChild: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(
+              this._workout.name,
+              style: kMediumBoldTextStyle,
+            ),
+            Text(
+              this._workout.description,
+              style: kLabelTextStyle,
+            ),
+            SizedBox(height: kSizedBoxHeight),
+            Text(
+              this._workout == null
+                  ? "No Exercises"
+                  : _getNumberOfRoutines() + ' Routines',
+              style: kSmallTextStyle,
+            )
+          ],
         ),
       ),
     );

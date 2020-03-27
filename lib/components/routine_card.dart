@@ -5,57 +5,61 @@ import 'package:lfti_app/components/custom_card.dart';
 
 class RoutineCard extends StatelessWidget {
   //working data TODO: update to pull for DB
-  final Routine _routine;
-  RoutineCard(this._routine);
+  final Routine routine;
+  final Function cardAction;
+  RoutineCard({@required this.routine, this.cardAction});
 
   String _generateTargetString() {
     String target = '';
-    String reps = _routine.reps.toString();
+    String reps = routine.reps.toString();
 
     // TODO: refactor to have Rest as its own class to say if(_routine.exercise is Rest)
-    if (_routine.exercise.name != 'Rest')
-      for (int i = 0; i < _routine.sets; i++) {
-        if (i < (_routine.sets - 1)) {
+    if (routine.exercise.name != 'Rest')
+      for (int i = 0; i < routine.sets; i++) {
+        if (i < (routine.sets - 1)) {
           target += '$reps / ';
         } else {
           target += reps;
         }
       }
     else {
-      target = _routine.timeToPerformInSeconds.toString() + ' sec';
+      target = routine.timeToPerformInSeconds.toString() + ' sec';
     }
     return target;
   }
 
   @override
   Widget build(BuildContext context) {
-    final exerciseName = _routine.exercise.name;
-    final exerciseFocus = _routine.exercise.focus;
+    final exerciseName = routine.exercise.name;
+    final exerciseFocus = routine.exercise.focus;
     final exerciseTarget = "Target: " + _generateTargetString();
 
-    return CustomCard(
-      cardChild: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                exerciseName,
-                style: kMediumBoldTextStyle,
-              ),
-              SizedBox(
-                height: kSmallSizedBoxHeight,
-              ),
-              Text(
-                exerciseFocus,
-                style: kLabelTextStyle,
-              ),
-            ],
-          ),
-          SizedBox(height: kSizedBoxHeight),
-          Text(exerciseTarget, style: kMediumLabelTextStyle)
-        ],
+    return GestureDetector(
+      onLongPress: cardAction,
+      child: CustomCard(
+        cardChild: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  exerciseName,
+                  style: kMediumBoldTextStyle,
+                ),
+                SizedBox(
+                  height: kSmallSizedBoxHeight,
+                ),
+                Text(
+                  exerciseFocus,
+                  style: kLabelTextStyle,
+                ),
+              ],
+            ),
+            SizedBox(height: kSizedBoxHeight),
+            Text(exerciseTarget, style: kMediumLabelTextStyle)
+          ],
+        ),
       ),
     );
   }

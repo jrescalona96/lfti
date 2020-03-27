@@ -27,7 +27,8 @@
         {
           "exercise": { "name": "Rest" },
           "reps": 1,
-          "sets": 1
+          "sets": 1,
+          "timeToPerformInSeconds": 60
         },
         {
           "exercise": { "name": "Pull-Ups With A Wide Grip", "focus": "Back" },

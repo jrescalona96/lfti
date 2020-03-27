@@ -56,7 +56,7 @@ class Menu extends StatelessWidget {
                   style: kSmallTextStyle,
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, "/editChecklist",
+                  Navigator.pushNamed(context, "/updateChecklist",
                       arguments: _currentUser);
                 },
               ),
@@ -66,7 +66,7 @@ class Menu extends StatelessWidget {
                   style: kSmallTextStyle,
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, "/editWorkouts",
+                  Navigator.pushNamed(context, "/workouts",
                       arguments: _currentUser);
                 },
               ),

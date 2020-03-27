@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
@@ -9,24 +8,25 @@ import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/components/menu.dart";
 import "package:lfti_app/components/custom_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
+import "package:lfti_app/components/empty_state_notification.dart";
 
 // firestore import
 import "package:cloud_firestore/cloud_firestore.dart";
 
-class EditChecklistPage extends StatefulWidget {
+class UpdateChecklistPage extends StatefulWidget {
   final User _currentUser;
-  EditChecklistPage(this._currentUser);
+  UpdateChecklistPage(this._currentUser);
 
   @override
-  _EditChecklistPageState createState() =>
-      _EditChecklistPageState(_currentUser);
+  _UpdateChecklistPageState createState() =>
+      _UpdateChecklistPageState(_currentUser);
 }
 
-class _EditChecklistPageState extends State<EditChecklistPage> {
+class _UpdateChecklistPageState extends State<UpdateChecklistPage> {
   final User _currentUser;
   List _checklist = List();
 
-  _EditChecklistPageState(this._currentUser) {
+  _UpdateChecklistPageState(this._currentUser) {
     if (this._currentUser.getChecklist() == null) {
       this._currentUser.setChecklist(List());
     }
@@ -41,6 +41,9 @@ class _EditChecklistPageState extends State<EditChecklistPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Checklist Item name"),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          backgroundColor: kCardBackground.withOpacity(0.8),
           content: TextFormField(
             controller: _descriptionTextController,
             keyboardType: TextInputType.text,
@@ -73,6 +76,7 @@ class _EditChecklistPageState extends State<EditChecklistPage> {
     );
   }
 
+  // TODO: implement edit checklist
   void _editChecklistItem() {
     print("edit action");
   }
@@ -106,9 +110,11 @@ class _EditChecklistPageState extends State<EditChecklistPage> {
         cardChild: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              _checklist[index].toString(),
-              style: kMediumLabelTextStyle,
+            Flexible(
+              child: Text(
+                _checklist[index].toString(),
+                style: kMediumLabelTextStyle,
+              ),
             ),
             GestureDetector(
               onTap: () {
@@ -138,48 +144,35 @@ class _EditChecklistPageState extends State<EditChecklistPage> {
           },
         ),
         title: Text(
-          "Edit Checklist",
-          style: kMediumBoldTextStyle,
+          "Checklist",
+          style: kSmallTextStyle,
         ),
       ),
-      drawer: Menu(_currentUser),
-      body: _checklist == null
-          ? Container(
-              width: double.infinity,
-              child: CustomCard(
-                cardChild: Icon(
-                  FontAwesomeIcons.plus,
-                  size: 24.0,
+      drawer: Menu(this._currentUser),
+      body: this._checklist.length > 0
+          ? CustomScrollView(
+              slivers: <Widget>[
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                    Widget item;
+                    if (index < this._checklist.length) {
+                      item = buildChecklistItemCard(index);
+                    }
+                    return item;
+                  }),
                 ),
-                cardAction: _addChecklistItem,
-              ),
+              ],
             )
-          : SafeArea(
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      Widget item;
-                      if (index < _checklist.length) {
-                        item = buildChecklistItemCard(index);
-                      } else if (index == _checklist.length) {
-                        item = CustomCard(
-                          cardChild: Icon(
-                            FontAwesomeIcons.plus,
-                            size: 24.0,
-                          ),
-                          cardAction: _addChecklistItem,
-                        );
-                      }
-                      return item;
-                    }),
-                  ),
-                ],
-              ),
+          : EmptyStateNotification(sub: "Add Items to your Checklist first."),
+      bottomNavigationBar: this._checklist.length > 0
+          ? BottomNavigationButton(
+              label: "SAVE", action: _saveChanges, color: kGreenButtonColor)
+          : BottomNavigationButton(
+              label: "ADD ITEM",
+              action: _addChecklistItem,
+              color: kBlueButtonColor,
             ),
-      bottomNavigationBar: BottomNavigationButton(
-          label: "SAVE", action: _saveChanges, color: kGreenButtonColor),
     );
   }
 }

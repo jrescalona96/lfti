@@ -35,6 +35,8 @@ class _LoginPageState extends State<LoginPage> {
     // TODO: DELETE BEFORE PUBLISH
     _emailTextController.text = "jrescalona@gmail.com";
     _passwordTextController.text = "thisisatest";
+    // _emailTextController.text = "j@test.com";
+    // _passwordTextController.text = "test11";
   }
 
   @override
