@@ -86,8 +86,10 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                 style: kSmallTextStyle,
               ),
               onPressed: () {
-                _workout.routines[index].timeToPerformInSeconds =
-                    _timeDropdownMenu.getValue();
+                setState(() {
+                  _workout.routines[index].timeToPerformInSeconds =
+                      _timeDropdownMenu.getValue();
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -114,7 +116,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
         ),
         title: Text(
           "Edit " + _workout.name,
-          style: kSmallTextStyle,
+          style: kSmallBoldTextStyle,
         ),
       ),
       drawer: Menu(_currentUser),
