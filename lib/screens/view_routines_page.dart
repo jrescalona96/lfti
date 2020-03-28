@@ -36,7 +36,7 @@ class ViewRoutinesPage extends StatelessWidget {
                   if (index < _workout.routines.length) {
                     item = RoutineCard(
                       routine: _workout.routines[index],
-                      cardAction: null,
+                      onTap: null,
                     );
                   }
                   return item;
@@ -46,7 +46,7 @@ class ViewRoutinesPage extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: BottomNavigationButton(
-          label: "START",
+          label: "START SESSION",
           action: () {
             _currentUser.setSession(Session(_workout));
             Navigator.pushNamed(context, '/startSession',

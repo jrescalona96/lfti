@@ -59,6 +59,7 @@ class _DashboardPageState extends State<DashboardPage> {
       body: Container(
         child: ListView(
           children: <Widget>[
+            SizedBox(height: kSmallSizedBoxHeight),
             Container(
               child: DashboardCardTile(
                   heading: "LAST SESSION",
@@ -86,7 +87,8 @@ class _DashboardPageState extends State<DashboardPage> {
       bottomNavigationBar: BottomNavigationButton(
           label: "LET'S GO!",
           action: () {
-            Navigator.pushNamed(context, "/workouts", arguments: _currentUser);
+            Navigator.pushNamed(context, "/viewWorkouts",
+                arguments: _currentUser);
           },
           color: kGreenButtonColor),
     );

@@ -4,10 +4,10 @@ import 'package:lfti_app/classes/Routine.dart';
 import 'package:lfti_app/components/custom_card.dart';
 
 class RoutineCard extends StatelessWidget {
-  //working data TODO: update to pull for DB
   final Routine routine;
-  final Function cardAction;
-  RoutineCard({@required this.routine, this.cardAction});
+  final Function onTap;
+  final bool dottedBorder;
+  RoutineCard({@required this.routine, this.onTap, this.dottedBorder = false});
 
   String _generateTargetString() {
     String target = '';
@@ -30,13 +30,10 @@ class RoutineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final exerciseName = routine.exercise.name;
-    final exerciseFocus = routine.exercise.focus;
-    final exerciseTarget = "Target: " + _generateTargetString();
-
     return GestureDetector(
-      onLongPress: cardAction,
+      onTap: this.onTap,
       child: CustomCard(
+        dottedBorder: this.dottedBorder,
         cardChild: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -44,20 +41,21 @@ class RoutineCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  exerciseName,
+                  routine.exercise.name,
                   style: kMediumBoldTextStyle,
                 ),
                 SizedBox(
                   height: kSmallSizedBoxHeight,
                 ),
                 Text(
-                  exerciseFocus,
+                  routine.exercise.focus == null ? "" : routine.exercise.focus,
                   style: kLabelTextStyle,
                 ),
               ],
             ),
             SizedBox(height: kSizedBoxHeight),
-            Text(exerciseTarget, style: kMediumLabelTextStyle)
+            Text("Target: " + _generateTargetString(),
+                style: kMediumLabelTextStyle)
           ],
         ),
       ),

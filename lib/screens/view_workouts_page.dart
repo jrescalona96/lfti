@@ -11,23 +11,22 @@ import "package:lfti_app/screens/loading_screen.dart";
 
 // component imports
 import "package:lfti_app/components/workout_card.dart";
-import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/menu.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
 
-class WorkoutsPage extends StatefulWidget {
+class ViewWorkoutsPage extends StatefulWidget {
   final User _currentUser;
-  WorkoutsPage(this._currentUser);
+  ViewWorkoutsPage(this._currentUser);
 
   @override
-  _WorkoutsPageState createState() => _WorkoutsPageState(_currentUser);
+  _ViewWorkoutsPageState createState() => _ViewWorkoutsPageState(_currentUser);
 }
 
-class _WorkoutsPageState extends State<WorkoutsPage> {
+class _ViewWorkoutsPageState extends State<ViewWorkoutsPage> {
   User _currentUser;
   List<Workout> _workoutList;
 
-  _WorkoutsPageState(this._currentUser) {
+  _ViewWorkoutsPageState(this._currentUser) {
     if (_currentUser.getWorkoutList() == null) {
       this._currentUser.setWorkoutList(List<Workout>());
     }
@@ -115,17 +114,15 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                           Widget item;
                           if (index < _currentUser.getWorkoutList().length) {
                             item = WorkoutCard(
-                                dottedBorder: true,
-                                user: this._currentUser,
+                                user: _currentUser,
                                 index: index,
                                 onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                    '/updateWorkout',
-                                    arguments: {
-                                      "user": this._currentUser,
-                                      "index": index
-                                    },
-                                  );
+                                  Navigator.of(context)
+                                      .pushNamed('/viewRoutines', arguments: {
+                                    "user": this._currentUser,
+                                    "workout":
+                                        this._currentUser.getWorkoutAt(index)
+                                  });
                                 });
                           }
                           return item;
@@ -134,11 +131,6 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                     ],
                   )
                 : EmptyStateNotification(sub: "Create workout routines first."),
-            bottomNavigationBar: BottomNavigationButton(
-              label: "CREATE WORKOUT",
-              action: _createNewWorkout,
-              color: kBlueButtonColor,
-            ),
           );
   }
 }

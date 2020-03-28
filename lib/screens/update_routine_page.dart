@@ -1,77 +1,92 @@
-// flutter & dart imports
 import "package:flutter/material.dart";
 
-// component imports
-import "package:lfti_app/components/routine_card.dart";
-import "package:lfti_app/components/bottom_navigation_button.dart";
-import "package:lfti_app/components/menu.dart";
-import "package:lfti_app/components/empty_state_notification.dart";
-
 // class imports
-import "package:lfti_app/classes/Routine.dart";
-import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/classes/Constants.dart";
-import "package:lfti_app/classes/Workout.dart";
+import "package:lfti_app/classes/Routine.dart";
+import "package:lfti_app/classes/user.dart";
 
-class UpdateRoutinesPage extends StatefulWidget {
-  User _currentUser;
-  UpdateRoutinesPage(this._currentUser);
+class UpdateRoutinePage extends StatefulWidget {
+  final Map _args;
+  UpdateRoutinePage(this._args);
 
   @override
-  _UpdateRoutinesPageState createState() =>
-      _UpdateRoutinesPageState(this._currentUser);
+  _UpdateRoutinePageState createState() => _UpdateRoutinePageState(this._args);
 }
 
-class _UpdateRoutinesPageState extends State<UpdateRoutinesPage> {
+class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   User _currentUser;
-  Workout _workout;
-  List<Routine> _routineList;
+  Routine _routine;
+  _UpdateRoutinePageState(Map args) {
+    this._currentUser = args["user"];
+    this._routine = args["routine"];
+    _nameTextController = TextEditingController(text: _routine.exercise.name);
+    _focusTextController = TextEditingController(text: _routine.exercise.focus);
+    _repsTextController = TextEditingController(text: _routine.reps.toString());
+    _setsTextController = TextEditingController(text: _routine.sets.toString());
+  }
 
- _UpdateRoutinesPageState(this._currentUser) {
-   this._workout = this._currentUser
- }
+  TextEditingController _nameTextController,
+      _focusTextController,
+      _repsTextController,
+      _setsTextController;
+
+  bool _isNumber(String s) {
+    return double.tryParse(s) == null ? false : true;
+  }
+
+  String _validateNumber(String s) {
+    if (_isNumber(s)) {
+      return "Please enter a valid number.";
+    } else {
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
-        ),
-        title: Text(
-          "WORKOUTS",
-          style: kSmallTextStyle,
-        ),
+        title: Text(_routine.exercise.name),
       ),
-      drawer: Menu(_currentUser),
-      body: this._routineList.length > 0
-          ? CustomScrollView(
-              slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    Widget item;
-                    if (index < _currentUser.getWorkoutList().length) {
-                      item = RoutineCard(_currentUser, index);
-                    }
-                    return item;
-                  }),
+      body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextFormField(
+                  controller: _nameTextController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(labelText: "Name"),
                 ),
+                SizedBox(height: kSizedBoxHeight),
+                TextFormField(
+                  controller: _focusTextController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(labelText: "Muscle Group Focus"),
+                ),
+                SizedBox(height: kSizedBoxHeight),
+                // TODO: change to Dropdown menu (count from 1 - 500?)
+                TextFormField(
+                  controller: _repsTextController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(labelText: "Reps"),
+                  validator: (val) => _validateNumber(val),
+                ),
+                SizedBox(height: kSizedBoxHeight),
+                // TODO: change to Dropdown menu (count from 1 - 500?)
+                TextFormField(
+                  controller: _setsTextController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(labelText: "Sets"),
+                  validator: (val) => _validateNumber(val),
+                ),
+                SizedBox(height: kSizedBoxHeight),
               ],
-            )
-          : EmptyStateNotification(sub: "Create workout routines first."),
-      bottomNavigationBar: BottomNavigationButton(
-        label: "ADD ROUTINE",
-        action: _createNewRoutine,
-        color: kBlueButtonColor,
+            ),
+          ],
+        ),
       ),
     );
   }

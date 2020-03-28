@@ -13,20 +13,19 @@ import "package:lfti_app/components/empty_state_notification.dart";
 // firestore import
 import "package:cloud_firestore/cloud_firestore.dart";
 
-class UpdateChecklistPage extends StatefulWidget {
+class ChecklistPage extends StatefulWidget {
   final User _currentUser;
-  UpdateChecklistPage(this._currentUser);
+  ChecklistPage(this._currentUser);
 
   @override
-  _UpdateChecklistPageState createState() =>
-      _UpdateChecklistPageState(_currentUser);
+  _ChecklistPageState createState() => _ChecklistPageState(_currentUser);
 }
 
-class _UpdateChecklistPageState extends State<UpdateChecklistPage> {
+class _ChecklistPageState extends State<ChecklistPage> {
   final User _currentUser;
   List _checklist = List();
 
-  _UpdateChecklistPageState(this._currentUser) {
+  _ChecklistPageState(this._currentUser) {
     if (this._currentUser.getChecklist() == null) {
       this._currentUser.setChecklist(List());
     }

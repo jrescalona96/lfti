@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 const kContentMargin = EdgeInsets.all(10.0);
+const kCardMargin = EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0);
 const kContentPadding = EdgeInsets.all(15.0);
 const kButtonPadding = EdgeInsets.all(20.0);
 const kStartButtonHeight = 100.0;
-const kSizedBoxHeight = 15.0;
+const kSizedBoxHeight = 12.0;
 const kSmallSizedBoxHeight = 5.0;
 const kStartButtonColor = Colors.blueAccent;
 const kMainBackgroundColor = Color(0x0B0A0E21);

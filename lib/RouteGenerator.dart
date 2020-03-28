@@ -14,7 +14,9 @@ import "package:lfti_app/screens/signup_page.dart";
 import "package:lfti_app/screens/view_routines_page.dart";
 import "package:lfti_app/screens/session_summary_page.dart";
 import "package:lfti_app/screens/update_workout_page.dart";
-import "package:lfti_app/screens/update_checklist_page.dart";
+import "package:lfti_app/screens/checklist_page.dart";
+import "package:lfti_app/screens/update_routine_page.dart";
+import "package:lfti_app/screens/view_workouts_page.dart";
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -50,6 +52,14 @@ class RouteGenerator {
           return _errorRoute();
         }
         break;
+      case "/viewWorkouts":
+        print("viewWorkouts args: $args");
+        if (args is User) {
+          return MaterialPageRoute(builder: (_) => ViewWorkoutsPage(args));
+        } else {
+          return _errorRoute();
+        }
+        break;
       case "/updateWorkout":
         print("updateWorkout args: $args");
         if (args is Map) {
@@ -58,20 +68,26 @@ class RouteGenerator {
           return _errorRoute();
         }
         break;
-      case "/updateChecklist":
-        print("updateChecklist args: $args");
-        if (args is User) {
-          return MaterialPageRoute(builder: (_) => UpdateChecklistPage(args));
+      case "/viewRoutines":
+        print("viewRoutines args: $args");
+        if (args is Map) {
+          return MaterialPageRoute(builder: (_) => ViewRoutinesPage(args));
         } else {
           return _errorRoute();
         }
         break;
-      case "/viewWorkout":
-        print("viewWorkout args: $args");
+      case "/updateRoutine":
+        print("updateRoutine args: $args");
         if (args is Map) {
-          return MaterialPageRoute(
-            builder: (_) => ViewRoutinesPage(args),
-          );
+          return MaterialPageRoute(builder: (_) => UpdateRoutinePage(args));
+        } else {
+          return _errorRoute();
+        }
+        break;
+      case "/updateChecklist":
+        print("updateChecklist args: $args");
+        if (args is User) {
+          return MaterialPageRoute(builder: (_) => ChecklistPage(args));
         } else {
           return _errorRoute();
         }

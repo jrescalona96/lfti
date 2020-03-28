@@ -1,17 +1,19 @@
 import "package:flutter/material.dart";
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Routine.dart";
+import 'package:lfti_app/components/custom_card.dart';
 
 // component imports
 import "package:lfti_app/components/menu.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
-import "package:lfti_app/components/edit_routine_card.dart";
 import "package:lfti_app/components/routine_card.dart";
+import "package:lfti_app/components/time_dropdown_menu.dart";
 
 // firestore import
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -26,80 +28,70 @@ class UpdateWorkoutPage extends StatefulWidget {
 
 class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
   User _currentUser;
-  int _index;
   Workout _workout;
 
   _UpdateWorkoutPageState(Map args) {
     this._currentUser = args["user"];
-    this._index = args["index"];
-    print(this._index);
-    if (_isNewWorkout()) {
-      this._index = this._currentUser.getWorkoutList().length - 1;
-    }
-    this._workout = this._currentUser.getWorkoutAt(this._index);
+    this._workout = this._currentUser.getWorkoutAt(args["index"]);
   }
 
-  bool _isNewWorkout() {
-    return this._index == null;
+  void _saveChanges() {
+    Firestore.instance.runTransaction(
+      (transaction) async {
+        transaction
+            .update(_currentUser.getFirestoreReference(), {
+              "workouts": {_currentUser.getWorkoutList()}
+            })
+            .then((val) => print("Workouts successfully updated!"))
+            .catchError((e) =>
+                print("Error: Failed to update user Workouts!" + e.toString()));
+      },
+    );
+  }
+
+  void _updateExerciseRoutine(Routine r) {
+    print("update routine");
   }
 
   void _addRoutine() {
-    print("Add routines");
+    print("add routine");
   }
 
-  void _saveChanges() async {
-    Firestore.instance.runTransaction((transaction) {
-      transaction
-          .update(_currentUser.getFirestoreReference(), {
-            "workouts": {_currentUser.getWorkoutList()}
-          })
-          .then((val) => print("Workouts successfully updated!"))
-          .catchError((e) =>
-              print("Error: Failed to update user Workouts!" + e.toString()));
-    });
-  }
-
-  void updateUserData() {
-    print("update current user data");
-  }
-
-// TODO: Start here... Navigate to another page instead of dialog box.
-  Future<void> _updateRoutine(Routine r) async {
-    return showDialog<void>(
+  Future<void> _updateRestRoutineTime(int index) async {
+    final _timeDropdownMenu =
+        TimeDropdownMenu(_workout.routines[index].timeToPerformInSeconds);
+    return await showDialog<void>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        return Dialog(
-          child: Column(
-            children: <Widget>[
-              EditRoutineCard(r),
-              Row(
-                children: <Widget>[
-                  FlatButton(
-                    child: Text(
-                      "Cancel",
-                      style: kSmallTextStyle,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  FlatButton(
-                    child: Text(
-                      "Confirm",
-                      style: kSmallTextStyle,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+        return AlertDialog(
+          title: Text("Enter Time"),
+          content: _timeDropdownMenu,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           backgroundColor: kCardBackground.withOpacity(0.9),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "Cancel",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Confirm",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                _workout.routines[index].timeToPerformInSeconds =
+                    _timeDropdownMenu.getValue();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );
@@ -121,7 +113,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
           },
         ),
         title: Text(
-          _workout.name,
+          "Edit " + _workout.name,
           style: kSmallTextStyle,
         ),
       ),
@@ -134,10 +126,27 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                     Widget item;
                     if (index < _workout.routines.length) {
                       item = RoutineCard(
+                        dottedBorder: true,
                         routine: _workout.routines[index],
-                        cardAction: () {
-                          _updateRoutine(_workout.routines[index]);
-                        },
+                        onTap: _workout.routines[index].exercise.name == "Rest"
+                            ? () {
+                                _updateRestRoutineTime(index);
+                              }
+                            : () {
+                                _updateExerciseRoutine(
+                                    _workout.routines[index]);
+                              },
+                      );
+                    } else if (index == _workout.routines.length) {
+                      item = CustomCard(
+                        cardChild: Center(
+                          child: Icon(
+                            FontAwesomeIcons.plus,
+                            size: 32.0,
+                            color: Colors.white60,
+                          ),
+                        ),
+                        onTap: _addRoutine,
                       );
                     }
                     return item;
@@ -146,22 +155,14 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
               ],
             )
           : EmptyStateNotification(sub: "Add Routines/ Exercises"),
-      bottomNavigationBar: this._workout.routines.length > 0
-          ? BottomNavigationButton(
-              label: "SAVE",
-              action: () {
-                _saveChanges();
-                Navigator.pushNamed(context, "/workouts",
-                    arguments: _currentUser);
-              },
-              color: kGreenButtonColor,
-            )
-          : BottomNavigationButton(
-              label: "ADD ROUTINE",
-              action: () {
-                _addRoutine();
-              },
-              color: kBlueButtonColor),
+      bottomNavigationBar: BottomNavigationButton(
+        label: "SAVE CHANGES",
+        action: () {
+          _saveChanges();
+          Navigator.pushNamed(context, "/workouts", arguments: _currentUser);
+        },
+        color: kBlueButtonColor,
+      ),
     );
   }
 }

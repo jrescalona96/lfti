@@ -210,7 +210,7 @@ class User {
     for (var item in r) {
       routines.add(Routine(
         exercise: Exercise(
-            name: item["exercise"]["name"], focus: item["exercise"]["name"]),
+            name: item["exercise"]["name"], focus: item["exercise"]["focus"]),
         reps: item["reps"],
         sets: item["sets"],
         timeToPerformInSeconds: item["timeToPerformInSeconds"] == null
