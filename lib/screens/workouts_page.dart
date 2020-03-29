@@ -67,7 +67,6 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                   );
                   print(_nameTextController.text + " Workout Initialized");
                   this._currentUser.setWorkoutList(_workoutList);
-                  print(_currentUser.getWorkoutList());
                   Navigator.pushNamed(context, "/updateWorkout",
                       arguments: {"user": _currentUser, "index": null});
                 } else {
@@ -115,18 +114,19 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                           Widget item;
                           if (index < _currentUser.getWorkoutList().length) {
                             item = WorkoutCard(
-                                dottedBorder: true,
-                                user: this._currentUser,
-                                index: index,
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                    '/updateWorkout',
-                                    arguments: {
-                                      "user": this._currentUser,
-                                      "index": index
-                                    },
-                                  );
-                                });
+                              dottedBorder: true,
+                              user: this._currentUser,
+                              index: index,
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  '/updateWorkout',
+                                  arguments: {
+                                    "user": this._currentUser,
+                                    "index": index
+                                  },
+                                );
+                              },
+                            );
                           }
                           return item;
                         }),

@@ -1,12 +1,14 @@
 import "package:flutter/material.dart";
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+// package imports
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "package:intl/intl.dart";
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Routine.dart";
-import 'package:lfti_app/components/custom_card.dart';
 
 // component imports
 import "package:lfti_app/components/menu.dart";
@@ -14,6 +16,7 @@ import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
 import "package:lfti_app/components/routine_card.dart";
 import "package:lfti_app/components/time_dropdown_menu.dart";
+import "package:lfti_app/components/custom_card.dart";
 
 // firestore import
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -29,32 +32,14 @@ class UpdateWorkoutPage extends StatefulWidget {
 class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
   User _currentUser;
   Workout _workout;
+  int _workoutIndex;
+  List<Routine> _routineList;
 
   _UpdateWorkoutPageState(Map args) {
     this._currentUser = args["user"];
-    this._workout = this._currentUser.getWorkoutAt(args["index"]);
-  }
-
-  void _saveChanges() {
-    Firestore.instance.runTransaction(
-      (transaction) async {
-        transaction
-            .update(_currentUser.getFirestoreReference(), {
-              "workouts": {_currentUser.getWorkoutList()}
-            })
-            .then((val) => print("Workouts successfully updated!"))
-            .catchError((e) =>
-                print("Error: Failed to update user Workouts!" + e.toString()));
-      },
-    );
-  }
-
-  void _updateExerciseRoutine(Routine r) {
-    print("update routine");
-  }
-
-  void _addRoutine() {
-    print("add routine");
+    this._workoutIndex = args["index"];
+    this._workout = this._currentUser.getWorkoutAt(this._workoutIndex);
+    this._routineList = this._workout.routines;
   }
 
   Future<void> _updateRestRoutineTime(int index) async {
@@ -68,7 +53,8 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
           title: Text("Enter Time"),
           content: _timeDropdownMenu,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
           backgroundColor: kCardBackground.withOpacity(0.9),
           actions: <Widget>[
             FlatButton(
@@ -99,6 +85,48 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     );
   }
 
+  void _addExerciseRoutine() {
+    print("add routine");
+  }
+
+  void _updateExerciseRoutine(int index) {
+    Navigator.pushNamed(context, "/updateRoutine", arguments: {
+      "user": this._currentUser,
+      "workoutIndex": this._workoutIndex,
+      "routineIndex": index
+    });
+  }
+
+  void _saveChanges() {
+    List newWorkoutList = _currentUser
+        .getWorkoutList()
+        .map((w) => {
+              "id": "W" + DateFormat(kFormatDateId).format(DateTime.now()),
+              "name": w.name.toString(),
+              "description": w.description.toString(),
+              "routines": w.routines
+                  .map((r) => {
+                        "exercise": {
+                          "name": r.exercise.name.toString(),
+                          "focus": r.exercise.focus.toString(),
+                        },
+                        "reps": r.reps,
+                        "sets": r.sets
+                      })
+                  .toList()
+            })
+        .toList();
+    print(newWorkoutList);
+    Firestore.instance.runTransaction((transaction) async {
+      transaction
+          .update(_currentUser.getFirestoreReference(),
+              {"workouts": newWorkoutList})
+          .then((val) => print("Success: Workouts successfully updated!"))
+          .catchError((e) =>
+              print("Error: Failed to update user Workouts! " + e.toString()));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,30 +144,25 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
         ),
         title: Text(
           "Edit " + _workout.name,
-          style: kSmallBoldTextStyle,
+          style: kSmallTextStyle,
         ),
       ),
       drawer: Menu(_currentUser),
-      body: _workout.routines.length > 0
+      body: _routineList != null
           ? CustomScrollView(
               slivers: <Widget>[
                 SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                     Widget item;
-                    if (index < _workout.routines.length) {
+                    if (index < _routineList.length) {
                       item = RoutineCard(
                         dottedBorder: true,
-                        routine: _workout.routines[index],
-                        onTap: _workout.routines[index].exercise.name == "Rest"
-                            ? () {
-                                _updateRestRoutineTime(index);
-                              }
-                            : () {
-                                _updateExerciseRoutine(
-                                    _workout.routines[index]);
-                              },
+                        routine: _routineList[index],
+                        onTap: _routineList[index].exercise.name == "Rest"
+                            ? () => _updateRestRoutineTime(index)
+                            : () => _updateExerciseRoutine(index),
                       );
-                    } else if (index == _workout.routines.length) {
+                    } else if (index == _routineList.length) {
                       item = CustomCard(
                         cardChild: Center(
                           child: Icon(
@@ -148,7 +171,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                             color: Colors.white60,
                           ),
                         ),
-                        onTap: _addRoutine,
+                        onTap: () => _addExerciseRoutine(),
                       );
                     }
                     return item;
@@ -156,7 +179,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                 ),
               ],
             )
-          : EmptyStateNotification(sub: "Add Routines/ Exercises"),
+          : EmptyStateNotification(sub: "Add Routines/Exercises"),
       bottomNavigationBar: BottomNavigationButton(
         label: "SAVE CHANGES",
         action: () {

@@ -33,8 +33,8 @@ class _SessionPageState extends State<SessionPage> {
     this._currentRoutine = _session.getCurrentRoutine();
   }
 
-  Future<void> _showSessionConfirmationDialogBox() async {
-    return showDialog<void>(
+  void _showSessionConfirmationDialogBox() async {
+    await showDialog<void>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {

@@ -66,7 +66,6 @@ class _ViewWorkoutsPageState extends State<ViewWorkoutsPage> {
                   );
                   print(_nameTextController.text + " Workout Initialized");
                   this._currentUser.setWorkoutList(_workoutList);
-                  print(_currentUser.getWorkoutList());
                   Navigator.pushNamed(context, "/updateWorkout",
                       arguments: {"user": _currentUser, "index": null});
                 } else {

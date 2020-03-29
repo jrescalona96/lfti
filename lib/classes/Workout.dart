@@ -17,18 +17,23 @@ class Workout {
     this.description = "",
   }) {
     this.id = this.id == null
-        ? ("W" + DateFormat(kFormatDateAndTime).format(DateTime.now()))
+        ? "W" + DateFormat(kFormatDateAndTime).format(DateTime.now())
         : this.id;
   }
-  add(Routine routine) {
-    routines.add(routine);
+
+  void add(Routine r) {
+    routines.add(r);
   }
 
-  remove(int index) {
-    routines.removeAt(index);
+  void remove(int i) {
+    routines.removeAt(i);
   }
 
-  reset() {
+  void setRoutineAt(int i, Routine r) {
+    routines[i] = r;
+  }
+
+  void reset() {
     routines.clear();
   }
 }

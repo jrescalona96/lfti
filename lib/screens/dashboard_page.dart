@@ -36,7 +36,6 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Scaffold _buildDashboardPage(BuildContext context) {
-    print(_currentUser.getNextSession());
     return Scaffold(
       appBar: AppBar(
         leading: Builder(

@@ -114,6 +114,10 @@ class User {
     this._workouts = l;
   }
 
+  void setWorkoutAt(int index, Workout w) {
+    this._workouts[index] = w;
+  }
+
   bool isLoggedIn() {
     return getDocument() != null && getAuth() != null;
   }

@@ -30,12 +30,6 @@ class _TimeDropdownMenuState extends State<TimeDropdownMenu> {
     return this._selectedValue;
   }
 
-  void setSelectedValue(int val) {
-    setState(() {
-      this._selectedValue = val;
-    });
-  }
-
   List<DropdownMenuItem> _generateTimeListOptions() {
     var l = List<DropdownMenuItem>();
     for (var number in Iterable<int>.generate(400).toList()) {
@@ -56,12 +50,15 @@ class _TimeDropdownMenuState extends State<TimeDropdownMenu> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
-        hint: Text("$_selectedValue sec", style: kSmallBoldTextStyle),
-        isExpanded: true,
-        isDense: true,
-        items: _generateTimeListOptions(),
-        onChanged: (val) {
-          setSelectedValue(val);
+      hint: Text("$_selectedValue sec", style: kSmallBoldTextStyle),
+      isExpanded: true,
+      isDense: true,
+      items: _generateTimeListOptions(),
+      onChanged: (val) {
+        setState(() {
+          this._selectedValue = val;
         });
+      },
+    );
   }
 }
