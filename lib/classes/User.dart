@@ -122,6 +122,15 @@ class User {
     return getDocument() != null && getAuth() != null;
   }
 
+  void deleteRoutineAt(int workoutIndex, int routineIndex) {
+    _workouts[workoutIndex].routines.removeAt(routineIndex);
+  }
+
+  void deleteWorkoutAt() {
+    // TODO: need to implement delete workout
+    print("TODO: need to implement delete workout");
+  }
+
   /// getters
   AuthResult getAuth() {
     return _authRes;

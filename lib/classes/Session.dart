@@ -104,6 +104,7 @@ class Session {
       this._performedRoutines.add(getCurrentRoutine());
       nextRoutine();
     }
+    print("Session next was called!");
   }
 
   void previous() {
@@ -127,6 +128,7 @@ class Session {
   void nextRoutine() {
     if (this._currentRoutineIndex < _workout.routines.length) {
       this._currentRoutineIndex++;
+      print("Session next routine was called!");
     }
   }
 
@@ -148,6 +150,7 @@ class Session {
         // entire routine is skipped
         this._skippedRoutines.add(getCurrentRoutine());
       } else {
+        // some sets performed
         this._performedRoutines.add(getCurrentRoutine());
       }
     }

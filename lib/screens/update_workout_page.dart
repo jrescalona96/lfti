@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 
 // package imports
-import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:intl/intl.dart";
 
 // class imports
@@ -16,6 +15,7 @@ import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
 import "package:lfti_app/components/routine_card.dart";
 import "package:lfti_app/components/time_dropdown_menu.dart";
+import "package:lfti_app/components/custom_button_card.dart";
 import "package:lfti_app/components/custom_card.dart";
 
 // firestore import
@@ -42,7 +42,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     this._routineList = this._workout.routines;
   }
 
-  Future<void> _updateRestRoutineTime(int index) async {
+  void _showUpdateRestTimeDialog(int index) async {
     final _timeDropdownMenu =
         TimeDropdownMenu(_workout.routines[index].timeToPerformInSeconds);
     return await showDialog<void>(
@@ -50,7 +50,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Enter Time"),
+          title: Text("Enter Time (seconds)"),
           content: _timeDropdownMenu,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -58,19 +58,17 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
           backgroundColor: kCardBackground.withOpacity(0.9),
           actions: <Widget>[
             FlatButton(
-              child: Text(
-                "Cancel",
-                style: kSmallTextStyle,
-              ),
+              color: kRedButtonColor.withOpacity(0.5),
+              child: Text("DELETE", style: kSmallTextStyle),
               onPressed: () {
+                setState(() {
+                  this._currentUser.deleteRoutineAt(this._workoutIndex, index);
+                });
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: Text(
-                "Confirm",
-                style: kSmallTextStyle,
-              ),
+              child: Text("CONFIRM", style: kSmallTextStyle),
               onPressed: () {
                 setState(() {
                   _workout.routines[index].timeToPerformInSeconds =
@@ -98,6 +96,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
   }
 
   void _saveChanges() {
+    // TODO: Create a class schema for workout
     List newWorkoutList = _currentUser
         .getWorkoutList()
         .map((w) => {
@@ -110,8 +109,8 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                           "name": r.exercise.name.toString(),
                           "focus": r.exercise.focus.toString(),
                         },
-                        "reps": r.reps,
-                        "sets": r.sets
+                        "reps": r.exercise.name == "Rest" ? 1 : r.reps,
+                        "sets": r.exercise.name == "Rest" ? 1 : r.sets
                       })
                   .toList()
             })
@@ -159,20 +158,11 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                         dottedBorder: true,
                         routine: _routineList[index],
                         onTap: _routineList[index].exercise.name == "Rest"
-                            ? () => _updateRestRoutineTime(index)
+                            ? () => _showUpdateRestTimeDialog(index)
                             : () => _updateExerciseRoutine(index),
                       );
                     } else if (index == _routineList.length) {
-                      item = CustomCard(
-                        cardChild: Center(
-                          child: Icon(
-                            FontAwesomeIcons.plus,
-                            size: 32.0,
-                            color: Colors.white60,
-                          ),
-                        ),
-                        onTap: () => _addExerciseRoutine(),
-                      );
+                      item = CustomButtonCard(onTap: _addExerciseRoutine);
                     }
                     return item;
                   }),

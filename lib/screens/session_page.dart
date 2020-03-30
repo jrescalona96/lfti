@@ -80,12 +80,17 @@ class _SessionPageState extends State<SessionPage> {
   }
 
   void _next() {
-    _routineTimerController.restart();
-    _session.next();
-    setState(() {
-      _currentSet = _session.getCurrentSet();
-      _currentRoutine = _session.getCurrentRoutine();
-    });
+    try {
+      _routineTimerController.restart();
+      _session.next();
+      setState(() {
+        _currentSet = _session.getCurrentSet();
+        _currentRoutine = _session.getCurrentRoutine();
+      });
+      print("Success: Next Set.");
+    } catch (e) {
+      print("Error: something went wrong calling next() in Session Page!");
+    }
   }
 
   void _back() {
@@ -246,10 +251,10 @@ class _SessionPageState extends State<SessionPage> {
                       child: RaisedButton(
                         onPressed: _session.isPaused || _session.isFinished()
                             ? null
-                            : _next,
+                            : () => _next(),
                         onLongPress: _session.isPaused || _session.isFinished()
                             ? null
-                            : _skipRoutine,
+                            : () => _skipRoutine(),
                         child: Text(
                           "NEXT",
                           style: kButtonTextFontStyle,

@@ -16,6 +16,7 @@ const kGreenButtonColor = Color(0xFF00C11D);
 const kBlueButtonColor = Colors.blueAccent;
 const kRedButtonColor = Colors.red;
 const kOrangeButtonColor = Colors.orange;
+const kIconColor = Colors.white70;
 
 const kLabelTextStyle = TextStyle(
   fontSize: 15.0,
@@ -32,9 +33,7 @@ const kUnitLabelTextStyle = TextStyle(
   color: Color(0xFF8D8E98),
 );
 
-const kSmallTextStyle = TextStyle(
-  fontSize: 18,
-);
+const kSmallTextStyle = TextStyle(fontSize: 18, color: Colors.white);
 
 const kSmallBoldTextStyle = TextStyle(
   fontSize: 18,
@@ -70,7 +69,7 @@ const kLargeBoldTextStyle2x = TextStyle(
 );
 
 const kButtonTextFontStyle =
-    TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700);
+    TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.white);
 
 const kButtonBoldTextFontStyle = TextStyle(
     fontSize: 24.0, color: Color(0xFF0A0E21), fontWeight: FontWeight.w900);

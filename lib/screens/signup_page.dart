@@ -163,7 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 RaisedButton(
                     child: Text(
                       "SIGN UP",
-                      style: kButtonBoldTextFontStyle,
+                      style: kButtonTextFontStyle,
                     ),
                     onPressed: () async {
                       if (_isAllInputNotEmpty()) {

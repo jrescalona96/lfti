@@ -6,8 +6,15 @@ import 'package:lfti_app/classes/Constants.dart';
 class CustomCard extends StatelessWidget {
   final Widget cardChild;
   final Function onTap;
+  final Color color;
   bool dottedBorder;
-  CustomCard({@required this.cardChild, this.onTap, this.dottedBorder = false});
+
+  CustomCard({
+    @required this.cardChild,
+    this.onTap,
+    this.dottedBorder = false,
+    this.color = kCardBackground,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +24,14 @@ class CustomCard extends StatelessWidget {
         margin: kCardMargin,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          color: kCardBackground,
+          color: this.color,
         ),
         child: DottedBorder(
-          color: dottedBorder ? Colors.white24 : Colors.transparent,
-          strokeWidth: 3,
+          color: this.dottedBorder ? Colors.white24 : Colors.transparent,
+          strokeWidth: 2,
           padding: kContentPadding,
           dashPattern: [6.0, 6.0, 6.0, 6.0],
-          child: cardChild,
+          child: this.cardChild,
         ),
       ),
     );

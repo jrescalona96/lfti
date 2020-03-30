@@ -34,7 +34,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
     this._workoutList = _currentUser.getWorkoutList();
   }
 
-  Future<void> _createNewWorkout() async {
+  void _createNewWorkout() async {
     final _nameTextController = TextEditingController();
     return showDialog<void>(
       context: context,
@@ -112,21 +112,18 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                         delegate: SliverChildBuilderDelegate(
                             (BuildContext context, int index) {
                           Widget item;
-                          if (index < _currentUser.getWorkoutList().length) {
+                          if (index < _workoutList.length) {
                             item = WorkoutCard(
-                              dottedBorder: true,
-                              user: this._currentUser,
-                              index: index,
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                  '/updateWorkout',
-                                  arguments: {
+                                dottedBorder: true,
+                                user: this._currentUser,
+                                index: index,
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed('/updateWorkout', arguments: {
                                     "user": this._currentUser,
                                     "index": index
-                                  },
-                                );
-                              },
-                            );
+                                  });
+                                });
                           }
                           return item;
                         }),

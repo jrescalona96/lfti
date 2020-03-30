@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:numberpicker/numberpicker.dart";
 
 // class imports
@@ -9,7 +9,7 @@ import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/User.dart";
 
 // component imports
-import 'package:lfti_app/components/bottom_navigation_button.dart';
+import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/custom_dropdown_menu.dart";
 import "package:lfti_app/components/custom_card.dart";
 
@@ -141,6 +141,16 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     }
   }
 
+  void _deleteRoutine() {
+    // show confirmation dialog
+    this._currentUser.deleteRoutineAt(this._workoutIndex, this._routineIndex);
+    Navigator.pushNamed(
+      context,
+      "/updateWorkout",
+      arguments: {"user": _currentUser, "index": _workoutIndex},
+    );
+  }
+
   void _saveChanges() {
     // TODO: consider using ".pop(result)" instead
     Workout workout = _currentUser.getWorkoutAt(this._workoutIndex);
@@ -160,7 +170,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_routine.exercise.name),
+        title: Text("Update Routine", style: kSmallTextStyle),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -172,8 +182,10 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
               children: <Widget>[
                 Text("Name", style: kLabelTextStyle),
                 TextFormField(
+                  minLines: 1,
+                  maxLines: 3,
                   controller: _nameTextController,
-                  style: kMediumTextStyle,
+                  style: kSmallBoldTextStyle,
                   decoration: InputDecoration(
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -199,10 +211,9 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Text("Major Muscle Group", style: kLabelTextStyle),
-                  SizedBox(height: kSmallSizedBoxHeight),
                   Text(
                     _routine.exercise.focus,
-                    style: kMediumTextStyle,
+                    style: kSmallBoldTextStyle,
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -232,7 +243,6 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
                   ),
                 ),
               ),
-
               // sets section
               Expanded(
                 child: GestureDetector(
@@ -253,6 +263,18 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
                 ),
               ),
             ],
+          ),
+
+          // delete button
+          CustomCard(
+            onTap: _deleteRoutine,
+            cardChild: Center(
+              child: Text(
+                "DELETE ROUTINE",
+                style: kButtonTextFontStyle,
+              ),
+            ),
+            color: Colors.red.withOpacity(0.8),
           ),
         ],
       ),

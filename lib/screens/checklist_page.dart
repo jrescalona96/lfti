@@ -9,6 +9,7 @@ import "package:lfti_app/components/menu.dart";
 import "package:lfti_app/components/custom_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
+import "package:lfti_app/components/custom_button_card.dart";
 
 // firestore import
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -106,20 +107,30 @@ class _ChecklistPageState extends State<ChecklistPage> {
         _editChecklistItem();
       },
       child: CustomCard(
+        dottedBorder: true,
         cardChild: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Flexible(
-              child: Text(
-                _checklist[index].toString(),
-                style: kMediumLabelTextStyle,
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    index.toString(),
+                    style: kMediumLabelTextStyle,
+                  ),
+                  SizedBox(width: kSizedBoxHeight),
+                  Text(
+                    _checklist[index].toString(),
+                    style: kSmallBoldTextStyle,
+                  ),
+                ],
               ),
             ),
             GestureDetector(
               onTap: () {
                 _deleteChecklistItem(index);
               },
-              child: Icon(Icons.close),
+              child: Icon(Icons.close, color: kIconColor),
             )
           ],
         ),
@@ -130,48 +141,43 @@ class _ChecklistPageState extends State<ChecklistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
+        appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              );
+            },
+          ),
+          title: Text(
+            "Checklist",
+            style: kSmallTextStyle,
+          ),
         ),
-        title: Text(
-          "Checklist",
-          style: kSmallTextStyle,
-        ),
-      ),
-      drawer: Menu(this._currentUser),
-      body: this._checklist.length > 0
-          ? CustomScrollView(
-              slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    Widget item;
-                    if (index < this._checklist.length) {
-                      item = buildChecklistItemCard(index);
-                    }
-                    return item;
-                  }),
-                ),
-              ],
-            )
-          : EmptyStateNotification(sub: "Add Items to your Checklist first."),
-      bottomNavigationBar: this._checklist.length > 0
-          ? BottomNavigationButton(
-              label: "SAVE", action: _saveChanges, color: kGreenButtonColor)
-          : BottomNavigationButton(
-              label: "ADD ITEM",
-              action: _addChecklistItem,
-              color: kBlueButtonColor,
-            ),
-    );
+        drawer: Menu(this._currentUser),
+        body: this._checklist.length > 0
+            ? CustomScrollView(
+                slivers: <Widget>[
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                      Widget item;
+                      if (index < this._checklist.length) {
+                        item = buildChecklistItemCard(index);
+                      } else if (index == this._checklist.length) {
+                        item = CustomButtonCard(onTap: _addChecklistItem);
+                      }
+                      return item;
+                    }),
+                  ),
+                ],
+              )
+            : EmptyStateNotification(sub: "Add Items to your Checklist first."),
+        bottomNavigationBar: BottomNavigationButton(
+            label: "SAVE", action: _saveChanges, color: kGreenButtonColor));
   }
 }
