@@ -154,7 +154,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   void _saveChanges() {
     // TODO: consider using ".pop(result)" instead
     Workout workout = _currentUser.getWorkoutAt(this._workoutIndex);
-    workout.setRoutineAt(this._routineIndex, this._routine);
+    workout.updateRoutineAt(this._routineIndex, this._routine);
     this._currentUser.setWorkoutAt(
           this._workoutIndex,
           workout,
@@ -243,6 +243,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
                   ),
                 ),
               ),
+
               // sets section
               Expanded(
                 child: GestureDetector(

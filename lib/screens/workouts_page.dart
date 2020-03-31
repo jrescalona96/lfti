@@ -14,6 +14,7 @@ import "package:lfti_app/components/workout_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/menu.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
+import "package:lfti_app/components/custom_dialog_button.dart";
 
 class WorkoutsPage extends StatefulWidget {
   final User _currentUser;
@@ -34,29 +35,28 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
     this._workoutList = _currentUser.getWorkoutList();
   }
 
-  void _createNewWorkout() async {
+  void _showCreateNewWorkoutDialog() async {
     final _nameTextController = TextEditingController();
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Enter Name"),
+          title: Text("Enter Workout Name"),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           backgroundColor: kCardBackground.withOpacity(0.9),
-          content: TextFormField(
-              controller: _nameTextController,
-              keyboardType: TextInputType.text),
+          content: Column(
+            children: <Widget>[
+              TextFormField(
+                  controller: _nameTextController,
+                  keyboardType: TextInputType.text),
+            ],
+          ),
           actions: <Widget>[
-            FlatButton(
-              child: Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text("Create"),
+            CustomDialogButton(
+              label: "CREATE",
+              color: kGreenButtonColor.withOpacity(0.5),
               onPressed: () {
                 if (_nameTextController.text != null) {
                   _workoutList.add(
@@ -65,12 +65,18 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                       routines: List<Routine>(),
                     ),
                   );
-                  print(_nameTextController.text + " Workout Initialized");
-                  this._currentUser.setWorkoutList(_workoutList);
-                  Navigator.pushNamed(context, "/updateWorkout",
-                      arguments: {"user": _currentUser, "index": null});
+                  this._currentUser.addWorkout(
+                        Workout(
+                          name: _nameTextController.text,
+                          routines: List<Routine>(),
+                        ),
+                      );
+                  Navigator.pushNamed(
+                    context,
+                    "/createWorkout",
+                    arguments: _currentUser,
+                  );
                 } else {
-                  // TODO: Dialog Box to Warn user
                   print("Empty Name Field!");
                 }
               },
@@ -133,7 +139,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                 : EmptyStateNotification(sub: "Create workout routines first."),
             bottomNavigationBar: BottomNavigationButton(
               label: "CREATE WORKOUT",
-              action: _createNewWorkout,
+              action: _showCreateNewWorkoutDialog,
               color: kBlueButtonColor,
             ),
           );

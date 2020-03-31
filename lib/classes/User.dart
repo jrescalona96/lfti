@@ -122,8 +122,12 @@ class User {
     return getDocument() != null && getAuth() != null;
   }
 
+  void addWorkout(Workout w) {
+    this._workouts.add(w);
+  }
+
   void deleteRoutineAt(int workoutIndex, int routineIndex) {
-    _workouts[workoutIndex].routines.removeAt(routineIndex);
+    _workouts[workoutIndex].deleteRoutine(routineIndex);
   }
 
   void deleteWorkoutAt() {
@@ -190,6 +194,10 @@ class User {
 
   Session getSession() {
     return this._currentSession;
+  }
+
+  Workout getLastWorkout() {
+    return getWorkoutAt(this._workouts.length - 1);
   }
 
   /// helper methods

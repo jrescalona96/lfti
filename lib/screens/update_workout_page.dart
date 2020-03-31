@@ -16,7 +16,7 @@ import "package:lfti_app/components/empty_state_notification.dart";
 import "package:lfti_app/components/routine_card.dart";
 import "package:lfti_app/components/time_dropdown_menu.dart";
 import "package:lfti_app/components/custom_button_card.dart";
-import "package:lfti_app/components/custom_card.dart";
+import "package:lfti_app/components/custom_dialog_button.dart";
 
 // firestore import
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -57,18 +57,18 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
           ),
           backgroundColor: kCardBackground.withOpacity(0.9),
           actions: <Widget>[
-            FlatButton(
-              color: kRedButtonColor.withOpacity(0.5),
-              child: Text("DELETE", style: kSmallTextStyle),
+            CustomDialogButton(
+              label: "DELETE",
               onPressed: () {
                 setState(() {
                   this._currentUser.deleteRoutineAt(this._workoutIndex, index);
                 });
                 Navigator.of(context).pop();
               },
+              color: kRedButtonColor.withOpacity(0.5),
             ),
-            FlatButton(
-              child: Text("CONFIRM", style: kSmallTextStyle),
+            CustomDialogButton(
+              label: "CONFIRM",
               onPressed: () {
                 setState(() {
                   _workout.routines[index].timeToPerformInSeconds =

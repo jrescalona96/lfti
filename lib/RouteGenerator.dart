@@ -13,10 +13,11 @@ import "package:lfti_app/screens/session_page.dart";
 import "package:lfti_app/screens/signup_page.dart";
 import "package:lfti_app/screens/view_routines_page.dart";
 import "package:lfti_app/screens/session_summary_page.dart";
-import "package:lfti_app/screens/update_workout_page.dart";
 import "package:lfti_app/screens/checklist_page.dart";
 import "package:lfti_app/screens/update_routine_page.dart";
 import "package:lfti_app/screens/view_workouts_page.dart";
+import "package:lfti_app/screens/update_workout_page.dart";
+import "package:lfti_app/screens/create_workout_page.dart";
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -64,6 +65,14 @@ class RouteGenerator {
         print("updateWorkout args: $args");
         if (args is Map) {
           return MaterialPageRoute(builder: (_) => UpdateWorkoutPage(args));
+        } else {
+          return _errorRoute();
+        }
+        break;
+      case "/createWorkout":
+        print("createWorkout args: $args");
+        if (args is User) {
+          return MaterialPageRoute(builder: (_) => CreateWorkoutPage(args));
         } else {
           return _errorRoute();
         }

@@ -21,19 +21,23 @@ class Workout {
         : this.id;
   }
 
-  void add(Routine r) {
-    routines.add(r);
+  void addRoutine(Routine r) {
+    this.routines.add(r);
   }
 
-  void remove(int i) {
+  void deleteRoutine(int i) {
     routines.removeAt(i);
   }
 
-  void setRoutineAt(int i, Routine r) {
+  void updateRoutineAt(int i, Routine r) {
     routines[i] = r;
   }
 
   void reset() {
     routines.clear();
+  }
+
+  Routine getRoutineAt(int index) {
+    return routines[index];
   }
 }
