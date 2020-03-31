@@ -1,19 +1,15 @@
-import 'package:lfti_app/classes/Exercise.dart';
-
-// TODO: separate exercise and rest
+import "Exercise.dart";
+import "package:intl/intl.dart";
+import "Constants.dart";
+import "package:flutter/material.dart";
 
 class Routine {
-  int id;
+  String id;
   Exercise exercise;
   int sets;
   int reps;
-  int timeToPerformInSeconds;
 
-  Routine({
-    this.id,
-    this.exercise,
-    this.sets = 1,
-    this.reps = 1,
-    this.timeToPerformInSeconds = 0,
-  });
+  Routine({@required this.exercise, this.reps = 1, this.sets = 1}) {
+    this.id = "R" + DateFormat(kFormatDateId).format(DateTime.now());
+  }
 }

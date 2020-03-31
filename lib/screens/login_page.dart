@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import "package:lfti_app/classes/User.dart";
 
-// firebase imports
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class LoginPage extends StatefulWidget {
   final Map<String, String> _emailAndPassword;
   LoginPage(this._emailAndPassword);
@@ -14,8 +10,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Map<String, String> _emailAndPassword;
-  _LoginPageState(this._emailAndPassword);
+  Map<String, String> _userCredentials;
+  _LoginPageState(this._userCredentials);
 
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
@@ -30,13 +26,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _init() {
-    // _emailTextController.text = _emailAndPassword["email"];
-    // _passwordTextController.text = _emailAndPassword["pw"];
-    // TODO: DELETE BEFORE PUBLISH
-    _emailTextController.text = "jrescalona@gmail.com";
-    _passwordTextController.text = "thisisatest";
-    // _emailTextController.text = "j@test.com";
-    // _passwordTextController.text = "test11";
+    // _emailTextController.text = _userCredentials["email"];
+    // _passwordTextController.text = _userCredentials["pw"];
+    _emailTextController.text = "test@test.com";
+    _passwordTextController.text = "testing";
   }
 
   @override
@@ -86,12 +79,14 @@ class _LoginPageState extends State<LoginPage> {
                                 await _currentUser.login(
                                     _emailTextController.text.trim(),
                                     _passwordTextController.text);
+
                                 if (_currentUser.isLoggedIn()) {
-                                  print("Login Successfull: Logged in as " +
-                                      _currentUser.getFirstName() +
-                                      _currentUser.getLastName() +
-                                      ", uid : " +
-                                      _currentUser.getAuth().user.uid);
+                                  print(
+                                    "Login Successful: Logged in as " +
+                                        _currentUser.getFirstName() +
+                                        " " +
+                                        _currentUser.getLastName(),
+                                  );
                                   Navigator.pushNamed(context, '/dashboard',
                                       arguments: _currentUser);
                                 } else {

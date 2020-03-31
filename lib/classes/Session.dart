@@ -1,5 +1,5 @@
-import 'package:lfti_app/classes/Exercise.dart';
 import "package:lfti_app/classes/Workout.dart";
+import "package:lfti_app/classes/TimedRoutine.dart";
 import "package:lfti_app/classes/Routine.dart";
 import "package:intl/intl.dart";
 import "package:lfti_app/classes/Constants.dart";
@@ -49,27 +49,17 @@ class Session {
     return this._currentRoutineIndex;
   }
 
-  Routine getCurrentRoutine() {
-    Routine r;
+  dynamic getCurrentRoutine() {
     try {
-      r = _workout.routines[_currentRoutineIndex];
+      return _workout.routines[_currentRoutineIndex];
     } catch (e) {
       print("Accessed invalid routine index. " + e.toString());
     }
-    return r;
+    return _workout.routines[_currentRoutineIndex];
   }
 
   Routine getNextRoutine() {
-    try {
-      return _workout.routines[_currentRoutineIndex + 1];
-    } catch (e) {
-      print("No more routines left. " + e.toString());
-      return Routine(
-        exercise: Exercise(name: "Last Exercise"),
-        reps: 0,
-        sets: 0,
-      );
-    }
+    return _workout.routines[_currentRoutineIndex + 1];
   }
 
   bool isFinished() {
@@ -157,9 +147,19 @@ class Session {
     nextRoutine();
   }
 
+  bool isLastRoutine() {
+    return _currentRoutineIndex < _workout.routines.length - 1;
+  }
+
+  bool isLastSet() {
+    if (getCurrentRoutine() is TimedRoutine)
+      return false;
+    else
+      return _currentSet < getCurrentRoutine().sets - 1;
+  }
+
   bool hasNext() {
-    return _currentRoutineIndex >= _workout.routines.length &&
-        _currentSet >= getCurrentRoutine().sets - 1;
+    return isLastRoutine() || isLastSet();
   }
 
   bool isRoutineDone() {
@@ -173,7 +173,7 @@ class Session {
     for (int i = _currentRoutineIndex + 1;
         i < getWorkout().routines.length;
         i++) {
-      Routine r = getWorkout().routines[i];
+      var r = getWorkout().routines[i];
       if (r.exercise.name != "Rest") {
         _skippedRoutines.add(r);
         _skippedSets = this._skippedSets + r.sets;

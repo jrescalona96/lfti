@@ -4,7 +4,7 @@ import 'package:lfti_app/classes/Routine.dart';
 import 'package:lfti_app/components/custom_card.dart';
 
 class RoutineCard extends StatelessWidget {
-  final Routine routine;
+  final routine;
   final Function onTap;
   final bool dottedBorder;
   RoutineCard({@required this.routine, this.onTap, this.dottedBorder = false});

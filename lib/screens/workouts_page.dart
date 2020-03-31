@@ -71,11 +71,10 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                           routines: List<Routine>(),
                         ),
                       );
-                  Navigator.pushNamed(
-                    context,
-                    "/createWorkout",
-                    arguments: _currentUser,
-                  );
+                  Navigator.pushNamed(context, "/updateWorkout", arguments: {
+                    "user": _currentUser,
+                    "index": _currentUser.getWorkoutList().length - 1
+                  });
                 } else {
                   print("Empty Name Field!");
                 }

@@ -5,6 +5,7 @@ import "package:firebase_auth/firebase_auth.dart";
 
 // class imports
 import "package:lfti_app/classes/Routine.dart";
+import 'package:lfti_app/classes/TimedRoutine.dart';
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Session.dart";
 import "package:lfti_app/classes/Exercise.dart";
@@ -219,25 +220,27 @@ class User {
       id: w["id"],
       name: w["name"],
       description: w["description"],
-      routines: _buildRoutineList(
-        w["routines"],
-      ),
+      routines: _buildRoutineList(w["routines"]),
     );
   }
 
-  List<Routine> _buildRoutineList(List r) {
-    int _defaultTime = 120;
+  List<Routine> _buildRoutineList(List list) {
     var routines = List<Routine>();
-    for (var item in r) {
-      routines.add(Routine(
-        exercise: Exercise(
-            name: item["exercise"]["name"], focus: item["exercise"]["focus"]),
-        reps: item["reps"],
-        sets: item["sets"],
-        timeToPerformInSeconds: item["timeToPerformInSeconds"] == null
-            ? _defaultTime
-            : item["timeToPerformInSeconds"],
-      ));
+    for (var r in list) {
+      if (r["type"] == "COUNTED") {
+        routines.add(
+          Routine(
+            exercise: Exercise(
+                name: r["exercise"]["name"], focus: r["exercise"]["focus"]),
+            reps: r["reps"],
+            sets: r["sets"],
+          ),
+        );
+      } else {
+        routines.add(
+          TimedRoutine(timeToPerformInSeconds: r["timeToPerformInSeconds"]),
+        );
+      }
     }
     return routines;
   }

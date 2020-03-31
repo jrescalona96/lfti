@@ -74,6 +74,6 @@ const kButtonTextFontStyle =
 const kButtonBoldTextFontStyle = TextStyle(
     fontSize: 24.0, color: Color(0xFF0A0E21), fontWeight: FontWeight.w900);
 
-String kFormatDateId = "yyyyMMdd-kk:mm:ss:ms";
+String kFormatDateId = "yyyyMMddkkmmssms";
 String kFormatDateAndTime = "MM/dd/yyyy kk:mm:ss";
 String kFormatDateMMddyyyy = "MM/dd/yyyy";

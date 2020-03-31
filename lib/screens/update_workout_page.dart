@@ -1,22 +1,20 @@
 import "package:flutter/material.dart";
 
-// package imports
-import "package:intl/intl.dart";
-
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Routine.dart";
+import "package:lfti_app/classes/TimedRoutine.dart";
 
 // component imports
 import "package:lfti_app/components/menu.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
-import "package:lfti_app/components/empty_state_notification.dart";
 import "package:lfti_app/components/routine_card.dart";
 import "package:lfti_app/components/time_dropdown_menu.dart";
 import "package:lfti_app/components/custom_button_card.dart";
 import "package:lfti_app/components/custom_dialog_button.dart";
+import "package:lfti_app/components/custom_text_form_field.dart";
 
 // firestore import
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -34,12 +32,19 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
   Workout _workout;
   int _workoutIndex;
   List<Routine> _routineList;
+  String _name, _description;
+
+  TextEditingController _nameTextController, _descriptionTextController;
 
   _UpdateWorkoutPageState(Map args) {
     this._currentUser = args["user"];
     this._workoutIndex = args["index"];
     this._workout = this._currentUser.getWorkoutAt(this._workoutIndex);
     this._routineList = this._workout.routines;
+    this._name = this._workout.name;
+    this._description = this._workout.description;
+    this._nameTextController = TextEditingController(text: _name);
+    this._descriptionTextController = TextEditingController(text: _description);
   }
 
   void _showUpdateRestTimeDialog(int index) async {
@@ -95,39 +100,80 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     });
   }
 
+  List<RoutineCard> _getRoutineCards() {
+    final routines = List<RoutineCard>();
+    if (this._routineList.isNotEmpty) {
+      for (int i = 0; i < this._routineList.length; i++) {
+        routines.add(
+          RoutineCard(
+              routine: _routineList[i],
+              onTap: _routineList[i] is TimedRoutine
+                  ? () => _showUpdateRestTimeDialog(i)
+                  : () => _updateExerciseRoutine(i)),
+        );
+      }
+    }
+    return routines;
+  }
+
+  void _showAddExerciseDialog() {
+    print("TODO: Need to implement");
+  }
+
   void _saveChanges() {
+    this._workout.setName(_nameTextController.text);
+    this._workout.setDescription(_descriptionTextController.text);
+    this._workout.setRoutines(this._routineList);
+    this._currentUser.setWorkoutAt(this._workoutIndex, _workout);
     // TODO: Create a class schema for workout
-    List newWorkoutList = _currentUser
+    var newWorkoutList = _currentUser
         .getWorkoutList()
         .map((w) => {
-              "id": "W" + DateFormat(kFormatDateId).format(DateTime.now()),
-              "name": w.name.toString(),
-              "description": w.description.toString(),
+              "id": w.id,
+              "name": w.name,
+              "description": w.description,
               "routines": w.routines
-                  .map((r) => {
-                        "exercise": {
-                          "name": r.exercise.name.toString(),
-                          "focus": r.exercise.focus.toString(),
-                        },
-                        "reps": r.exercise.name == "Rest" ? 1 : r.reps,
-                        "sets": r.exercise.name == "Rest" ? 1 : r.sets
-                      })
+                  .map((r) => (r is TimedRoutine)
+                      ? {
+                          "type": "TIMED",
+                          "exercise": {
+                            "name": r.exercise.name,
+                            "focus": r.exercise.focus
+                          },
+                          "timeToPerformInSeconds": r.timeToPerformInSeconds
+                        }
+                      : {
+                          "type": "COUNTED",
+                          "exercise": {
+                            "name": r.exercise.name,
+                            "focus": r.exercise.focus
+                          },
+                          "reps": r.reps,
+                          "sets": r.sets
+                        })
                   .toList()
             })
         .toList();
-    print(newWorkoutList);
+
     Firestore.instance.runTransaction((transaction) async {
       transaction
           .update(_currentUser.getFirestoreReference(),
               {"workouts": newWorkoutList})
           .then((val) => print("Success: Workouts successfully updated!"))
-          .catchError((e) =>
-              print("Error: Failed to update user Workouts! " + e.toString()));
+          .catchError((e) => print(
+              "Error: Failed to update user Workouts! : " + e.toString()));
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // line divider
+    var lineDivider = Divider(
+      indent: 40.0,
+      endIndent: 40.0,
+      color: kIconColor.withOpacity(0.2),
+      thickness: 1.0,
+    );
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -147,29 +193,31 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
         ),
       ),
       drawer: Menu(_currentUser),
-      body: _routineList != null
-          ? CustomScrollView(
-              slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    Widget item;
-                    if (index < _routineList.length) {
-                      item = RoutineCard(
-                        dottedBorder: true,
-                        routine: _routineList[index],
-                        onTap: _routineList[index].exercise.name == "Rest"
-                            ? () => _showUpdateRestTimeDialog(index)
-                            : () => _updateExerciseRoutine(index),
-                      );
-                    } else if (index == _routineList.length) {
-                      item = CustomButtonCard(onTap: _addExerciseRoutine);
-                    }
-                    return item;
-                  }),
-                ),
-              ],
-            )
-          : EmptyStateNotification(sub: "Add Routines/Exercises"),
+      body: ListView(
+        children: <Widget>[
+          CustomTextFormField(
+              textController: _nameTextController, label: "Name"),
+          lineDivider,
+          CustomTextFormField(
+              textController: _descriptionTextController, label: "Description"),
+          Container(
+            child: _routineList.isNotEmpty
+                ? lineDivider
+                : Text(
+                    "Add Routines",
+                    style: kSmallBoldTextStyle,
+                  ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ..._getRoutineCards(),
+              lineDivider,
+              CustomButtonCard(onTap: () => _showAddExerciseDialog()),
+            ],
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationButton(
         label: "SAVE CHANGES",
         action: () {

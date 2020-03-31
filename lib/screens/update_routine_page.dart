@@ -1,5 +1,6 @@
+import 'dart:ffi';
+
 import "package:flutter/material.dart";
-import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:numberpicker/numberpicker.dart";
 
 // class imports
@@ -12,6 +13,7 @@ import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/custom_dropdown_menu.dart";
 import "package:lfti_app/components/custom_card.dart";
+import "package:lfti_app/components/custom_text_form_field.dart";
 
 class UpdateRoutinePage extends StatefulWidget {
   final Map _args;
@@ -26,6 +28,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   Routine _routine;
   int _workoutIndex;
   int _routineIndex;
+
   TextEditingController _nameTextController;
 
   _UpdateRoutinePageState(Map args) {
@@ -70,6 +73,106 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
         _updateSets(val);
       }
     });
+  }
+
+  void _updateMuscleGroupFocus(String val) {
+    setState(() {
+      this._routine.exercise.focus = val;
+    });
+  }
+
+  void _updateReps(int val) {
+    if (this._routine.reps != val) {
+      setState(() {
+        this._routine.reps = val;
+      });
+    }
+  }
+
+  void _updateSets(int val) {
+    if (this._routine.sets != val) {
+      setState(() {
+        this._routine.sets = val;
+      });
+    }
+  }
+
+  void _deleteRoutine() {
+    // show confirmation dialog
+    this._currentUser.deleteRoutineAt(this._workoutIndex, this._routineIndex);
+    Navigator.pushNamed(
+      context,
+      "/updateWorkout",
+      arguments: {"user": _currentUser, "index": _workoutIndex},
+    );
+  }
+
+  void _saveChanges() {
+    Workout workout = _currentUser.getWorkoutAt(this._workoutIndex);
+    workout.setRoutineAt(this._routineIndex, this._routine);
+    this._currentUser.setWorkoutAt(
+          this._workoutIndex,
+          workout,
+        );
+    Navigator.pushNamed(
+      context,
+      "/updateWorkout",
+      arguments: {"user": _currentUser, "index": _workoutIndex},
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Update Routine", style: kSmallTextStyle),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(height: kSizedBoxHeight),
+          CustomTextFormField(
+              textController: _nameTextController, label: "Name"),
+          // muscle group section
+          CustomCard(
+            cardChild: GestureDetector(
+              onTap: _showMuscleGroupOptionDialog,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Text("Major Muscle Group", style: kLabelTextStyle),
+                  Text(
+                    _routine.exercise.focus,
+                    style: kSmallBoldTextStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          Container(
+            child: buildRepsTargetOptionSection(),
+          ),
+
+          // delete button
+          CustomCard(
+            onTap: () => _saveChanges(),
+            cardChild: Center(
+              child: Text(
+                "SAVE CHANGES",
+                style: kButtonTextFontStyle,
+              ),
+            ),
+            color: kGreenButtonColor,
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationButton(
+          label: "DELETE ROUTINE",
+          action: () => _deleteRoutine(),
+          color: kRedButtonColor),
+    );
   }
 
   void _showMuscleGroupOptionDialog() async {
@@ -119,170 +222,89 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     );
   }
 
-  void _updateMuscleGroupFocus(String val) {
-    setState(() {
-      this._routine.exercise.focus = val;
-    });
-  }
-
-  void _updateReps(int val) {
-    if (this._routine.reps != val) {
-      setState(() {
-        this._routine.reps = val;
-      });
-    }
-  }
-
-  void _updateSets(int val) {
-    if (this._routine.sets != val) {
-      setState(() {
-        this._routine.sets = val;
-      });
-    }
-  }
-
-  void _deleteRoutine() {
-    // show confirmation dialog
-    this._currentUser.deleteRoutineAt(this._workoutIndex, this._routineIndex);
-    Navigator.pushNamed(
-      context,
-      "/updateWorkout",
-      arguments: {"user": _currentUser, "index": _workoutIndex},
+  void _showTargetOptionDialog() async {
+    var _dropdown = CustomDropdownMenu(
+      initialValue: "Rep Count",
+      items: ["Rep Count", "Time"],
     );
-  }
-
-  void _saveChanges() {
-    // TODO: consider using ".pop(result)" instead
-    Workout workout = _currentUser.getWorkoutAt(this._workoutIndex);
-    workout.updateRoutineAt(this._routineIndex, this._routine);
-    this._currentUser.setWorkoutAt(
-          this._workoutIndex,
-          workout,
-        );
-    Navigator.pushNamed(
-      context,
-      "/updateWorkout",
-      arguments: {"user": _currentUser, "index": _workoutIndex},
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Update Routine", style: kSmallTextStyle),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          SizedBox(height: kSizedBoxHeight),
-          CustomCard(
-            cardChild: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("Name", style: kLabelTextStyle),
-                TextFormField(
-                  minLines: 1,
-                  maxLines: 3,
-                  controller: _nameTextController,
-                  style: kSmallBoldTextStyle,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        FontAwesomeIcons.times,
-                        size: 18.0,
-                        color: Colors.white60,
-                      ),
-                      onPressed: () {
-                        _nameTextController.clear();
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Choose Completion Target"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
+          content: _dropdown,
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "Cancel",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Confirm",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                _updateMuscleGroupFocus(_dropdown.getValue());
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-          // muscle group section
-          CustomCard(
-            cardChild: GestureDetector(
-              onTap: _showMuscleGroupOptionDialog,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+  Row buildRepsTargetOptionSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        // reps section
+        Expanded(
+          child: GestureDetector(
+            onTap: () => _showRepsOptionDialog(),
+            child: CustomCard(
+              cardChild: Column(
                 children: <Widget>[
-                  Text("Major Muscle Group", style: kLabelTextStyle),
+                  Text("Reps", style: kLabelTextStyle),
+                  SizedBox(height: kSmallSizedBoxHeight),
                   Text(
-                    _routine.exercise.focus,
-                    style: kSmallBoldTextStyle,
+                    this._routine.reps.toString(),
+                    style: kMediumTextStyle,
                     textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
           ),
-
-          // reps section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => _showRepsOptionDialog(),
-                  child: CustomCard(
-                    cardChild: Column(
-                      children: <Widget>[
-                        Text("Reps", style: kLabelTextStyle),
-                        SizedBox(height: kSmallSizedBoxHeight),
-                        Text(
-                          this._routine.reps.toString(),
-                          style: kMediumTextStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+        ),
+        // sets section
+        Expanded(
+          child: GestureDetector(
+            onTap: () => _showSetsOptionDialog(),
+            child: CustomCard(
+              cardChild: Column(
+                children: <Widget>[
+                  Text("Sets", style: kLabelTextStyle),
+                  SizedBox(height: kSmallSizedBoxHeight),
+                  Text(
+                    this._routine.sets.toString(),
+                    style: kMediumTextStyle,
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ),
-
-              // sets section
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => _showSetsOptionDialog(),
-                  child: CustomCard(
-                    cardChild: Column(
-                      children: <Widget>[
-                        Text("Sets", style: kLabelTextStyle),
-                        SizedBox(height: kSmallSizedBoxHeight),
-                        Text(
-                          this._routine.sets.toString(),
-                          style: kMediumTextStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          // delete button
-          CustomCard(
-            onTap: _deleteRoutine,
-            cardChild: Center(
-              child: Text(
-                "DELETE ROUTINE",
-                style: kButtonTextFontStyle,
+                ],
               ),
             ),
-            color: Colors.red.withOpacity(0.8),
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationButton(
-          label: "SAVE CHANGES",
-          action: () => _saveChanges(),
-          color: kGreenButtonColor),
+        ),
+      ],
     );
   }
 }

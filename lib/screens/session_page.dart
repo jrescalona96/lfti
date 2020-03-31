@@ -5,6 +5,7 @@ import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/Session.dart";
 import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/classes/Routine.dart";
+import "package:lfti_app/classes/TimedRoutine.dart";
 
 // Component imports
 import "package:lfti_app/components/custom_card.dart";
@@ -23,7 +24,7 @@ class _SessionPageState extends State<SessionPage> {
   User _currentUser;
   Session _session;
   int _currentSet;
-  Routine _currentRoutine;
+  var _currentRoutine;
   final _routineTimerController = TimerCard(cardLabel: "ROUTINE TIME");
   final _sessionTimerController = TimerCard(cardLabel: "SESSION TIME");
 
@@ -87,7 +88,6 @@ class _SessionPageState extends State<SessionPage> {
         _currentSet = _session.getCurrentSet();
         _currentRoutine = _session.getCurrentRoutine();
       });
-      print("Success: Next Set.");
     } catch (e) {
       print("Error: something went wrong calling next() in Session Page!");
     }
@@ -173,13 +173,13 @@ class _SessionPageState extends State<SessionPage> {
                             textBaseline: TextBaseline.alphabetic,
                             children: <Widget>[
                               Text(
-                                  _currentRoutine.exercise.name == "Rest"
+                                  _currentRoutine is TimedRoutine
                                       ? _currentRoutine.timeToPerformInSeconds
                                           .toString()
                                       : _currentRoutine.reps.toString(),
                                   style: kLargeBoldTextStyle1x),
                               Text(
-                                _currentRoutine.exercise.name == "Rest"
+                                _currentRoutine is TimedRoutine
                                     ? " seconds"
                                     : " reps",
                                 style: kUnitLabelTextStyle,
@@ -276,10 +276,16 @@ class _SessionPageState extends State<SessionPage> {
                       style: kLabelTextStyle,
                     ),
                     SizedBox(height: kSmallSizedBoxHeight),
-                    Text(
-                      _session.getNextRoutine().exercise.name,
-                      style: kMediumBoldTextStyle,
-                    ),
+                    Container(
+                        child: _session.hasNext()
+                            ? Text(
+                                _session.getNextRoutine().exercise.name,
+                                style: kMediumBoldTextStyle,
+                              )
+                            : Text(
+                                "Last Routine",
+                                style: kMediumBoldTextStyle,
+                              )),
                   ],
                 ),
               ),
@@ -307,21 +313,19 @@ class _SessionPageState extends State<SessionPage> {
       ),
       bottomNavigationBar: Container(
         child: GestureDetector(
-            onLongPress: () {
-              _showSessionConfirmationDialogBox();
-            },
-            child: _session.isFinished()
-                ? BottomNavigationButton(
-                    label: "END",
-                    action: _showSessionConfirmationDialogBox,
-                    color: kRedButtonColor)
-                : BottomNavigationButton(
-                    label: _session.isPaused ? "CONTINUE" : "PAUSE",
-                    action: _togglePause,
-                    color: _session.isPaused
-                        ? kGreenButtonColor
-                        : kBlueButtonColor,
-                  )),
+          onLongPress: () => _showSessionConfirmationDialogBox(),
+          child: _session.isFinished()
+              ? BottomNavigationButton(
+                  label: "END",
+                  action: _showSessionConfirmationDialogBox,
+                  color: kRedButtonColor)
+              : BottomNavigationButton(
+                  label: _session.isPaused ? "CONTINUE" : "PAUSE",
+                  action: _togglePause,
+                  color:
+                      _session.isPaused ? kGreenButtonColor : kBlueButtonColor,
+                ),
+        ),
       ),
     );
   }

@@ -67,8 +67,8 @@ class _CreateWorkoutPageState extends State<CreateWorkoutPage> {
                           "name": r.exercise.name.toString(),
                           "focus": r.exercise.focus.toString(),
                         },
-                        "reps": r.exercise.name == "Rest" ? 1 : r.reps,
-                        "sets": r.exercise.name == "Rest" ? 1 : r.sets
+                        "reps": r.reps,
+                        "sets": r.sets
                       })
                   .toList()
             })

@@ -23,7 +23,7 @@ class CustomCard extends StatelessWidget {
       child: Container(
         margin: kCardMargin,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(12.0),
           color: this.color,
         ),
         child: DottedBorder(
