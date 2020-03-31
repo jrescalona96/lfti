@@ -131,9 +131,8 @@ class User {
     _workouts[workoutIndex].deleteRoutine(routineIndex);
   }
 
-  void deleteWorkoutAt() {
-    // TODO: need to implement delete workout
-    print("TODO: need to implement delete workout");
+  void deleteWorkoutAt(int index) {
+    this._workouts.removeAt(index);
   }
 
   /// getters

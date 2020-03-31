@@ -5,7 +5,7 @@ class CustomDropdownMenu extends StatefulWidget {
   final String initialValue;
   final List<String> items;
 
-  CustomDropdownMenu({this.initialValue, this.items});
+  CustomDropdownMenu({this.initialValue = "", @required this.items});
 
   final _customDropdownMenuState = _CustomDropdownMenuState();
   @override

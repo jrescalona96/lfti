@@ -17,6 +17,7 @@ const kBlueButtonColor = Colors.blueAccent;
 const kRedButtonColor = Colors.red;
 const kOrangeButtonColor = Colors.orange;
 const kIconColor = Colors.white70;
+const kGrayTextColor = Colors.white60;
 
 const kLabelTextStyle = TextStyle(
   fontSize: 15.0,

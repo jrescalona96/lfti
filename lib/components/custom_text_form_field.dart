@@ -28,6 +28,7 @@ class CustomTextFormField extends StatelessWidget {
             controller: _textController,
             style: kSmallBoldTextStyle,
             decoration: InputDecoration(
+              contentPadding: kContentPadding,
               suffixIcon: IconButton(
                 icon: Icon(
                   Icons.close,

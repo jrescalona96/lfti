@@ -14,7 +14,16 @@ class WorkoutCard extends StatelessWidget {
   Workout _workout;
   final Function onTap;
   bool dottedBorder;
-  WorkoutCard({this.user, this.index, this.onTap, this.dottedBorder = false}) {
+  final Function onMoreOptions;
+  IconData moreOptionsIcon;
+  WorkoutCard({
+    this.user,
+    this.index,
+    this.onTap,
+    this.dottedBorder = false,
+    this.onMoreOptions,
+    this.moreOptionsIcon,
+  }) {
     this._workout = this.user.getWorkoutAt(index);
   }
 
@@ -36,9 +45,27 @@ class WorkoutCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(
-              this._workout.name,
-              style: kMediumBoldTextStyle,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
+                  child: Text(
+                    this._workout.name,
+                    style: kMediumBoldTextStyle,
+                  ),
+                ),
+                this.onMoreOptions == null
+                    ? SizedBox(height: 0.0)
+                    : Expanded(
+                        child: GestureDetector(
+                          child: Container(
+                              alignment: AlignmentDirectional.topEnd,
+                              child: Icon(moreOptionsIcon, size: 20.0)),
+                          onTap: this.onMoreOptions,
+                        ),
+                      )
+              ],
             ),
             SizedBox(height: kSmallSizedBoxHeight),
             Text(
@@ -48,7 +75,7 @@ class WorkoutCard extends StatelessWidget {
             SizedBox(height: kSizedBoxHeight),
             Text(
               this._workout == null
-                  ? "No Exercises"
+                  ? "No Routines yet"
                   : _getNumberOfRoutines() + ' Routines',
               style: kSmallTextStyle,
             )

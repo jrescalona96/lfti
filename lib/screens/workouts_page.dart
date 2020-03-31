@@ -5,6 +5,7 @@ import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Routine.dart";
+import "package:lfti_app/classes/Crud.dart";
 
 // screen imports
 import "package:lfti_app/screens/loading_screen.dart";
@@ -27,12 +28,49 @@ class WorkoutsPage extends StatefulWidget {
 class _WorkoutsPageState extends State<WorkoutsPage> {
   User _currentUser;
   List<Workout> _workoutList;
+  Crud crudController;
 
   _WorkoutsPageState(this._currentUser) {
     if (_currentUser.getWorkoutList() == null) {
       this._currentUser.setWorkoutList(List<Workout>());
     }
     this._workoutList = _currentUser.getWorkoutList();
+    crudController = Crud(_currentUser);
+  }
+
+  void _showDeleteConfirmationDialogBox(int index) async {
+    return await showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete Workout"),
+          content: Text("Are you sure you want to delete Workout?"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          backgroundColor: kCardBackground.withOpacity(0.9),
+          actions: <Widget>[
+            CustomDialogButton(
+              label: "CANCEL",
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CustomDialogButton(
+              label: "DELETE",
+              onPressed: () {
+                setState(() {
+                  this._currentUser.deleteWorkoutAt(index);
+                  crudController.updateWorkoutList();
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showCreateNewWorkoutDialog() async {
@@ -43,28 +81,18 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Enter Workout Name"),
+          content: TextFormField(
+              controller: _nameTextController,
+              keyboardType: TextInputType.text),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           backgroundColor: kCardBackground.withOpacity(0.9),
-          content: Column(
-            children: <Widget>[
-              TextFormField(
-                  controller: _nameTextController,
-                  keyboardType: TextInputType.text),
-            ],
-          ),
           actions: <Widget>[
             CustomDialogButton(
               label: "CREATE",
               color: kGreenButtonColor.withOpacity(0.5),
               onPressed: () {
                 if (_nameTextController.text != null) {
-                  _workoutList.add(
-                    Workout(
-                      name: _nameTextController.text,
-                      routines: List<Routine>(),
-                    ),
-                  );
                   this._currentUser.addWorkout(
                         Workout(
                           name: _nameTextController.text,
@@ -95,7 +123,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
               leading: Builder(
                 builder: (BuildContext context) {
                   return IconButton(
-                    icon: const Icon(Icons.menu),
+                    icon: Icon(Icons.menu),
                     onPressed: () {
                       Scaffold.of(context).openDrawer();
                     },
@@ -119,7 +147,9 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                           Widget item;
                           if (index < _workoutList.length) {
                             item = WorkoutCard(
-                                dottedBorder: true,
+                                onMoreOptions: () =>
+                                    _showDeleteConfirmationDialogBox(index),
+                                moreOptionsIcon: Icons.delete,
                                 user: this._currentUser,
                                 index: index,
                                 onTap: () {

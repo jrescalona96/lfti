@@ -33,53 +33,6 @@ class _ViewWorkoutsPageState extends State<ViewWorkoutsPage> {
     this._workoutList = _currentUser.getWorkoutList();
   }
 
-  Future<void> _createNewWorkout() async {
-    final _nameTextController = TextEditingController();
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Enter Name"),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          backgroundColor: kCardBackground.withOpacity(0.9),
-          content: TextFormField(
-              controller: _nameTextController,
-              keyboardType: TextInputType.text),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text("Create"),
-              onPressed: () {
-                if (_nameTextController.text != null) {
-                  _workoutList.add(
-                    Workout(
-                      name: _nameTextController.text,
-                      routines: List<Routine>(),
-                    ),
-                  );
-                  print(_nameTextController.text + " Workout Initialized");
-                  this._currentUser.setWorkoutList(_workoutList);
-                  Navigator.pushNamed(context, "/updateWorkout",
-                      arguments: {"user": _currentUser, "index": null});
-                } else {
-                  // TODO: Dialog Box to Warn user
-                  print("Empty Name Field!");
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return _currentUser.getDocument() == null

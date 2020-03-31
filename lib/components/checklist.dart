@@ -28,7 +28,7 @@ class _ChecklistState extends State<Checklist> {
             value: item.getStatus(),
             title: Text(
               item.getDescription(),
-              style: kSmallTextStyle,
+              style: kSmallBoldTextStyle,
             ),
             onChanged: (bool newStatus) {
               setState(

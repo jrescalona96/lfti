@@ -26,6 +26,10 @@ class TimerCard extends StatefulWidget {
     _timerCardState.startStopWatch();
   }
 
+  void dispose() {
+    _timerCardState.dispose();
+  }
+
   String getCurrentTime() {
     return _timerCardState.getTime();
   }

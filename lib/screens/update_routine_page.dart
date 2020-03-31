@@ -121,60 +121,6 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Update Routine", style: kSmallTextStyle),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          SizedBox(height: kSizedBoxHeight),
-          CustomTextFormField(
-              textController: _nameTextController, label: "Name"),
-          // muscle group section
-          CustomCard(
-            cardChild: GestureDetector(
-              onTap: _showMuscleGroupOptionDialog,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text("Major Muscle Group", style: kLabelTextStyle),
-                  Text(
-                    _routine.exercise.focus,
-                    style: kSmallBoldTextStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          Container(
-            child: buildRepsTargetOptionSection(),
-          ),
-
-          // delete button
-          CustomCard(
-            onTap: () => _saveChanges(),
-            cardChild: Center(
-              child: Text(
-                "SAVE CHANGES",
-                style: kButtonTextFontStyle,
-              ),
-            ),
-            color: kGreenButtonColor,
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationButton(
-          label: "DELETE ROUTINE",
-          action: () => _deleteRoutine(),
-          color: kRedButtonColor),
-    );
-  }
-
   void _showMuscleGroupOptionDialog() async {
     var _dropdown = CustomDropdownMenu(
       initialValue: this._routine.exercise.focus,
@@ -307,4 +253,59 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
       ],
     );
   }
+
+  //======================================CONTENT SECTION======================================//
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Update Routine", style: kSmallTextStyle),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          SizedBox(height: kSizedBoxHeight),
+          CustomTextFormField(
+              textController: _nameTextController, label: "Name"),
+          // muscle group section
+          CustomCard(
+            cardChild: GestureDetector(
+              onTap: _showMuscleGroupOptionDialog,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Text("Major Muscle Group", style: kLabelTextStyle),
+                  Text(
+                    _routine.exercise.focus,
+                    style: kSmallBoldTextStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            child: buildRepsTargetOptionSection(),
+          ),
+          // save button
+          CustomCard(
+            onTap: () => _saveChanges(),
+            cardChild: Center(
+              child: Text(
+                "SAVE CHANGES",
+                style: kButtonTextFontStyle,
+              ),
+            ),
+            color: kGreenButtonColor,
+          ),
+        ],
+      ),
+      // delete button
+      bottomNavigationBar: BottomNavigationButton(
+          label: "DELETE ROUTINE",
+          action: () => _deleteRoutine(),
+          color: kRedButtonColor),
+    );
+  }
+  //======================================CONTENT SECTION======================================//
 }

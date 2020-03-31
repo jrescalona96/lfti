@@ -16,13 +16,13 @@ class EmptyStateNotification extends StatelessWidget {
         children: <Widget>[
           Text(
             "Nothing here yet!",
-            style: kMediumBoldTextStyle,
+            style: kMediumBoldTextStyle.copyWith(fontStyle: FontStyle.italic),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: kSmallSizedBoxHeight),
           Text(
             this.sub,
-            style: kMediumLabelTextStyle,
+            style: kMediumLabelTextStyle.copyWith(fontStyle: FontStyle.italic),
             textAlign: TextAlign.center,
           ),
         ],

@@ -62,6 +62,8 @@ class _SessionPageState extends State<SessionPage> {
               ),
               onPressed: () {
                 print("Ending Session!");
+                _routineTimerController.dispose();
+                _sessionTimerController.dispose();
                 setState(() {
                   _session.end(_sessionTimerController.getCurrentTime());
                 });
