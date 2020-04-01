@@ -4,7 +4,6 @@ import "package:flutter/material.dart";
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/Session.dart";
 import "package:lfti_app/classes/User.dart";
-import "package:lfti_app/classes/Routine.dart";
 import "package:lfti_app/classes/TimedRoutine.dart";
 
 // Component imports
@@ -279,7 +278,7 @@ class _SessionPageState extends State<SessionPage> {
                     ),
                     SizedBox(height: kSmallSizedBoxHeight),
                     Container(
-                        child: _session.hasNext()
+                        child: !_session.isLastRoutine()
                             ? Text(
                                 _session.getNextRoutine().exercise.name,
                                 style: kMediumBoldTextStyle,

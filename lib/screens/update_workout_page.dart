@@ -148,7 +148,11 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
 
   void _addRestRoutine() {
     setState(() {
-      _routineList.add(TimedRoutine());
+      _routineList.add(
+        TimedRoutine(
+          exercise: Exercise(name: "Rest", focus: "--"),
+        ),
+      );
     });
   }
 

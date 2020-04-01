@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/TimedRoutine.dart";
 import "package:lfti_app/classes/Routine.dart";
@@ -53,20 +54,20 @@ class Session {
     try {
       return _workout.routines[_currentRoutineIndex];
     } catch (e) {
-      print("Accessed invalid routine index. " + e.toString());
+      print("Accessed invalid Routine index. " + e.toString());
     }
-    return _workout.routines[_currentRoutineIndex];
   }
 
   Routine getNextRoutine() {
-    return _workout.routines[_currentRoutineIndex + 1];
+    try {
+      if (!isLastRoutine()) return _workout.routines[_currentRoutineIndex + 1];
+    } catch (e) {
+      print("Error: Next routine index invalid " + e.toString());
+    }
   }
 
   bool isFinished() {
-    int totalRoutineCount = _workout.routines.length - 1;
-    int totalSetCount = getCurrentRoutine().sets - 1;
-    return _currentRoutineIndex >= totalRoutineCount &&
-        _currentSet >= totalSetCount - 1;
+    return isLastRoutine() && isLastSet();
   }
 
   int getCurrentSet() {
@@ -87,7 +88,7 @@ class Session {
 
   void next() {
     this._performedSets++;
-    if (this._currentSet < getCurrentRoutine().sets) {
+    if (!isLastSet()) {
       this._currentSet++;
     } else {
       this._currentSet = 1;
@@ -116,9 +117,8 @@ class Session {
   }
 
   void nextRoutine() {
-    if (this._currentRoutineIndex < _workout.routines.length) {
+    if (!isLastRoutine()) {
       this._currentRoutineIndex++;
-      print("Session next routine was called!");
     }
   }
 
@@ -129,7 +129,6 @@ class Session {
   }
 
   void skip() {
-    print("Skipped => " + getCurrentRoutine().exercise.name);
     // remainingSets offset by 1 since _currentSet starts at 1
     int performedSets = _currentSet - 1;
     int remainingSets = getCurrentRoutine().sets - performedSets;
@@ -148,18 +147,15 @@ class Session {
   }
 
   bool isLastRoutine() {
-    return _currentRoutineIndex < _workout.routines.length - 1;
+    return _currentRoutineIndex >= _workout.routines.length - 1;
   }
 
   bool isLastSet() {
-    if (getCurrentRoutine() is TimedRoutine)
-      return false;
-    else
-      return _currentSet < getCurrentRoutine().sets - 1;
+    return _currentSet >= getCurrentRoutine().sets;
   }
 
   bool hasNext() {
-    return isLastRoutine() || isLastSet();
+    return !isLastRoutine() || !isLastSet();
   }
 
   bool isRoutineDone() {

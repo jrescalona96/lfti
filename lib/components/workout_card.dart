@@ -82,8 +82,8 @@ class WorkoutCard extends StatelessWidget {
               this._workout == null
                   ? "No Routines yet"
                   : _workout.routines.length > 1
-                      ? _workout.routines.length.toString() + ' Routines'
-                      : _workout.routines.length.toString() + "Routine",
+                      ? _workout.routines.length.toString() + " Routines"
+                      : _workout.routines.length.toString() + " Routine",
               style: _routineCountTextStyle,
             )
           ],
