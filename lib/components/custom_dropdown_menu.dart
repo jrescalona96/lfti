@@ -4,13 +4,15 @@ import "package:lfti_app/classes/Constants.dart";
 class CustomDropdownMenu extends StatefulWidget {
   final String initialValue;
   final List<String> items;
-
-  CustomDropdownMenu({this.initialValue = "", @required this.items});
+  final Function onChangeAction;
+  CustomDropdownMenu(
+      {this.initialValue = "", @required this.items, this.onChangeAction});
 
   final _customDropdownMenuState = _CustomDropdownMenuState();
   @override
   _CustomDropdownMenuState createState() {
-    _customDropdownMenuState._initDropdownValue(this.initialValue, this.items);
+    _customDropdownMenuState._initDropdownValue(
+        this.initialValue, this.items, this.onChangeAction);
     return _customDropdownMenuState;
   }
 
@@ -23,10 +25,12 @@ class CustomDropdownMenu extends StatefulWidget {
 class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
   String _dropdownValue;
   List<String> _items;
+  Function _onChangeAction;
 
-  void _initDropdownValue(String val, List<String> l) {
+  void _initDropdownValue(String val, List<String> l, Function f) {
     this._dropdownValue = val;
     this._items = l;
+    this._onChangeAction = f;
   }
 
   String getValue() {
@@ -53,6 +57,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
           this._dropdownValue = val;
           print("Selected New Value : $_dropdownValue");
         });
+        _onChangeAction();
       },
     );
   }

@@ -31,14 +31,14 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
   Crud crudController;
 
   _WorkoutsPageState(this._currentUser) {
-    if (_currentUser.getWorkoutList() == null) {
+    if (_currentUser.getWorkoutList().isEmpty) {
       this._currentUser.setWorkoutList(List<Workout>());
     }
     this._workoutList = _currentUser.getWorkoutList();
     crudController = Crud(_currentUser);
   }
 
-  void _showDeleteConfirmationDialogBox(int index) async {
+  void _showDeleteConfirmationDialog(int index) async {
     return await showDialog<void>(
       context: context,
       barrierDismissible: true,
@@ -138,7 +138,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
               ),
             ),
             drawer: Menu(_currentUser),
-            body: _workoutList.length > 0
+            body: _workoutList.isNotEmpty
                 ? CustomScrollView(
                     slivers: <Widget>[
                       SliverList(
@@ -147,9 +147,9 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                           Widget item;
                           if (index < _workoutList.length) {
                             item = WorkoutCard(
-                                onMoreOptions: () =>
-                                    _showDeleteConfirmationDialogBox(index),
-                                moreOptionsIcon: Icons.delete,
+                                onOptionsTap: () =>
+                                    _showDeleteConfirmationDialog(index),
+                                optionsIcon: Icons.delete,
                                 user: this._currentUser,
                                 index: index,
                                 onTap: () {

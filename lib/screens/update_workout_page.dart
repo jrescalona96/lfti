@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
+import 'package:lfti_app/components/custom_card.dart';
+import "package:numberpicker/numberpicker.dart";
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
+import 'package:lfti_app/classes/Exercise.dart';
 import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Routine.dart";
@@ -10,6 +13,7 @@ import "package:lfti_app/classes/Crud.dart";
 
 // component imports
 import "package:lfti_app/components/bottom_navigation_button.dart";
+import 'package:lfti_app/components/custom_button_card.dart';
 import "package:lfti_app/components/routine_card.dart";
 import "package:lfti_app/components/time_dropdown_menu.dart";
 import "package:lfti_app/components/custom_dialog_button.dart";
@@ -85,8 +89,67 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     );
   }
 
-  void _addExerciseRoutine() {
-    print("add routine");
+  void _showAddRoutineDialog() async {
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Choose Type of Routine",
+            style: kMediumLabelTextStyle,
+            textAlign: TextAlign.center,
+          ),
+          content: Container(
+            height: 150,
+            child: Column(
+              children: <Widget>[
+                FlatButton(
+                  color: kGreenButtonColor.withOpacity(0.1),
+                  child: Text(
+                    "Rest",
+                    style:
+                        kButtonTextFontStyle.copyWith(color: kGreenButtonColor),
+                  ),
+                  onPressed: () {
+                    _addRestRoutine();
+                    Navigator.pop(context);
+                  },
+                ),
+                SizedBox(height: kSizedBoxHeight),
+                FlatButton(
+                  color: kRedButtonColor.withOpacity(0.1),
+                  child: Text(
+                    "Exercise",
+                    style:
+                        kButtonTextFontStyle.copyWith(color: kRedButtonColor),
+                  ),
+                  onPressed: () {
+                    this._routineList.add(Routine(
+                          exercise: Exercise(name: "", focus: "--"),
+                          sets: 1,
+                          reps: 1,
+                        ));
+                    Navigator.pop(context);
+                    _updateExerciseRoutine(_routineList.length - 1);
+                  },
+                )
+              ],
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          backgroundColor: kCardBackground,
+        );
+      },
+    );
+  }
+
+  void _addRestRoutine() {
+    setState(() {
+      _routineList.add(TimedRoutine());
+    });
   }
 
   void _updateExerciseRoutine(int index) {
@@ -103,6 +166,8 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
       for (int i = 0; i < this._routineList.length; i++) {
         routines.add(
           RoutineCard(
+            onOptionsTap: () => _removeWorkoutAt(i),
+            optionsIcon: Icons.delete,
             routine: _routineList[i],
             onTap: _routineList[i] is TimedRoutine
                 ? () => _showUpdateRestTimeDialog(i)
@@ -114,13 +179,19 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     return routines;
   }
 
-  void _showAddExerciseDialog() {
-    print("TODO: Need to implement");
+  void _removeWorkoutAt(int index) {
+    setState(() {
+      _routineList.removeAt(index);
+    });
   }
 
   void _saveChanges() {
-    this._workout.setName(_nameTextController.text);
-    this._workout.setDescription(_descriptionTextController.text);
+    this._workout.setName(_nameTextController.text.isEmpty
+        ? "Unnamed Workout"
+        : _nameTextController.text.toString());
+    this._workout.setDescription(_descriptionTextController.text.isEmpty
+        ? ""
+        : _descriptionTextController.text.toString());
     this._workout.setRoutines(this._routineList);
     this._currentUser.setWorkoutAt(this._workoutIndex, _workout);
     crudController.updateWorkoutList();
@@ -151,11 +222,14 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
           children: <Widget>[
             // workout name
             CustomTextFormField(
-                textController: _nameTextController, label: "Name"),
+              textController: _nameTextController,
+              label: "Name",
+            ),
             // workout description
             CustomTextFormField(
-                textController: _descriptionTextController,
-                label: "Description"),
+              textController: _descriptionTextController,
+              label: "Description",
+            ),
             Container(
               child: _routineList.isEmpty
                   ? Column(
@@ -180,6 +254,8 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                 ..._getRoutineCards(),
               ],
             ),
+            SizedBox(height: kSizedBoxHeight),
+            CustomButtonCard(onTap: () => _showAddRoutineDialog())
           ],
         ),
       ),

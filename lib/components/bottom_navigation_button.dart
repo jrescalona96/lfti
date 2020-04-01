@@ -21,7 +21,7 @@ class BottomNavigationButton extends StatelessWidget {
         child: Center(
           child: Text(
             label,
-            style: kButtonTextFontStyle,
+            style: kBottomButtonTextFontStyle,
           ),
         ),
       ),

@@ -204,7 +204,8 @@ class User {
   List<Workout> _buildWorkoutList() {
     try {
       List<Workout> w = List<Workout>();
-      for (var item in getDocument().data["workouts"]) {
+      List list = getDocument().data["workouts"];
+      for (var item in list) {
         w.add(_buildWorkout(item));
       }
       print("Success: Workout List set!");
@@ -215,12 +216,16 @@ class User {
   }
 
   Workout _buildWorkout(Map w) {
-    return Workout(
-      id: w["id"],
-      name: w["name"],
-      description: w["description"],
-      routines: _buildRoutineList(w["routines"]),
-    );
+    try {
+      return Workout(
+        id: w["id"],
+        name: w["name"],
+        description: w["description"],
+        routines: _buildRoutineList(w["routines"]),
+      );
+    } catch (e) {
+      print("Error: Failed to build workout " + e.toString());
+    }
   }
 
   List<Routine> _buildRoutineList(List list) {
@@ -237,7 +242,9 @@ class User {
         );
       } else {
         routines.add(
-          TimedRoutine(timeToPerformInSeconds: r["timeToPerformInSeconds"]),
+          TimedRoutine(
+              timeToPerformInSeconds: r["timeToPerformInSeconds"],
+              exercise: Exercise(name: "Rest", focus: "--")),
         );
       }
     }

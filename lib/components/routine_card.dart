@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Routine.dart';
+import 'package:lfti_app/classes/TimedRoutine.dart';
 import 'package:lfti_app/components/custom_card.dart';
 
 class RoutineCard extends StatelessWidget {
   final routine;
   final Function onTap;
   final bool dottedBorder;
-  RoutineCard({@required this.routine, this.onTap, this.dottedBorder = false});
+  final Function onOptionsTap;
+  IconData optionsIcon;
+  RoutineCard({
+    @required this.routine,
+    this.onTap,
+    this.dottedBorder = false,
+    this.onOptionsTap,
+    this.optionsIcon,
+  });
 
   String _generateTargetString() {
     String target = '';
-    String reps = routine.reps.toString();
-
-    // TODO: refactor to have Rest as its own class to say if(_routine.exercise is Rest)
-    if (routine.exercise.name != 'Rest')
-      for (int i = 0; i < routine.sets; i++) {
-        if (i < (routine.sets - 1)) {
-          target += '$reps / ';
-        } else {
-          target += reps;
-        }
-      }
-    else {
+    if (routine is TimedRoutine)
       target = routine.timeToPerformInSeconds.toString() + ' sec';
+    else {
+      target = routine.reps.toString() +
+          " reps x " +
+          routine.sets.toString() +
+          " sets";
     }
     return target;
   }
@@ -33,29 +36,71 @@ class RoutineCard extends StatelessWidget {
     return GestureDetector(
       onTap: this.onTap,
       child: CustomCard(
+        color: routine.exercise.name == "Rest"
+            ? kBlueButtonColor.withOpacity(0.1)
+            : kGreenButtonColor.withOpacity(0.1),
         dottedBorder: this.dottedBorder,
         cardChild: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            // Exercise name
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  routine.exercise.name,
-                  style: kMediumBoldTextStyle,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        routine.exercise.name == null
+                            ? "Null"
+                            : routine.exercise.name,
+                        style: routine.exercise.name == "Rest"
+                            ? kMediumBoldTextStyle.copyWith(
+                                color: kBlueButtonColor)
+                            : kMediumBoldTextStyle.copyWith(
+                                color: kGreenButtonColor),
+                      ),
+                    ),
+                    this.onOptionsTap == null
+                        ? SizedBox(height: 0.0)
+                        : Expanded(
+                            child: GestureDetector(
+                              child: Container(
+                                  alignment: AlignmentDirectional.topEnd,
+                                  child: Icon(optionsIcon, size: 20.0)),
+                              onTap: this.onOptionsTap,
+                            ),
+                          ),
+                  ],
                 ),
                 SizedBox(
                   height: kSmallSizedBoxHeight,
                 ),
-                Text(
-                  routine.exercise.focus == null ? "" : routine.exercise.focus,
-                  style: kLabelTextStyle,
+                // Exercise Description
+                Container(
+                  child: routine is TimedRoutine
+                      ? null
+                      : Text(
+                          routine.exercise.focus == null
+                              ? "Null"
+                              : routine.exercise.focus,
+                          style: routine.exercise.name == "Rest"
+                              ? kMediumLabelTextStyle.copyWith(
+                                  color: kBlueButtonColor)
+                              : kMediumLabelTextStyle.copyWith(
+                                  color: kGreenButtonColor),
+                        ),
                 ),
               ],
             ),
             SizedBox(height: kSizedBoxHeight),
-            Text("Target: " + _generateTargetString(),
-                style: kMediumLabelTextStyle)
+            Text(
+              "Target: " + _generateTargetString(),
+              style: routine.exercise.name == "Rest"
+                  ? kMediumLabelTextStyle.copyWith(color: kBlueButtonColor)
+                  : kMediumLabelTextStyle.copyWith(color: kGreenButtonColor),
+            )
           ],
         ),
       ),

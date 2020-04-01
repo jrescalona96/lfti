@@ -26,9 +26,8 @@ class CustomTextFormField extends StatelessWidget {
             minLines: 1,
             maxLines: 3,
             controller: _textController,
-            style: kSmallBoldTextStyle,
+            style: kSmallTextStyle.copyWith(fontStyle: FontStyle.italic),
             decoration: InputDecoration(
-              contentPadding: kContentPadding,
               suffixIcon: IconButton(
                 icon: Icon(
                   Icons.close,

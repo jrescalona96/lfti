@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/User.dart';
+import "package:lfti_app/classes/Routine.dart";
 
 // component imports
 import 'package:lfti_app/components/custom_card.dart';
@@ -14,32 +15,36 @@ class WorkoutCard extends StatelessWidget {
   Workout _workout;
   final Function onTap;
   bool dottedBorder;
-  final Function onMoreOptions;
-  IconData moreOptionsIcon;
+  final Function onOptionsTap;
+  IconData optionsIcon;
   WorkoutCard({
     this.user,
     this.index,
     this.onTap,
     this.dottedBorder = false,
-    this.onMoreOptions,
-    this.moreOptionsIcon,
+    this.onOptionsTap,
+    this.optionsIcon,
   }) {
     this._workout = this.user.getWorkoutAt(index);
   }
 
+  bool _isIncompleteWorkout() {
+    return _workout.name.isNotEmpty || _workout.routines.isEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
-    String _getNumberOfRoutines() {
-      int sum = 0;
-      for (var item in _workout.routines) {
-        if (item.exercise.name != "Rest") sum++;
-      }
-      return sum.toString();
-    }
+    var cardColor = _isIncompleteWorkout()
+        ? kBlueButtonColor.withOpacity(0.2)
+        : kRedButtonColor.withOpacity(0.2);
+    var _workoutNameTextStyle = kMediumBoldTextStyle;
+    var _descriptionTextStyle = kLabelTextStyle;
+    var _routineCountTextStyle = kMediumBoldTextStyle;
 
     return GestureDetector(
       onTap: this.onTap,
       child: CustomCard(
+        color: cardColor,
         dottedBorder: this.dottedBorder,
         cardChild: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -52,17 +57,17 @@ class WorkoutCard extends StatelessWidget {
                   flex: 4,
                   child: Text(
                     this._workout.name,
-                    style: kMediumBoldTextStyle,
+                    style: _workoutNameTextStyle,
                   ),
                 ),
-                this.onMoreOptions == null
+                this.onOptionsTap == null
                     ? SizedBox(height: 0.0)
                     : Expanded(
                         child: GestureDetector(
                           child: Container(
                               alignment: AlignmentDirectional.topEnd,
-                              child: Icon(moreOptionsIcon, size: 20.0)),
-                          onTap: this.onMoreOptions,
+                              child: Icon(optionsIcon, size: 20.0)),
+                          onTap: this.onOptionsTap,
                         ),
                       )
               ],
@@ -70,14 +75,16 @@ class WorkoutCard extends StatelessWidget {
             SizedBox(height: kSmallSizedBoxHeight),
             Text(
               this._workout.description,
-              style: kLabelTextStyle,
+              style: _descriptionTextStyle,
             ),
             SizedBox(height: kSizedBoxHeight),
             Text(
               this._workout == null
                   ? "No Routines yet"
-                  : _getNumberOfRoutines() + ' Routines',
-              style: kSmallTextStyle,
+                  : _workout.routines.length > 1
+                      ? _workout.routines.length.toString() + ' Routines'
+                      : _workout.routines.length.toString() + "Routine",
+              style: _routineCountTextStyle,
             )
           ],
         ),

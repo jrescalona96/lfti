@@ -89,7 +89,7 @@ class _DashboardPageState extends State<DashboardPage> {
             Navigator.pushNamed(context, "/viewWorkouts",
                 arguments: _currentUser);
           },
-          color: kGreenButtonColor),
+          color: kBlueButtonColor),
     );
   }
 

@@ -12,10 +12,10 @@ const kMainBackgroundColor = Color(0x0B0A0E21);
 const kInactiveCardColor = Color(0xFF1f1f22);
 const kCardBackground = Color(0xFF1f1f22);
 const kActiveCardColor = Color(0xFF111328);
-const kGreenButtonColor = Color(0xFF00C11D);
-const kBlueButtonColor = Colors.blueAccent;
-const kRedButtonColor = Colors.red;
-const kOrangeButtonColor = Colors.orange;
+final kGreenButtonColor = Colors.green;
+final kBlueButtonColor = Colors.blueAccent[700];
+final kRedButtonColor = Colors.redAccent[700];
+final kOrangeButtonColor = Colors.orangeAccent[700];
 const kIconColor = Colors.white70;
 const kGrayTextColor = Colors.white60;
 
@@ -42,11 +42,11 @@ const kSmallBoldTextStyle = TextStyle(
 );
 
 const kMediumTextStyle = TextStyle(
-  fontSize: 24,
+  fontSize: 22.0,
 );
 
 const kMediumBoldTextStyle = TextStyle(
-  fontSize: 24.0,
+  fontSize: 22.0,
   fontWeight: FontWeight.w700,
 );
 
@@ -72,8 +72,14 @@ const kLargeBoldTextStyle2x = TextStyle(
 const kButtonTextFontStyle =
     TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.white);
 
-const kButtonBoldTextFontStyle = TextStyle(
-    fontSize: 24.0, color: Color(0xFF0A0E21), fontWeight: FontWeight.w900);
+const kBottomButtonTextFontStyle = TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+    letterSpacing: 2.0);
+
+const kButtonBoldTextFontStyle =
+    TextStyle(fontSize: 24.0, fontWeight: FontWeight.w900);
 
 String kFormatDateId = "yyyyMMddkkmmssms";
 String kFormatDateAndTime = "MM/dd/yyyy kk:mm:ss";
