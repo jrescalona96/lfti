@@ -1,6 +1,4 @@
-import 'package:flutter/services.dart';
 import "package:lfti_app/classes/Workout.dart";
-import "package:lfti_app/classes/TimedRoutine.dart";
 import "package:lfti_app/classes/Routine.dart";
 import "package:intl/intl.dart";
 import "package:lfti_app/classes/Constants.dart";
@@ -10,13 +8,11 @@ class Session {
   String id;
   String _elapseTime;
   String date;
-  int _currentSet = 1;
+  int _currentSet = 0;
   int _currentRoutineIndex = 0;
   int _skippedSets = 0;
   int _performedSets = 0;
   bool isPaused = false;
-  final _skippedRoutines =
-      List<Routine>(); // List implemented as a Stack, no Stack class in Dart
   final _performedRoutines =
       List<Routine>(); // List implemented as a Stack, no Stack class in Dart
 
@@ -30,8 +26,12 @@ class Session {
     return this._workout;
   }
 
-  List<Routine> getSkippedRoutines() {
-    return this._skippedRoutines;
+  List getSkippedRoutines() {
+    List skippedRoutines = List();
+    getWorkout().routines.forEach((routine) {
+      if (!_performedRoutines.contains(routine)) skippedRoutines.add(routine);
+    });
+    return skippedRoutines;
   }
 
   List<Routine> getPerformedRoutines() {
@@ -39,7 +39,12 @@ class Session {
   }
 
   int getSkippedSets() {
-    return this._skippedSets;
+    int total = 0;
+    for (var item in getWorkout().routines) {
+      if (item.exercise.name != "Rest") total += item.sets;
+    }
+    print("Total = $total");
+    return total - this._performedSets;
   }
 
   int getPerformedSets() {
@@ -87,31 +92,32 @@ class Session {
   }
 
   void next() {
-    this._performedSets++;
+    if (getCurrentRoutine().exercise.name != "Rest") this._performedSets++;
     if (!isLastSet()) {
       this._currentSet++;
     } else {
-      this._currentSet = 1;
-      this._performedRoutines.add(getCurrentRoutine());
-      nextRoutine();
+      if (!isLastRoutine()) {
+        this._currentSet = 0;
+        this._performedRoutines.add(getCurrentRoutine());
+        nextRoutine();
+      }
     }
-    print("Session next was called!");
   }
 
   void previous() {
-    this._performedSets--;
-    if (this._currentSet > 1) {
+    if (this._currentSet > 0) {
       // not first set
+      this._performedSets--;
       this._currentSet--;
     } else {
       this._performedRoutines.removeLast();
       if (_currentRoutineIndex > 0) {
         // not first routine
-        _currentSet = getCurrentRoutine().sets;
         previousRoutine();
+        _currentSet = getCurrentRoutine().sets - 1;
       } else {
         // first routine
-        _currentSet = 1;
+        _currentSet = 0;
       }
     }
   }
@@ -129,18 +135,14 @@ class Session {
   }
 
   void skip() {
-    // remainingSets offset by 1 since _currentSet starts at 1
-    int performedSets = _currentSet - 1;
+    int performedSets = _currentSet;
     int remainingSets = getCurrentRoutine().sets - performedSets;
-
     if (getCurrentRoutine().exercise.name != "Rest") {
       this._skippedSets = this._skippedSets + remainingSets;
-      if (_currentSet <= 1) {
+      if (_currentSet > 0) {
         // entire routine is skipped
-        this._skippedRoutines.add(getCurrentRoutine());
-      } else {
-        // some sets performed
-        this._performedRoutines.add(getCurrentRoutine());
+        if (!this._performedRoutines.contains(getCurrentRoutine()))
+          this._performedRoutines.add(getCurrentRoutine());
       }
     }
     nextRoutine();
@@ -151,7 +153,7 @@ class Session {
   }
 
   bool isLastSet() {
-    return _currentSet >= getCurrentRoutine().sets;
+    return _currentSet >= getCurrentRoutine().sets - 1;
   }
 
   bool hasNext() {
@@ -164,16 +166,5 @@ class Session {
 
   void end(String t) {
     _setElapseTime(t);
-    // add sets performed on current routine
-    skip();
-    for (int i = _currentRoutineIndex + 1;
-        i < getWorkout().routines.length;
-        i++) {
-      var r = getWorkout().routines[i];
-      if (r.exercise.name != "Rest") {
-        _skippedRoutines.add(r);
-        _skippedSets = this._skippedSets + r.sets;
-      }
-    }
   }
 }

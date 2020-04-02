@@ -17,6 +17,7 @@ class WorkoutCard extends StatelessWidget {
   bool dottedBorder;
   final Function onOptionsTap;
   IconData optionsIcon;
+  int numberOfExercices;
   WorkoutCard({
     this.user,
     this.index,
@@ -32,6 +33,16 @@ class WorkoutCard extends StatelessWidget {
     return _workout.name.isNotEmpty || _workout.routines.isEmpty;
   }
 
+  int _setNumberOfExercises() {
+    int sum = 0;
+    _workout.routines.forEach((val) {
+      if (val.exercise.name != "Rest") {
+        sum++;
+      }
+    });
+    return sum;
+  }
+
   @override
   Widget build(BuildContext context) {
     var cardColor = _isIncompleteWorkout()
@@ -39,7 +50,8 @@ class WorkoutCard extends StatelessWidget {
         : kRedButtonColor.withOpacity(0.2);
     var _workoutNameTextStyle = kMediumBoldTextStyle;
     var _descriptionTextStyle = kLabelTextStyle;
-    var _routineCountTextStyle = kMediumBoldTextStyle;
+    var _routineCountTextStyle = kSmallBoldTextStyle;
+    var _numberOfExercices = _setNumberOfExercises();
 
     return GestureDetector(
       onTap: this.onTap,
@@ -82,8 +94,8 @@ class WorkoutCard extends StatelessWidget {
               this._workout == null
                   ? "No Routines yet"
                   : _workout.routines.length > 1
-                      ? _workout.routines.length.toString() + " Routines"
-                      : _workout.routines.length.toString() + " Routine",
+                      ? _numberOfExercices.toString() + " Exercise Routines"
+                      : _numberOfExercices.toString() + " Exercise Routine",
               style: _routineCountTextStyle,
             )
           ],

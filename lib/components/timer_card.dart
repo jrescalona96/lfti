@@ -26,8 +26,8 @@ class TimerCard extends StatefulWidget {
     _timerCardState.startStopWatch();
   }
 
-  void dispose() {
-    _timerCardState.dispose();
+  void terminate() {
+    _timerCardState.terminate();
   }
 
   String getCurrentTime() {
@@ -40,13 +40,14 @@ class _TimerCardState extends State<TimerCard> {
   String _timerString = '00:00';
   final _duration = const Duration(seconds: 1);
   var label = 'Elapse Time';
+  var timer;
 
   void setCardLabel(String l) {
     this.label = l;
   }
 
   void _startTimer() {
-    Timer(_duration, _keepRunning);
+    timer = Timer(_duration, _keepRunning);
   }
 
   void _keepRunning() {
@@ -73,6 +74,12 @@ class _TimerCardState extends State<TimerCard> {
     });
   }
 
+  void terminate() {
+    setState(() {
+      this.timer.cancel();
+    });
+  }
+
   String getTime() {
     return _timerString;
   }
@@ -88,17 +95,13 @@ class _TimerCardState extends State<TimerCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text(label, style: kLabelTextStyle),
-          SizedBox(height: kSmallSizedBoxHeight),
-          Text(
-            _timerString,
-            style: kMediumBoldTextStyle,
-          ),
-        ],
-      ),
+    return Column(
+      children: <Widget>[
+        Text(label, style: kLabelTextStyle, textAlign: TextAlign.center),
+        SizedBox(height: kSmallSizedBoxHeight),
+        Text(_timerString,
+            style: kMediumBoldTextStyle, textAlign: TextAlign.center),
+      ],
     );
   }
 }

@@ -7,10 +7,10 @@ import 'package:lfti_app/components/custom_dialog_button.dart';
 
 // component imports
 import "package:lfti_app/components/menu.dart";
-import "package:lfti_app/components/custom_card.dart";
+import "package:lfti_app/components/checklist_item_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
-import "package:lfti_app/components/custom_button_card.dart";
+import "package:lfti_app/components/custom_floating_action_button.dart";
 
 // firestore import
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -34,7 +34,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
     _checklist = this._currentUser.getChecklist();
   }
 
-  void _addChecklistItem() async {
+  void _showAddChecklistDialog() async {
     final _descriptionTextController = TextEditingController();
     return showDialog(
       context: context,
@@ -75,7 +75,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
     );
   }
 
-  void _editChecklistItem(int index) async {
+  void _showEditChecklistDialog(int index) async {
     final _descriptionTextController =
         TextEditingController(text: _checklist[index]);
     return await showDialog(
@@ -116,7 +116,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
     );
   }
 
-  void _deleteChecklistItem(int index) {
+  void _removeChecklistAt(int index) {
     _currentUser.getChecklist().removeAt(index);
     setState(() {
       _checklist = _currentUser.getChecklist();
@@ -136,40 +136,32 @@ class _ChecklistPageState extends State<ChecklistPage> {
     }
   }
 
-  GestureDetector buildChecklistItemCard(int index) {
-    return GestureDetector(
-      onTap: () {
-        _editChecklistItem(index);
-      },
-      child: CustomCard(
-        cardChild: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Flexible(
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    index.toString(),
-                    style: kMediumLabelTextStyle,
-                  ),
-                  SizedBox(width: kSizedBoxHeight),
-                  Text(
-                    _checklist[index].toString(),
-                    style: kSmallBoldTextStyle,
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                _deleteChecklistItem(index);
-              },
-              child: Icon(Icons.delete, color: kIconColor),
-            )
-          ],
-        ),
-      ),
-    );
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      var r = this._checklist.removeAt(oldIndex);
+      this._checklist.insert(newIndex, r);
+    });
+  }
+
+  List<ChecklistItemCard> _getChecklistItems() {
+    final routines = List<ChecklistItemCard>();
+    if (this._checklist.isNotEmpty) {
+      for (int i = 0; i < this._checklist.length; i++) {
+        routines.add(
+          ChecklistItemCard(
+            key: Key("C" + _checklist[i] + i.toString()),
+            onOptionsTap: () => _removeChecklistAt(i),
+            optionsIcon: Icons.delete,
+            data: _checklist[i],
+            onTap: () => _showEditChecklistDialog(i),
+          ),
+        );
+      }
+    }
+    return routines;
   }
 
   @override
@@ -193,24 +185,10 @@ class _ChecklistPageState extends State<ChecklistPage> {
           ),
         ),
         drawer: Menu(this._currentUser),
-        body: this._checklist.length > 0
-            ? CustomScrollView(
-                slivers: <Widget>[
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                      Widget item;
-                      if (index < this._checklist.length) {
-                        item = buildChecklistItemCard(index);
-                      } else if (index == this._checklist.length) {
-                        item = CustomButtonCard(
-                          onTap: () => _addChecklistItem(),
-                        );
-                      }
-                      return item;
-                    }),
-                  ),
-                ],
+        body: this._checklist.isNotEmpty
+            ? ReorderableListView(
+                onReorder: _onReorder,
+                children: _getChecklistItems(),
               )
             : Center(
                 child: Column(
@@ -218,14 +196,13 @@ class _ChecklistPageState extends State<ChecklistPage> {
                   children: <Widget>[
                     EmptyStateNotification(
                         sub: "Add Items to your Checklist first."),
-                    SizedBox(height: kSizedBoxHeight),
-                    CustomButtonCard(
-                      onTap: _addChecklistItem,
-                      icon: Icons.add,
-                    )
                   ],
                 ),
               ),
+        floatingActionButton: CustomFloatingActionButton(
+          icon: Icons.add,
+          onPressed: () => _showAddChecklistDialog(),
+        ),
         bottomNavigationBar: BottomNavigationButton(
             label: "SAVE", action: _saveChanges, color: kBlueButtonColor));
   }

@@ -13,6 +13,7 @@ import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/menu.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
 import "package:lfti_app/components/custom_dialog_button.dart";
+import "package:lfti_app/components/custom_floating_action_button.dart";
 
 class WorkoutsPage extends StatefulWidget {
   final User _currentUser;
@@ -160,9 +161,14 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
               ],
             )
           : EmptyStateNotification(sub: "Create workout routines first."),
+      floatingActionButton: CustomFloatingActionButton(
+        icon: Icons.add,
+        onPressed: () => _showCreateNewWorkoutDialog(),
+      ),
       bottomNavigationBar: BottomNavigationButton(
-        label: "CREATE WORKOUT",
-        action: _showCreateNewWorkoutDialog,
+        label: "START WORKOUT",
+        action: () => Navigator.pushNamed(context, "/viewWorkouts",
+            arguments: this._currentUser),
         color: kBlueButtonColor,
       ),
     );

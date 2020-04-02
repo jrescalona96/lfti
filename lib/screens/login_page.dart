@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Loader.dart';
 import "package:lfti_app/classes/User.dart";
-import "package:lfti_app/components/custom_dialog_button.dart";
-import "package:lfti_app/classes/Constants.dart";
 
 class LoginPage extends StatefulWidget {
   final Map<String, String> _emailAndPassword;
@@ -22,10 +20,8 @@ class _LoginPageState extends State<LoginPage> {
   final _loader = Loader();
 
   void _init() {
-    // _emailTextController.text = _userCredentials["email"];
-    // _passwordTextController.text = _userCredentials["pw"];
-    _emailTextController.text = "test@test.com";
-    _passwordTextController.text = "testing";
+    _emailTextController.text = _userCredentials["email"];
+    _passwordTextController.text = _userCredentials["pw"];
   }
 
   @override

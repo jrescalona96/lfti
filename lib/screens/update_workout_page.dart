@@ -11,7 +11,7 @@ import "package:lfti_app/classes/Crud.dart";
 
 // component imports
 import "package:lfti_app/components/bottom_navigation_button.dart";
-import 'package:lfti_app/components/custom_button_card.dart';
+import 'package:lfti_app/components/custom_floating_action_button.dart';
 import "package:lfti_app/components/routine_card.dart";
 import "package:lfti_app/components/time_dropdown_menu.dart";
 import "package:lfti_app/components/custom_dialog_button.dart";
@@ -165,14 +165,17 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     if (this._routineList.isNotEmpty) {
       for (int i = 0; i < this._routineList.length; i++) {
         routines.add(
-          RoutineCard(
+          Padding(
             key: Key(_routineList[i].id + i.toString()),
-            onOptionsTap: () => _removeWorkoutAt(i),
-            optionsIcon: Icons.delete,
-            routine: _routineList[i],
-            onTap: _routineList[i] is TimedRoutine
-                ? () => _showUpdateRestTimeDialog(i)
-                : () => _updateExerciseRoutine(i),
+            padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+            child: RoutineCard(
+              onOptionsTap: () => _removeWorkoutAt(i),
+              optionsIcon: Icons.delete,
+              routine: _routineList[i],
+              onTap: _routineList[i] is TimedRoutine
+                  ? () => _showUpdateRestTimeDialog(i)
+                  : () => _updateExerciseRoutine(i),
+            ),
           ),
         );
       }
@@ -186,6 +189,16 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     });
   }
 
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      var r = this._routineList.removeAt(oldIndex);
+      this._routineList.insert(newIndex, r);
+    });
+  }
+
   void _saveChanges() {
     this._workout.setName(_nameTextController.text.isEmpty
         ? "Unnamed Workout"
@@ -196,16 +209,6 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     this._workout.setRoutines(this._routineList);
     this._currentUser.setWorkoutAt(this._workoutIndex, _workout);
     crudController.updateWorkoutList();
-  }
-
-  void _onReorder(int oldIndex, int newIndex) {
-    setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      var r = this._routineList.removeAt(oldIndex);
-      this._routineList.insert(newIndex, r);
-    });
   }
 
   @override
@@ -222,43 +225,53 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
-        child: ReorderableListView(
-          onReorder: _onReorder,
-          scrollDirection: Axis.vertical,
-          header: // workout name
-              Column(
-            children: <Widget>[
-              CustomTextFormField(
-                textController: _nameTextController,
-                label: "Name",
-              ), // workout description
-              CustomTextFormField(
-                textController: _descriptionTextController,
-                label: "Description",
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 12,
+              child: ReorderableListView(
+                onReorder: _onReorder,
+                scrollDirection: Axis.vertical,
+                header: // workout name
+                    Column(
+                  children: <Widget>[
+                    CustomTextFormField(
+                      textController: _nameTextController,
+                      label: "Name",
+                    ), // workout description
+                    CustomTextFormField(
+                      textController: _descriptionTextController,
+                      label: "Description",
+                    ),
+                    Container(
+                      child: _routineList.isEmpty
+                          ? Column(
+                              children: <Widget>[
+                                kLineDivider,
+                                Text(
+                                  "No Routines Yet!",
+                                  style: kSmallBoldTextStyle.copyWith(
+                                      fontStyle: FontStyle.italic,
+                                      color: kGrayTextColor),
+                                  textAlign: TextAlign.center,
+                                ),
+                                kLineDivider,
+                              ],
+                            )
+                          : null,
+                    ),
+                  ],
+                ),
+                // routines section
+                children: _getRoutineCards(),
               ),
-              Container(
-                child: _routineList.isEmpty
-                    ? Column(
-                        children: <Widget>[
-                          kLineDivider,
-                          Text(
-                            "No Routines Yet!",
-                            style: kSmallBoldTextStyle.copyWith(
-                                fontStyle: FontStyle.italic,
-                                color: kGrayTextColor),
-                            textAlign: TextAlign.center,
-                          ),
-                          kLineDivider,
-                        ],
-                      )
-                    : null,
-              ),
-              CustomButtonCard(onTap: () => _showAddRoutineDialog())
-            ],
-          ),
-          // routines section
-          children: _getRoutineCards(),
+            ),
+          ],
         ),
+      ),
+      floatingActionButton: CustomFloatingActionButton(
+        icon: Icons.add,
+        onPressed: () => _showAddRoutineDialog(),
       ),
       bottomNavigationBar: BottomNavigationButton(
         label: "SAVE CHANGES",

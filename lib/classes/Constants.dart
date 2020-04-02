@@ -23,7 +23,7 @@ const kContentMargin = EdgeInsets.all(10.0);
 const kCardMargin = EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0);
 const kContentPadding = EdgeInsets.all(20.0);
 const kButtonPadding = EdgeInsets.all(20.0);
-const kStartButtonHeight = 100.0;
+const kStartButtonHeight = 80.0;
 const kSizedBoxHeight = 12.0;
 const kSmallSizedBoxHeight = 5.0;
 const kStartButtonColor = Colors.blueAccent;
@@ -37,6 +37,7 @@ final kRedButtonColor = Colors.redAccent[700];
 final kOrangeButtonColor = Colors.orangeAccent[700];
 final kIconColor = Color(0xFF404040);
 const kGrayTextColor = Colors.white60;
+final kFloatingActionButtonColor = Colors.blue;
 
 const kLabelTextStyle = TextStyle(
   fontSize: 15.0,

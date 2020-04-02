@@ -26,13 +26,13 @@ class _SessionPageState extends State<SessionPage> {
   var _currentRoutine;
   final _routineTimerController = TimerCard(cardLabel: "ROUTINE TIME");
   final _sessionTimerController = TimerCard(cardLabel: "SESSION TIME");
+  bool _isTimeUp = false;
 
   _SessionPageState(this._currentUser) {
     this._session = _currentUser.getSession();
     this._currentSet = 1;
     this._currentRoutine = _session.getCurrentRoutine();
   }
-
   void _showSessionConfirmationDialogBox() async {
     await showDialog<void>(
       context: context,
@@ -61,8 +61,9 @@ class _SessionPageState extends State<SessionPage> {
               ),
               onPressed: () {
                 print("Ending Session!");
-                _routineTimerController.dispose();
-                _sessionTimerController.dispose();
+                _routineTimerController.terminate();
+
+                _sessionTimerController.terminate();
                 setState(() {
                   _session.end(_sessionTimerController.getCurrentTime());
                 });
@@ -78,19 +79,26 @@ class _SessionPageState extends State<SessionPage> {
 
   bool _isFirstRoutineAndSet() {
     return _session.getCurrentRoutineIndex() == 0 &&
-        _session.getCurrentSet() < 2;
+        _session.getCurrentSet() == 0;
   }
 
   void _next() {
-    try {
-      _routineTimerController.restart();
+    if (!_session.isFinished()) {
+      try {
+        _routineTimerController.restart();
+        _session.next();
+        setState(() {
+          _currentSet = _session.getCurrentSet();
+          _currentRoutine = _session.getCurrentRoutine();
+        });
+      } catch (e) {
+        print("Error: something went wrong calling next() in Session Page!");
+      }
+    } else {
       _session.next();
-      setState(() {
-        _currentSet = _session.getCurrentSet();
-        _currentRoutine = _session.getCurrentRoutine();
-      });
-    } catch (e) {
-      print("Error: something went wrong calling next() in Session Page!");
+      _routineTimerController.terminate();
+      _sessionTimerController.terminate();
+      _showSessionConfirmationDialogBox();
     }
   }
 
@@ -116,7 +124,6 @@ class _SessionPageState extends State<SessionPage> {
     // Run Timer at navigate
     _routineTimerController.start();
     _sessionTimerController.start();
-
     _session.isPaused
         ? _routineTimerController.pause()
         : _routineTimerController.start();
@@ -137,6 +144,7 @@ class _SessionPageState extends State<SessionPage> {
       body: SafeArea(
         child: Container(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               // Excercise Section
@@ -203,7 +211,7 @@ class _SessionPageState extends State<SessionPage> {
                             textBaseline: TextBaseline.alphabetic,
                             children: <Widget>[
                               Text(
-                                _currentSet.toString(),
+                                (_currentSet + 1).toString(),
                                 style: kLargeBoldTextStyle1_5x,
                               ),
                               Text(
@@ -250,9 +258,7 @@ class _SessionPageState extends State<SessionPage> {
                     Expanded(
                       flex: 2,
                       child: RaisedButton(
-                        onPressed: _session.isPaused || _session.isFinished()
-                            ? null
-                            : () => _next(),
+                        onPressed: _session.isPaused ? null : () => _next(),
                         onLongPress: _session.isPaused || _session.isFinished()
                             ? null
                             : () => _skipRoutine(),
@@ -315,17 +321,11 @@ class _SessionPageState extends State<SessionPage> {
       bottomNavigationBar: Container(
         child: GestureDetector(
           onLongPress: () => _showSessionConfirmationDialogBox(),
-          child: _session.isFinished()
-              ? BottomNavigationButton(
-                  label: "END",
-                  action: _showSessionConfirmationDialogBox,
-                  color: kRedButtonColor)
-              : BottomNavigationButton(
-                  label: _session.isPaused ? "CONTINUE" : "PAUSE",
-                  action: _togglePause,
-                  color:
-                      _session.isPaused ? kGreenButtonColor : kBlueButtonColor,
-                ),
+          child: BottomNavigationButton(
+            label: _session.isPaused ? "CONTINUE" : "PAUSE",
+            action: _togglePause,
+            color: _session.isPaused ? kGreenButtonColor : kBlueButtonColor,
+          ),
         ),
       ),
     );

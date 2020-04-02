@@ -26,9 +26,9 @@ class User {
   int _age = 29;
   // TODO: set up date formatter or create own class
   Map<String, int> _dob = {"month": 9, "day": 6, "year": 1990};
-  Session _currentSession = null;
-  Map _lastSession = null;
-  Map _nextSession = null;
+  Session _currentSession;
+  Map _lastSession;
+  Map _nextSession;
 
   void login(String email, String password) async {
     try {
