@@ -27,7 +27,7 @@ class CustomCard extends StatelessWidget {
           color: this.color,
         ),
         child: DottedBorder(
-          color: this.dottedBorder ? Colors.white24 : Colors.transparent,
+          color: this.dottedBorder ? Colors.black : Colors.transparent,
           strokeWidth: 2,
           padding: kContentPadding,
           dashPattern: [6.0, 6.0, 6.0, 6.0],

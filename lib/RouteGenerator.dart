@@ -18,6 +18,7 @@ import "package:lfti_app/screens/update_routine_page.dart";
 import "package:lfti_app/screens/view_workouts_page.dart";
 import "package:lfti_app/screens/update_workout_page.dart";
 import "package:lfti_app/screens/create_workout_page.dart";
+import "package:lfti_app/screens/login_navigator_screen.dart";
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -36,6 +37,13 @@ class RouteGenerator {
         break;
       case "/signup":
         return MaterialPageRoute(builder: (_) => SignUpPage());
+        break;
+      case "/loginNavigator":
+        if (args is User) {
+          return MaterialPageRoute(builder: (_) => LoginNavigationScreen(args));
+        } else {
+          return _errorRoute();
+        }
         break;
       case "/dashboard":
         print("dashboard args: $args");

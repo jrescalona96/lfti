@@ -7,9 +7,6 @@ import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Routine.dart";
 import "package:lfti_app/classes/Crud.dart";
 
-// screen imports
-import "package:lfti_app/screens/loading_screen.dart";
-
 // component imports
 import "package:lfti_app/components/workout_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
@@ -116,61 +113,58 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _currentUser.getDocument() == null
-        ? LoadingScreen()
-        : Scaffold(
-            appBar: AppBar(
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return IconButton(
-                    icon: Icon(Icons.menu),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                    tooltip:
-                        MaterialLocalizations.of(context).openAppDrawerTooltip,
-                  );
-                },
-              ),
-              title: Text(
-                "WORKOUTS",
-                style: kSmallTextStyle,
-              ),
-            ),
-            drawer: Menu(_currentUser),
-            body: _workoutList.isNotEmpty
-                ? CustomScrollView(
-                    slivers: <Widget>[
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                          Widget item;
-                          if (index < _workoutList.length) {
-                            item = WorkoutCard(
-                                onOptionsTap: () =>
-                                    _showDeleteConfirmationDialog(index),
-                                optionsIcon: Icons.delete,
-                                user: this._currentUser,
-                                index: index,
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .pushNamed('/updateWorkout', arguments: {
-                                    "user": this._currentUser,
-                                    "index": index
-                                  });
+    return Scaffold(
+      appBar: AppBar(
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
+        title: Text(
+          "WORKOUTS",
+          style: kSmallTextStyle,
+        ),
+      ),
+      drawer: Menu(_currentUser),
+      body: _workoutList.isNotEmpty
+          ? CustomScrollView(
+              slivers: <Widget>[
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                    Widget item;
+                    if (index < _workoutList.length) {
+                      item = WorkoutCard(
+                          onOptionsTap: () =>
+                              _showDeleteConfirmationDialog(index),
+                          optionsIcon: Icons.delete,
+                          user: this._currentUser,
+                          index: index,
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/updateWorkout',
+                                arguments: {
+                                  "user": this._currentUser,
+                                  "index": index
                                 });
-                          }
-                          return item;
-                        }),
-                      ),
-                    ],
-                  )
-                : EmptyStateNotification(sub: "Create workout routines first."),
-            bottomNavigationBar: BottomNavigationButton(
-              label: "CREATE WORKOUT",
-              action: _showCreateNewWorkoutDialog,
-              color: kBlueButtonColor,
-            ),
-          );
+                          });
+                    }
+                    return item;
+                  }),
+                ),
+              ],
+            )
+          : EmptyStateNotification(sub: "Create workout routines first."),
+      bottomNavigationBar: BottomNavigationButton(
+        label: "CREATE WORKOUT",
+        action: _showCreateNewWorkoutDialog,
+        color: kBlueButtonColor,
+      ),
+    );
   }
 }

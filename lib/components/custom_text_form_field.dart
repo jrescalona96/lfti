@@ -17,6 +17,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
+      color: Colors.transparent,
       cardChild: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -32,7 +33,6 @@ class CustomTextFormField extends StatelessWidget {
                 icon: Icon(
                   Icons.close,
                   size: 18.0,
-                  color: Colors.white60,
                 ),
                 onPressed: () {
                   _textController.clear();

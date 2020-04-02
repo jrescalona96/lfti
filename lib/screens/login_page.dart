@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
+import 'package:lfti_app/classes/Loader.dart';
 import "package:lfti_app/classes/User.dart";
+import "package:lfti_app/components/custom_dialog_button.dart";
+import "package:lfti_app/classes/Constants.dart";
 
 class LoginPage extends StatefulWidget {
   final Map<String, String> _emailAndPassword;
@@ -16,14 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _currentUser = User();
-
-  bool _isInputNotEmpty() {
-    if (_emailTextController.text.isNotEmpty &&
-        _passwordTextController.text.isNotEmpty)
-      return true;
-    else
-      return false;
-  }
+  final _loader = Loader();
 
   void _init() {
     // _emailTextController.text = _userCredentials["email"];
@@ -75,27 +71,23 @@ class _LoginPageState extends State<LoginPage> {
                               style: kButtonTextFontStyle,
                             ),
                             onPressed: () async {
-                              if (_isInputNotEmpty()) {
+                              try {
                                 await _currentUser.login(
                                     _emailTextController.text.trim(),
                                     _passwordTextController.text);
-
+                                await _currentUser.setDatabaseReference();
+                                await _currentUser.setDocumentSnapshot();
+                                await _currentUser.initUserData();
                                 if (_currentUser.isLoggedIn()) {
-                                  print(
-                                    "Login Successful: Logged in as " +
-                                        _currentUser.getFirstName() +
-                                        " " +
-                                        _currentUser.getLastName(),
-                                  );
-                                  Navigator.pushNamed(context, '/dashboard',
+                                  Navigator.pushNamed(
+                                      context, "/loginNavigator",
                                       arguments: _currentUser);
                                 } else {
-                                  // TODO: create an alert to tell the user of errror
-                                  _passwordTextController.clear();
+                                  _loader.showAlertDialog("Failed to Log In!",
+                                      "Invalid Email / Password", context);
                                 }
-                              } else {
-                                // TODO: implement alert dialog box
-                                print('Alert: Empty Fields');
+                              } catch (e) {
+                                print("Error: Failed to Log in! $e");
                               }
                             }),
                       ],

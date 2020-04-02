@@ -32,18 +32,16 @@ class User {
 
   void login(String email, String password) async {
     try {
-      _setAuthResult(await _auth.signInWithEmailAndPassword(
-          email: email.trim(), password: password));
-      await _setDatabaseReference();
-      await _setDocumentSnapshot();
-      await _initUserData();
+      AuthResult res = await _auth.signInWithEmailAndPassword(
+          email: email.trim(), password: password);
+      _setAuthResult(res);
       print("Success: Loggin in as " + _authRes.user.uid);
     } catch (e) {
       print("Error: Unable to Log in! " + e.toString());
     }
   }
 
-  void _initUserData() {
+  void initUserData() {
     try {
       this._workouts = _buildWorkoutList();
       this._firstName = getDocument().data["firstName"];
@@ -69,7 +67,7 @@ class User {
     this._authRes = res;
   }
 
-  void _setDatabaseReference() {
+  void setDatabaseReference() {
     try {
       this._firestoreReference =
           Firestore.instance.collection("users").document(_authRes.user.uid);
@@ -79,7 +77,7 @@ class User {
     }
   }
 
-  void _setDocumentSnapshot() async {
+  void setDocumentSnapshot() async {
     try {
       this._document = await _firestoreReference.get();
       print("Success: Document Snapshot set!");
@@ -133,6 +131,14 @@ class User {
 
   void deleteWorkoutAt(int index) {
     this._workouts.removeAt(index);
+  }
+
+  void addChecklistItem(String s) {
+    this._checklist.add(s);
+  }
+
+  void setChecklistItemAt(int index, String s) {
+    this._checklist[index] = s;
   }
 
   /// getters

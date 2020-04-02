@@ -314,19 +314,19 @@ class _SessionPageState extends State<SessionPage> {
       ),
       bottomNavigationBar: Container(
         child: GestureDetector(
-            onLongPress: () => _showSessionConfirmationDialogBox(),
-            child: _session.isFinished()
-                ? BottomNavigationButton(
-                    label: "END",
-                    action: _showSessionConfirmationDialogBox,
-                    color: kRedButtonColor)
-                : BottomNavigationButton(
-                    label: _session.isPaused ? "CONTINUE" : "PAUSE",
-                    action: _togglePause,
-                    color: _session.isPaused
-                        ? kGreenButtonColor
-                        : kBlueButtonColor,
-                  )),
+          onLongPress: () => _showSessionConfirmationDialogBox(),
+          child: _session.isFinished()
+              ? BottomNavigationButton(
+                  label: "END",
+                  action: _showSessionConfirmationDialogBox,
+                  color: kRedButtonColor)
+              : BottomNavigationButton(
+                  label: _session.isPaused ? "CONTINUE" : "PAUSE",
+                  action: _togglePause,
+                  color:
+                      _session.isPaused ? kGreenButtonColor : kBlueButtonColor,
+                ),
+        ),
       ),
     );
   }

@@ -10,8 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'lfti',
       theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: kMainBackgroundColor,
+        brightness: Brightness.light,
         buttonTheme: ButtonThemeData(
           minWidth: double.infinity,
           shape: RoundedRectangleBorder(

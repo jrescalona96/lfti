@@ -15,7 +15,10 @@ class CustomDialogButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlatButton(
       color: this.color,
-      child: Text(this.label, style: kSmallTextStyle),
+      child: Text(
+        this.label,
+        style: kSmallTextStyle,
+      ),
       onPressed: this.onPressed,
     );
   }

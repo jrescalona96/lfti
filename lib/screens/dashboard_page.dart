@@ -11,9 +11,6 @@ import "package:lfti_app/components/custom_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/menu.dart";
 
-// screen imports
-import "package:lfti_app/screens/loading_screen.dart";
-
 class DashboardPage extends StatefulWidget {
   final User _currentUser;
   DashboardPage(this._currentUser);
@@ -30,9 +27,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _currentUser.getDocument() == null
-        ? LoadingScreen()
-        : _buildDashboardPage(context);
+    return _buildDashboardPage(context);
   }
 
   Scaffold _buildDashboardPage(BuildContext context) {

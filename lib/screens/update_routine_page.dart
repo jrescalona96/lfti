@@ -319,7 +319,6 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
           ],
         ),
       ),
-
       // delete button
       bottomNavigationBar: BottomNavigationButton(
           label: "SAVE CHANGES",

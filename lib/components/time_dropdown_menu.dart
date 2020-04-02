@@ -50,9 +50,9 @@ class _TimeDropdownMenuState extends State<TimeDropdownMenu> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton(
-      hint: Text("$_selectedValue", style: kSmallBoldTextStyle),
+      hint: Text("$_selectedValue", style: kMediumTextStyle),
       value: _selectedValue,
-      isExpanded: true,
+      underline: Container(),
       isDense: true,
       items: _generateTimeListOptions(),
       onChanged: (val) {

@@ -52,7 +52,7 @@ class ViewRoutinesPage extends StatelessWidget {
             Navigator.pushNamed(context, '/startSession',
                 arguments: _currentUser);
           },
-          color: kGreenButtonColor,
+          color: kBlueButtonColor,
         ));
   }
 }

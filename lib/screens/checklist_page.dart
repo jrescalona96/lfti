@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
+import 'package:lfti_app/components/custom_dialog_button.dart';
 
 // component imports
 import "package:lfti_app/components/menu.dart";
@@ -33,40 +34,38 @@ class _ChecklistPageState extends State<ChecklistPage> {
     _checklist = this._currentUser.getChecklist();
   }
 
-  Future<void> _addChecklistItem() async {
+  void _addChecklistItem() async {
     final _descriptionTextController = TextEditingController();
-    return showDialog<void>(
+    return showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Checklist Item name"),
+          title:
+              Text("Checklist Item Description", style: kMediumLabelTextStyle),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          backgroundColor: kCardBackground.withOpacity(0.8),
+          backgroundColor: kCardBackground,
           content: TextFormField(
             controller: _descriptionTextController,
             keyboardType: TextInputType.text,
+            style: kSmallBoldTextStyle,
           ),
           actions: <Widget>[
-            FlatButton(
-              child: Text("Cancel"),
+            CustomDialogButton(
+              label: "CANCEL",
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            FlatButton(
-              child: Text("Add"),
+            CustomDialogButton(
+              label: "ADD",
               onPressed: () {
-                this
-                    ._currentUser
-                    .getChecklist()
-                    .add(_descriptionTextController.text);
-                print(this._currentUser.getWorkoutList());
                 setState(() {
-                  this._checklist = this._currentUser.getChecklist();
+                  this
+                      ._currentUser
+                      .addChecklistItem(_descriptionTextController.text);
                 });
-                print("Item Added!");
                 Navigator.of(context).pop();
               },
             ),
@@ -76,9 +75,45 @@ class _ChecklistPageState extends State<ChecklistPage> {
     );
   }
 
-  // TODO: implement edit checklist
-  void _editChecklistItem() {
-    print("edit action");
+  void _editChecklistItem(int index) async {
+    final _descriptionTextController =
+        TextEditingController(text: _checklist[index]);
+    return await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:
+              Text("Checklist Item Description", style: kMediumLabelTextStyle),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          backgroundColor: kCardBackground,
+          content: TextFormField(
+            controller: _descriptionTextController,
+            keyboardType: TextInputType.text,
+            style: kSmallBoldTextStyle,
+          ),
+          actions: <Widget>[
+            CustomDialogButton(
+              label: "CANCEL",
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CustomDialogButton(
+              label: "ADD",
+              onPressed: () {
+                setState(() {
+                  this._currentUser.setChecklistItemAt(
+                      index, _descriptionTextController.text);
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _deleteChecklistItem(int index) {
@@ -104,10 +139,9 @@ class _ChecklistPageState extends State<ChecklistPage> {
   GestureDetector buildChecklistItemCard(int index) {
     return GestureDetector(
       onTap: () {
-        _editChecklistItem();
+        _editChecklistItem(index);
       },
       child: CustomCard(
-        dottedBorder: true,
         cardChild: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -130,7 +164,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
               onTap: () {
                 _deleteChecklistItem(index);
               },
-              child: Icon(Icons.close, color: kIconColor),
+              child: Icon(Icons.delete, color: kIconColor),
             )
           ],
         ),
@@ -169,15 +203,30 @@ class _ChecklistPageState extends State<ChecklistPage> {
                       if (index < this._checklist.length) {
                         item = buildChecklistItemCard(index);
                       } else if (index == this._checklist.length) {
-                        item = CustomButtonCard(onTap: _addChecklistItem);
+                        item = CustomButtonCard(
+                          onTap: () => _addChecklistItem(),
+                        );
                       }
                       return item;
                     }),
                   ),
                 ],
               )
-            : EmptyStateNotification(sub: "Add Items to your Checklist first."),
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    EmptyStateNotification(
+                        sub: "Add Items to your Checklist first."),
+                    SizedBox(height: kSizedBoxHeight),
+                    CustomButtonCard(
+                      onTap: _addChecklistItem,
+                      icon: Icons.add,
+                    )
+                  ],
+                ),
+              ),
         bottomNavigationBar: BottomNavigationButton(
-            label: "SAVE", action: _saveChanges, color: kGreenButtonColor));
+            label: "SAVE", action: _saveChanges, color: kBlueButtonColor));
   }
 }

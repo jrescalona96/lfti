@@ -7,7 +7,7 @@ class CustomButtonCard extends StatelessWidget {
   final Color color;
   final IconData icon;
   const CustomButtonCard(
-      {@required this.onTap, this.color, this.icon = FontAwesomeIcons.plus});
+      {@required this.onTap, this.color, this.icon = Icons.add});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class CustomButtonCard extends StatelessWidget {
         child: Center(
           child: Icon(
             this.icon,
-            size: 30.0,
+            size: 50.0,
             color: kIconColor,
           ),
         ),

@@ -1,6 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:lfti_app/components/custom_card.dart';
-import "package:numberpicker/numberpicker.dart";
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
@@ -61,7 +59,6 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
-          backgroundColor: kCardBackground.withOpacity(0.9),
           actions: <Widget>[
             CustomDialogButton(
               label: "DELETE",
@@ -71,7 +68,6 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                 });
                 Navigator.of(context).pop();
               },
-              color: kRedButtonColor.withOpacity(0.5),
             ),
             CustomDialogButton(
               label: "CONFIRM",
@@ -164,12 +160,13 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     });
   }
 
-  List<RoutineCard> _getRoutineCards() {
-    final routines = List<RoutineCard>();
+  List<Widget> _getRoutineCards() {
+    final routines = List<Widget>();
     if (this._routineList.isNotEmpty) {
       for (int i = 0; i < this._routineList.length; i++) {
         routines.add(
           RoutineCard(
+            key: Key(_routineList[i].id + i.toString()),
             onOptionsTap: () => _removeWorkoutAt(i),
             optionsIcon: Icons.delete,
             routine: _routineList[i],
@@ -201,15 +198,18 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     crudController.updateWorkoutList();
   }
 
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      var r = this._routineList.removeAt(oldIndex);
+      this._routineList.insert(newIndex, r);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // line divider
-    var lineDivider = Divider(
-      indent: 40.0,
-      endIndent: 40.0,
-      color: kIconColor.withOpacity(0.2),
-      thickness: 1.0,
-    );
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -222,45 +222,42 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
-        child: ListView(
-          children: <Widget>[
-            // workout name
-            CustomTextFormField(
-              textController: _nameTextController,
-              label: "Name",
-            ),
-            // workout description
-            CustomTextFormField(
-              textController: _descriptionTextController,
-              label: "Description",
-            ),
-            Container(
-              child: _routineList.isEmpty
-                  ? Column(
-                      children: <Widget>[
-                        lineDivider,
-                        Text(
-                          "No Routines Yet!",
-                          style: kSmallBoldTextStyle.copyWith(
-                              fontStyle: FontStyle.italic,
-                              color: kGrayTextColor),
-                          textAlign: TextAlign.center,
-                        ),
-                        lineDivider,
-                      ],
-                    )
-                  : null,
-            ),
-            // routines section
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                ..._getRoutineCards(),
-              ],
-            ),
-            SizedBox(height: kSizedBoxHeight),
-            CustomButtonCard(onTap: () => _showAddRoutineDialog())
-          ],
+        child: ReorderableListView(
+          onReorder: _onReorder,
+          scrollDirection: Axis.vertical,
+          header: // workout name
+              Column(
+            children: <Widget>[
+              CustomTextFormField(
+                textController: _nameTextController,
+                label: "Name",
+              ), // workout description
+              CustomTextFormField(
+                textController: _descriptionTextController,
+                label: "Description",
+              ),
+              Container(
+                child: _routineList.isEmpty
+                    ? Column(
+                        children: <Widget>[
+                          kLineDivider,
+                          Text(
+                            "No Routines Yet!",
+                            style: kSmallBoldTextStyle.copyWith(
+                                fontStyle: FontStyle.italic,
+                                color: kGrayTextColor),
+                            textAlign: TextAlign.center,
+                          ),
+                          kLineDivider,
+                        ],
+                      )
+                    : null,
+              ),
+              CustomButtonCard(onTap: () => _showAddRoutineDialog())
+            ],
+          ),
+          // routines section
+          children: _getRoutineCards(),
         ),
       ),
       bottomNavigationBar: BottomNavigationButton(

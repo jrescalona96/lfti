@@ -10,10 +10,6 @@ class Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _navigateTo(String route) {
-      Navigator.pushNamed(context, route, arguments: _currentUser);
-    }
-
     return Drawer(
       child: Column(
         children: <Widget>[
