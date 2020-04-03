@@ -101,12 +101,8 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
             child: Column(
               children: <Widget>[
                 FlatButton(
-                  color: kGreenButtonColor.withOpacity(0.1),
-                  child: Text(
-                    "Rest",
-                    style:
-                        kButtonTextFontStyle.copyWith(color: kGreenButtonColor),
-                  ),
+                  color: kCardBackground,
+                  child: Text("Rest", style: kButtonTextFontStyle),
                   onPressed: () {
                     _addRestRoutine();
                     Navigator.pop(context);
