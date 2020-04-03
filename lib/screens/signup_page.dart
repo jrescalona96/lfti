@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import "package:flutter/material.dart";
 import "package:lfti_app/classes/Constants.dart";
 
@@ -17,9 +16,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordTextController = TextEditingController();
   final _firstNameTextController = TextEditingController();
   final _lastNameTextController = TextEditingController();
-  final _dayTextController = TextEditingController();
-  final _monthTextController = TextEditingController();
-  final _yearTextController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _usersRef = Firestore.instance.collection("users");
@@ -56,11 +52,15 @@ class _SignUpPageState extends State<SignUpPage> {
     _userDocumentRef.setData({
       "firstName": _firstNameTextController.text,
       "lastName": _lastNameTextController.text,
-      "dob": {
-        "month": int.parse(_monthTextController.text),
-        "day": int.parse(_dayTextController.text),
-        "year": int.parse(_yearTextController.text)
-      },
+//      "dob": {
+//        "month": int.parse(
+//            _monthTextController.text.isEmpty ? 1 : _monthTextController.text),
+//        "day": int.parse(_dayTextController.text.isEmpty
+//            ? 1
+//            : _dayTextController.text.isEmpty),
+//        "year": int.parse(
+//            _yearTextController.text.isEmpty ? 1990 : _yearTextController.text)
+//      },
       "email": _emailTextController.text.trim(),
     }).then((res) {
       print("User Added!");
@@ -80,9 +80,6 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isAllInputNotEmpty() {
     if (_firstNameTextController.text.isNotEmpty &&
         _lastNameTextController.text.isNotEmpty &&
-        _dayTextController.text.isNotEmpty &&
-        _monthTextController.text.isNotEmpty &&
-        _yearTextController.text.isNotEmpty &&
         _emailTextController.text.isNotEmpty &&
         _passwordTextController.text.isNotEmpty)
       return true;
@@ -116,38 +113,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: _lastNameTextController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: "Last Name")),
-                SizedBox(height: kSizedBoxHeight),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("Birthday", style: kLabelTextStyle),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: TextFormField(
-                              controller: _dayTextController,
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(labelText: "Month")),
-                        ),
-                        SizedBox(width: kSizedBoxHeight),
-                        Expanded(
-                          child: TextFormField(
-                              controller: _monthTextController,
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(labelText: "Day")),
-                        ),
-                        SizedBox(width: kSizedBoxHeight),
-                        Expanded(
-                          flex: 2,
-                          child: TextFormField(
-                              controller: _yearTextController,
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(labelText: "Year")),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
                 SizedBox(height: kSizedBoxHeight),
                 TextFormField(
                     controller: _emailTextController,

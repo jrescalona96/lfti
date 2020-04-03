@@ -61,23 +61,12 @@ class Menu extends StatelessWidget {
                   arguments: _currentUser);
             },
           ),
-          // TODO: Create Settings for email, password, and profile pic changes
-          ListTile(
-            title: Text(
-              "Settings",
-              style: kSmallTextStyle,
-            ),
-            onTap: () {
-              print("Implement Settings Tab.");
-            },
-          ),
           ListTile(
             title: Text(
               "Log out",
               style: kSmallTextStyle,
             ),
             onTap: () {
-              // TODO: Add alert dialog box
               Navigator.pushNamed(context, "/");
             },
           ),
