@@ -3,11 +3,7 @@ import 'RouteGenerator.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import "package:flutter/services.dart";
 
-void main() {
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
-    (_) => runApp(MyApp()),
-  );
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override

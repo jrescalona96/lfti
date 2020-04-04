@@ -21,7 +21,7 @@ class _LoginNavigationScreenState extends State<LoginNavigationScreen> {
   Timer _startTimer(BuildContext context) {
     setState(() {
       this._timer = Timer(
-        Duration(seconds: 4),
+        Duration(seconds: 3),
         _updateState,
       );
     });
