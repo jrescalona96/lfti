@@ -88,7 +88,6 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
           actions: <Widget>[
             CustomDialogButton(
               label: "CREATE",
-              color: kGreenButtonColor.withOpacity(0.5),
               onPressed: () {
                 if (_nameTextController.text != null) {
                   this._currentUser.addWorkout(
@@ -129,7 +128,6 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
         ),
         title: Text(
           "WORKOUTS",
-          style: kSmallTextStyle,
         ),
       ),
       drawer: Menu(_currentUser),

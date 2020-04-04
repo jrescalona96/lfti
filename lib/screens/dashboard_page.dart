@@ -46,7 +46,6 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         title: Text(
           _currentUser.getFirstName(),
-          style: kSmallTextStyle,
         ),
       ),
       drawer: Menu(_currentUser),

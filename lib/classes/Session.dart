@@ -10,7 +10,6 @@ class Session {
   String date;
   int _currentSet = 0;
   int _currentRoutineIndex = 0;
-  int _skippedSets = 0;
   int _performedSets = 0;
   bool isPaused = false;
   final _performedRoutines =
@@ -43,7 +42,6 @@ class Session {
     for (var item in getWorkout().routines) {
       if (item.exercise.name != "Rest") total += item.sets;
     }
-    print("Total = $total");
     return total - this._performedSets;
   }
 
@@ -92,8 +90,9 @@ class Session {
   }
 
   void next() {
-    if (getCurrentRoutine().exercise.name != "Rest") this._performedSets++;
-    if (!isLastSet()) {
+    if (getCurrentRoutine().exercise.name != "Rest" &&
+        _currentSet < getCurrentRoutine().sets) this._performedSets++;
+    if (!isLastSet() && _currentSet < getCurrentRoutine().sets) {
       this._currentSet++;
     } else {
       if (!isLastRoutine()) {
@@ -102,22 +101,21 @@ class Session {
         nextRoutine();
       }
     }
+    print("Current set = " + _currentSet.toString());
+    print("Performed sets = " + _performedSets.toString());
+    print("Skipped sets = " + getSkippedSets().toString() + "\n\n");
   }
 
   void previous() {
     if (this._currentSet > 0) {
-      // not first set
       this._performedSets--;
       this._currentSet--;
     } else {
-      this._performedRoutines.removeLast();
       if (_currentRoutineIndex > 0) {
+        this._performedRoutines.removeLast();
         // not first routine
         previousRoutine();
         _currentSet = getCurrentRoutine().sets - 1;
-      } else {
-        // first routine
-        _currentSet = 0;
       }
     }
   }
@@ -125,6 +123,7 @@ class Session {
   void nextRoutine() {
     if (!isLastRoutine()) {
       this._currentRoutineIndex++;
+      this._currentSet = 0;
     }
   }
 
@@ -135,21 +134,16 @@ class Session {
   }
 
   void skip() {
-    int performedSets = _currentSet;
-    int remainingSets = getCurrentRoutine().sets - performedSets;
-    if (getCurrentRoutine().exercise.name != "Rest") {
-      this._skippedSets = this._skippedSets + remainingSets;
-      if (_currentSet > 0) {
-        // entire routine is skipped
-        if (!this._performedRoutines.contains(getCurrentRoutine()))
-          this._performedRoutines.add(getCurrentRoutine());
+    if (getCurrentRoutine().exercise.name != "Rest" && _currentSet > 0) {
+      if (!this._performedRoutines.contains(getCurrentRoutine())) {
+        this._performedRoutines.add(getCurrentRoutine());
       }
     }
-    nextRoutine();
+    if (!isLastRoutine()) nextRoutine();
   }
 
   bool isLastRoutine() {
-    return _currentRoutineIndex >= _workout.routines.length - 1;
+    return _currentRoutineIndex == _workout.routines.length - 1;
   }
 
   bool isLastSet() {
@@ -166,5 +160,7 @@ class Session {
 
   void end(String t) {
     _setElapseTime(t);
+    // add routines not performed
+    if (_currentSet > 0) this._performedRoutines.add(getCurrentRoutine());
   }
 }

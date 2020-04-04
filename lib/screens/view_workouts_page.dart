@@ -47,7 +47,6 @@ class _ViewWorkoutsPageState extends State<ViewWorkoutsPage> {
         ),
         title: Text(
           "WORKOUTS",
-          style: kSmallTextStyle,
         ),
       ),
       drawer: Menu(_currentUser),

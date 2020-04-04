@@ -53,53 +53,51 @@ class WorkoutCard extends StatelessWidget {
     var _routineCountTextStyle = kSmallBoldTextStyle;
     var _numberOfExercices = _setNumberOfExercises();
 
-    return GestureDetector(
+    return CustomCard(
       onTap: this.onTap,
-      child: CustomCard(
-        color: cardColor,
-        dottedBorder: this.dottedBorder,
-        cardChild: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    this._workout.name,
-                    style: _workoutNameTextStyle,
-                  ),
+      color: cardColor,
+      dottedBorder: this.dottedBorder,
+      cardChild: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: Text(
+                  this._workout.name,
+                  style: _workoutNameTextStyle,
                 ),
-                this.onOptionsTap == null
-                    ? SizedBox(height: 0.0)
-                    : Expanded(
-                        child: GestureDetector(
-                          child: Container(
-                              alignment: AlignmentDirectional.topEnd,
-                              child: Icon(optionsIcon, size: 20.0)),
-                          onTap: this.onOptionsTap,
-                        ),
-                      )
-              ],
-            ),
-            SizedBox(height: kSmallSizedBoxHeight),
-            Text(
-              this._workout.description,
-              style: _descriptionTextStyle,
-            ),
-            SizedBox(height: kSizedBoxHeight),
-            Text(
-              this._workout == null
-                  ? "No Routines yet"
-                  : _workout.routines.length > 1
-                      ? _numberOfExercices.toString() + " Exercise Routines"
-                      : _numberOfExercices.toString() + " Exercise Routine",
-              style: _routineCountTextStyle,
-            )
-          ],
-        ),
+              ),
+              this.onOptionsTap == null
+                  ? SizedBox(height: 0.0)
+                  : Expanded(
+                      child: GestureDetector(
+                        child: Container(
+                            alignment: AlignmentDirectional.topEnd,
+                            child: Icon(optionsIcon, size: 25.0)),
+                        onTap: this.onOptionsTap,
+                      ),
+                    )
+            ],
+          ),
+          SizedBox(height: kSmallSizedBoxHeight),
+          Text(
+            this._workout.description,
+            style: _descriptionTextStyle,
+          ),
+          SizedBox(height: kSizedBoxHeight),
+          Text(
+            this._workout == null
+                ? "No Routines yet"
+                : _workout.routines.length > 1
+                    ? _numberOfExercices.toString() + " Exercise Routines"
+                    : _numberOfExercices.toString() + " Exercise Routine",
+            style: _routineCountTextStyle,
+          )
+        ],
       ),
     );
   }

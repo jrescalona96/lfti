@@ -8,12 +8,14 @@ class CustomCard extends StatelessWidget {
   final Function onTap;
   final Color color;
   bool dottedBorder;
+  Key key;
 
   CustomCard({
     @required this.cardChild,
     this.onTap,
     this.dottedBorder = false,
     this.color = kCardBackground,
+    this.key,
   });
 
   @override

@@ -100,21 +100,20 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
             height: 150,
             child: Column(
               children: <Widget>[
-                FlatButton(
+                RaisedButton(
                   color: kCardBackground,
-                  child: Text("Rest", style: kButtonTextFontStyle),
+                  child: Text("Rest", style: kSmallTextStyle),
                   onPressed: () {
                     _addRestRoutine();
                     Navigator.pop(context);
                   },
                 ),
                 SizedBox(height: kSizedBoxHeight),
-                FlatButton(
-                  color: kRedButtonColor.withOpacity(0.1),
+                RaisedButton(
+                  color: kBlueButtonColor,
                   child: Text(
                     "Exercise",
-                    style:
-                        kButtonTextFontStyle.copyWith(color: kRedButtonColor),
+                    style: kSmallTextStyle.copyWith(color: Colors.white),
                   ),
                   onPressed: () {
                     this._routineList.add(Routine(
@@ -161,17 +160,15 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     if (this._routineList.isNotEmpty) {
       for (int i = 0; i < this._routineList.length; i++) {
         routines.add(
-          Padding(
+          RoutineCard(
+            dottedBorder: true,
             key: Key(_routineList[i].id + i.toString()),
-            padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-            child: RoutineCard(
-              onOptionsTap: () => _removeWorkoutAt(i),
-              optionsIcon: Icons.delete,
-              routine: _routineList[i],
-              onTap: _routineList[i] is TimedRoutine
-                  ? () => _showUpdateRestTimeDialog(i)
-                  : () => _updateExerciseRoutine(i),
-            ),
+            onOptionsTap: () => _removeWorkoutAt(i),
+            optionsIcon: Icons.delete,
+            routine: _routineList[i],
+            onTap: _routineList[i] is TimedRoutine
+                ? () => _showUpdateRestTimeDialog(i)
+                : () => _updateExerciseRoutine(i),
           ),
         );
       }
@@ -211,10 +208,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Edit Workout",
-          style: kSmallTextStyle,
-        ),
+        title: Text("Edit Workout"),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -246,9 +240,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                                 kLineDivider,
                                 Text(
                                   "No Routines Yet!",
-                                  style: kSmallBoldTextStyle.copyWith(
-                                      fontStyle: FontStyle.italic,
-                                      color: kGrayTextColor),
+                                  style: kSmallBoldTextStyle,
                                   textAlign: TextAlign.center,
                                 ),
                                 kLineDivider,

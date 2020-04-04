@@ -305,7 +305,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
                   children: <Widget>[
                     Text("Major Muscle Group", style: kLabelTextStyle),
                     Text(
-                      this._exerciseFocus == null ? "--" : _exerciseFocus,
+                      this._exerciseFocus,
                       style: kSmallBoldTextStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -319,7 +319,6 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
           ],
         ),
       ),
-      // delete button
       bottomNavigationBar: BottomNavigationButton(
           label: "SAVE CHANGES",
           action: () => _saveChanges(),

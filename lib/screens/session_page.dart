@@ -26,7 +26,6 @@ class _SessionPageState extends State<SessionPage> {
   var _currentRoutine;
   final _routineTimerController = TimerCard(cardLabel: "ROUTINE TIME");
   final _sessionTimerController = TimerCard(cardLabel: "SESSION TIME");
-  bool _isTimeUp = false;
 
   _SessionPageState(this._currentUser) {
     this._session = _currentUser.getSession();
@@ -39,21 +38,17 @@ class _SessionPageState extends State<SessionPage> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Session?"),
+          title: Text("End Session"),
           content: Text("You are about to end this session!"),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           backgroundColor: kCardBackground.withOpacity(0.9),
           actions: <Widget>[
             FlatButton(
-              child: Text(
-                "Cancel",
-                style: kSmallTextStyle,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+                child: Text("Cancel", style: kSmallTextStyle),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
             FlatButton(
               child: Text(
                 "Confirm",
@@ -62,7 +57,6 @@ class _SessionPageState extends State<SessionPage> {
               onPressed: () {
                 print("Ending Session!");
                 _routineTimerController.terminate();
-
                 _sessionTimerController.terminate();
                 setState(() {
                   _session.end(_sessionTimerController.getCurrentTime());
@@ -149,6 +143,7 @@ class _SessionPageState extends State<SessionPage> {
             children: <Widget>[
               // Excercise Section
               Expanded(
+                flex: 2,
                 child: CustomCard(
                   cardChild: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,40 +229,41 @@ class _SessionPageState extends State<SessionPage> {
               // Routine Navigation Buttons Section
               Container(
                 padding: kContentPadding,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Column(
                   children: <Widget>[
-                    // Back Button
-                    Expanded(
-                      flex: 1,
-                      child: RaisedButton(
-                        onPressed: _session.isPaused || _isFirstRoutineAndSet()
-                            ? null
-                            : _back,
-                        child: Text(
-                          "BACK",
-                          style: kButtonTextFontStyle,
-                        ),
-                        color: kOrangeButtonColor,
-                      ),
-                    ),
-
-                    SizedBox(width: kSizedBoxHeight),
-
                     // Next Button
-                    Expanded(
-                      flex: 2,
-                      child: RaisedButton(
-                        onPressed: _session.isPaused ? null : () => _next(),
-                        onLongPress: _session.isPaused || _session.isFinished()
-                            ? null
-                            : () => _skipRoutine(),
-                        child: Text(
-                          "NEXT",
-                          style: kButtonTextFontStyle,
+                    RaisedButton(
+                      onPressed: _session.isPaused ? null : () => _next(),
+                      child: Text("NEXT", style: kButtonTextFontStyle),
+                    ),
+                    SizedBox(height: kSizedBoxHeight),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        // Back Button
+                        Expanded(
+                          child: RaisedButton(
+                            onPressed:
+                                _session.isPaused || _isFirstRoutineAndSet()
+                                    ? null
+                                    : () => _back(),
+                            child: Text("BACK", style: kButtonTextFontStyle),
+                            color: kOrangeButtonColor,
+                          ),
                         ),
-                        color: kGreenButtonColor,
-                      ),
+                        SizedBox(width: kSizedBoxHeight),
+                        // Next Button
+                        Expanded(
+                          child: RaisedButton(
+                            onPressed:
+                                _session.isPaused ? null : () => _skipRoutine(),
+                            child: Text("SKIP",
+                                style: kButtonTextFontStyle.copyWith(
+                                    color: Colors.black)),
+                            color: kCardBackground,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -314,6 +310,7 @@ class _SessionPageState extends State<SessionPage> {
                   ],
                 ),
               ),
+              SizedBox(height: kSizedBoxHeight)
             ],
           ),
         ),
@@ -321,11 +318,18 @@ class _SessionPageState extends State<SessionPage> {
       bottomNavigationBar: Container(
         child: GestureDetector(
           onLongPress: () => _showSessionConfirmationDialogBox(),
-          child: BottomNavigationButton(
-            label: _session.isPaused ? "CONTINUE" : "PAUSE",
-            action: _togglePause,
-            color: _session.isPaused ? kGreenButtonColor : kBlueButtonColor,
-          ),
+          child: _session.isFinished()
+              ? BottomNavigationButton(
+                  label: "END",
+                  action: () => _showSessionConfirmationDialogBox(),
+                  color: kRedButtonColor,
+                )
+              : BottomNavigationButton(
+                  label: _session.isPaused ? "CONTINUE" : "PAUSE",
+                  action: () => _togglePause(),
+                  color:
+                      _session.isPaused ? kGreenButtonColor : kBlueButtonColor,
+                ),
         ),
       ),
     );

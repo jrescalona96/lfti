@@ -94,51 +94,57 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         title: Text("Hello Stranger!", style: kMediumBoldTextStyle),
       ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: kContentPadding,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: Text("Sign Up!", style: kMediumBoldTextStyle),
-                ),
-                TextFormField(
-                    controller: _firstNameTextController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(labelText: "First Name")),
-                SizedBox(height: kSizedBoxHeight),
-                TextFormField(
-                    controller: _lastNameTextController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(labelText: "Last Name")),
-                SizedBox(height: kSizedBoxHeight),
-                TextFormField(
-                    controller: _emailTextController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(labelText: "Email Address")),
-                SizedBox(height: kSizedBoxHeight),
-                TextFormField(
-                    controller: _passwordTextController,
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: "Password")),
-                SizedBox(height: kSizedBoxHeight),
-                SizedBox(height: kSizedBoxHeight),
-                RaisedButton(
-                    child: Text(
-                      "SIGN UP",
-                      style: kButtonTextFontStyle,
-                    ),
-                    onPressed: () async {
-                      if (_isAllInputNotEmpty()) {
-                        _signUp();
-                      } else {
-                        // TODO: implement alert dialog box
-                        print("Alert: Empty Fields");
-                      }
-                    }),
-              ],
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: kContentPadding,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(
+                    child: Text("Sign Up!", style: kMediumBoldTextStyle),
+                  ),
+                  TextFormField(
+                      controller: _firstNameTextController,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(labelText: "First Name")),
+                  SizedBox(height: kSizedBoxHeight),
+                  TextFormField(
+                      controller: _lastNameTextController,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(labelText: "Last Name")),
+                  SizedBox(height: kSizedBoxHeight),
+                  TextFormField(
+                      controller: _emailTextController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(labelText: "Email Address")),
+                  SizedBox(height: kSizedBoxHeight),
+                  TextFormField(
+                      controller: _passwordTextController,
+                      obscureText: true,
+                      decoration: InputDecoration(labelText: "Password")),
+                  SizedBox(height: kSizedBoxHeight),
+                  SizedBox(height: kSizedBoxHeight),
+                  RaisedButton(
+                      child: Text(
+                        "SIGN UP",
+                        style: kButtonTextFontStyle,
+                      ),
+                      onPressed: () async {
+                        if (_isAllInputNotEmpty()) {
+                          _signUp();
+                        } else {
+                          // TODO: implement alert dialog box
+                          print("Alert: Empty Fields");
+                        }
+                      }),
+                ],
+              ),
             ),
           ),
         ),

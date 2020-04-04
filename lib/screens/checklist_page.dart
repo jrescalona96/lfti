@@ -180,8 +180,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
             },
           ),
           title: Text(
-            "Checklist",
-            style: kSmallTextStyle,
+            "CHECKLIST",
           ),
         ),
         drawer: Menu(this._currentUser),

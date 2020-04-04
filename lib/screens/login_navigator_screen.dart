@@ -21,7 +21,7 @@ class _LoginNavigationScreenState extends State<LoginNavigationScreen> {
   Timer _startTimer(BuildContext context) {
     setState(() {
       this._timer = Timer(
-        Duration(seconds: 5),
+        Duration(seconds: 4),
         _updateState,
       );
     });
@@ -38,24 +38,36 @@ class _LoginNavigationScreenState extends State<LoginNavigationScreen> {
   Widget build(BuildContext context) {
     _startTimer(context);
     return Scaffold(
-      body: Center(
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          child: Text(
-            _appName,
-            style: kLabelTextStyle,
-            textAlign: TextAlign.center,
-          ),
-          decoration: BoxDecoration(
-            color: kBlueButtonColor,
-            image: DecorationImage(
-              image: NetworkImage(
-                "https://i.pinimg.com/originals/55/dd/91/55dd91a7fa65a104c9e08cc31e68d840.gif",
-                scale: 2.0,
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: kBlueButtonColor,
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: SizedBox(),
+            ),
+            Expanded(
+              child: Text(
+                _appName,
+                style: kLargeBoldTextStyle2x.copyWith(color: Colors.white),
               ),
             ),
-          ),
+            Expanded(
+              flex: 4,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      "https://i.pinimg.com/originals/55/dd/91/55dd91a7fa65a104c9e08cc31e68d840.gif",
+                      scale: 2.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

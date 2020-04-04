@@ -34,68 +34,66 @@ class RoutineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return CustomCard(
       key: Key(routine.id),
       onTap: this.onTap,
-      child: CustomCard(
-        color: routine.exercise.name == "Rest"
-            ? kCardBackground
-            : kBlueButtonColor.withOpacity(0.2),
-        dottedBorder: this.dottedBorder,
-        cardChild: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // Exercise name
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          routine.exercise.name == null
-                              ? "Null"
-                              : routine.exercise.name,
-                          style: kMediumBoldTextStyle,
-                        ),
+      color: routine.exercise.name == "Rest"
+          ? kCardBackground
+          : kBlueButtonColor.withOpacity(0.3),
+      dottedBorder: this.dottedBorder,
+      cardChild: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Exercise name
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        routine.exercise.name == null
+                            ? "Null"
+                            : routine.exercise.name,
+                        style: kMediumBoldTextStyle,
                       ),
-                      this.onOptionsTap == null
-                          ? SizedBox(height: 0.0)
-                          : Expanded(
-                              child: GestureDetector(
-                                child: Container(
-                                    alignment: AlignmentDirectional.topEnd,
-                                    child: Icon(optionsIcon, size: 20.0)),
-                                onTap: this.onOptionsTap,
-                              ),
+                    ),
+                    this.onOptionsTap == null
+                        ? SizedBox(height: 0.0)
+                        : Expanded(
+                            child: GestureDetector(
+                              child: Container(
+                                  alignment: AlignmentDirectional.topEnd,
+                                  child: Icon(optionsIcon, size: 25.0)),
+                              onTap: this.onOptionsTap,
                             ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: kSmallSizedBoxHeight,
-                  ),
-                  // Exercise Description
-                  Container(
-                    child: routine is TimedRoutine
-                        ? null
-                        : Text(
-                            routine.exercise.focus == null
-                                ? "Null"
-                                : routine.exercise.focus,
-                            style: kMediumLabelTextStyle,
                           ),
-                  ),
-                ],
-              ),
-              SizedBox(height: kSizedBoxHeight),
-              Text(
-                "Target: " + _generateTargetString(),
-                style: kMediumLabelTextStyle,
-              )
-            ],
-          ),
+                  ],
+                ),
+                SizedBox(
+                  height: kSmallSizedBoxHeight,
+                ),
+                // Exercise Description
+                Container(
+                  child: routine is TimedRoutine
+                      ? null
+                      : Text(
+                          routine.exercise.focus == null
+                              ? "Null"
+                              : routine.exercise.focus,
+                          style: kMediumLabelTextStyle,
+                        ),
+                ),
+              ],
+            ),
+            SizedBox(height: kSizedBoxHeight),
+            Text(
+              "Target: " + _generateTargetString(),
+              style: kMediumLabelTextStyle,
+            )
+          ],
         ),
       ),
     );

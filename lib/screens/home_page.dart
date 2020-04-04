@@ -9,6 +9,7 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
@@ -21,7 +22,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 1,
+                flex: 3,
                 child: Container(
                   padding: kContentPadding,
                   margin: kContentMargin,
