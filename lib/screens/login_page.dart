@@ -75,8 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                                 await _currentUser.setDocumentSnapshot();
                                 await _currentUser.initUserData();
                                 if (_currentUser.isLoggedIn()) {
-                                  Navigator.pushNamed(
-                                      context, "/loginNavigator",
+                                  Navigator.pushNamed(context, "/dashboard",
                                       arguments: _currentUser);
                                 } else {
                                   _loader.showAlertDialog("Failed to Log In!",

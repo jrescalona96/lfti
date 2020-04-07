@@ -30,8 +30,7 @@ class _LoginNavigationScreenState extends State<LoginNavigationScreen> {
 
   void _updateState() {
     _timer.cancel();
-    super.dispose();
-    Navigator.pushNamed(context, "/dashboard", arguments: _currentUser);
+    Navigator.pop(context);
   }
 
   @override

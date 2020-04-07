@@ -50,21 +50,20 @@ class _SessionPageState extends State<SessionPage> {
                   Navigator.of(context).pop();
                 }),
             FlatButton(
-              child: Text(
-                "Confirm",
-                style: kSmallTextStyle,
-              ),
-              onPressed: () {
-                print("Ending Session!");
-                _routineTimerController.terminate();
-                _sessionTimerController.terminate();
-                setState(() {
-                  _session.end(_sessionTimerController.getCurrentTime());
-                });
-                Navigator.pushNamed(context, "/endSession",
-                    arguments: {"user": _currentUser, "session": _session});
-              },
-            ),
+                child: Text(
+                  "Confirm",
+                  style: kSmallTextStyle,
+                ),
+                onPressed: () {
+                  print("Ending Session!");
+                  _routineTimerController.terminate();
+                  _sessionTimerController.terminate();
+                  setState(() {
+                    _session.end(_sessionTimerController.getCurrentTime());
+                  });
+                  Navigator.pushNamed(context, "/endSession",
+                      arguments: {"user": _currentUser, "session": _session});
+                }),
           ],
         );
       },
@@ -92,7 +91,6 @@ class _SessionPageState extends State<SessionPage> {
       _session.next();
       _routineTimerController.terminate();
       _sessionTimerController.terminate();
-      _showSessionConfirmationDialogBox();
     }
   }
 
@@ -164,60 +162,70 @@ class _SessionPageState extends State<SessionPage> {
                           ),
                         ],
                       ),
-                      // Target Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: <Widget>[
-                          Text(
-                            "TARGET",
-                            style: kLabelTextStyle,
+                          // Target Section
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "TARGET",
+                                  style: kLabelTextStyle,
+                                ),
+                                Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: <Widget>[
+                                    Text(
+                                        _currentRoutine is TimedRoutine
+                                            ? _currentRoutine
+                                                .timeToPerformInSeconds
+                                                .toString()
+                                            : _currentRoutine.reps.toString(),
+                                        style: kLargeBoldTextStyle1x),
+                                    Text(
+                                      _currentRoutine is TimedRoutine
+                                          ? " seconds"
+                                          : " reps",
+                                      style: kUnitLabelTextStyle,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: <Widget>[
-                              Text(
-                                  _currentRoutine is TimedRoutine
-                                      ? _currentRoutine.timeToPerformInSeconds
-                                          .toString()
-                                      : _currentRoutine.reps.toString(),
-                                  style: kLargeBoldTextStyle1x),
-                              Text(
-                                _currentRoutine is TimedRoutine
-                                    ? " seconds"
-                                    : " reps",
-                                style: kUnitLabelTextStyle,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-
-                      // Sets Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "SETS",
-                            style: kLabelTextStyle,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: <Widget>[
-                              Text(
-                                (_currentSet + 1).toString(),
-                                style: kLargeBoldTextStyle1_5x,
-                              ),
-                              Text(
-                                " / " + _currentRoutine.sets.toString(),
-                                style: kLargeBoldTextStyle1_5x,
-                              ),
-                              Text(
-                                " sets",
-                                style: kUnitLabelTextStyle,
-                              )
-                            ],
+                          // Sets Section
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "SETS",
+                                  style: kLabelTextStyle,
+                                ),
+                                Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: <Widget>[
+                                    Text(
+                                      (_currentSet + 1).toString(),
+                                      style: kLargeBoldTextStyle1x,
+                                    ),
+                                    Text(
+                                      " / " + _currentRoutine.sets.toString(),
+                                      style: kLargeBoldTextStyle1x,
+                                    ),
+                                    Text(
+                                      " sets",
+                                      style: kUnitLabelTextStyle,
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -228,17 +236,18 @@ class _SessionPageState extends State<SessionPage> {
 
               // Routine Navigation Buttons Section
               Container(
-                padding: kContentPadding,
+                padding: EdgeInsets.all(10.0),
                 child: Column(
                   children: <Widget>[
                     // Next Button
                     RaisedButton(
-                      onPressed: _session.isPaused ? null : () => _next(),
+                      onPressed: _session.isPaused || _session.isFinished()
+                          ? null
+                          : () => _next(),
                       child: Text("NEXT", style: kButtonTextFontStyle),
                     ),
                     SizedBox(height: kSizedBoxHeight),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         // Back Button
                         Expanded(
@@ -252,7 +261,7 @@ class _SessionPageState extends State<SessionPage> {
                           ),
                         ),
                         SizedBox(width: kSizedBoxHeight),
-                        // Next Button
+                        // Skip Button
                         Expanded(
                           child: RaisedButton(
                             onPressed:

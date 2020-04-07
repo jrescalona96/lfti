@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Center(
                   child: Text(
                     'lfti',
@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                flex: 3,
+                flex: 2,
                 child: Container(
                   padding: kContentPadding,
                   margin: kContentMargin,

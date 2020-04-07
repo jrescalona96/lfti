@@ -91,8 +91,8 @@ class Session {
 
   void next() {
     if (getCurrentRoutine().exercise.name != "Rest" &&
-        _currentSet < getCurrentRoutine().sets) this._performedSets++;
-    if (!isLastSet() && _currentSet < getCurrentRoutine().sets) {
+        _currentSet <= getCurrentRoutine().sets) this._performedSets++;
+    if (!isLastSet() && _currentSet <= getCurrentRoutine().sets) {
       this._currentSet++;
     } else {
       if (!isLastRoutine()) {
