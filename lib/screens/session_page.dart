@@ -330,7 +330,10 @@ class _SessionPageState extends State<SessionPage> {
           child: _session.isFinished()
               ? BottomNavigationButton(
                   label: "END",
-                  action: () => _showSessionConfirmationDialogBox(),
+                  action: () {
+                    _session.next();
+                    _showSessionConfirmationDialogBox();
+                  },
                   color: kRedButtonColor,
                 )
               : BottomNavigationButton(

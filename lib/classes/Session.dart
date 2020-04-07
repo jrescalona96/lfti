@@ -28,7 +28,8 @@ class Session {
   List getSkippedRoutines() {
     List skippedRoutines = List();
     getWorkout().routines.forEach((routine) {
-      if (!_performedRoutines.contains(routine)) skippedRoutines.add(routine);
+      if (!_performedRoutines.contains(routine) &&
+          routine.exercise.name != "Rest") skippedRoutines.add(routine);
     });
     return skippedRoutines;
   }
