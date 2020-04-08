@@ -55,7 +55,6 @@ class _SessionPageState extends State<SessionPage> {
                   style: kSmallTextStyle,
                 ),
                 onPressed: () {
-                  print("Ending Session!");
                   _routineTimerController.terminate();
                   _sessionTimerController.terminate();
                   setState(() {
@@ -80,15 +79,11 @@ class _SessionPageState extends State<SessionPage> {
       try {
         _routineTimerController.restart();
         _session.next();
-        setState(() {
-          _currentSet = _session.getCurrentSet();
-          _currentRoutine = _session.getCurrentRoutine();
-        });
+        _updateState();
       } catch (e) {
         print("Error: something went wrong calling next() in Session Page!");
       }
     } else {
-      _session.next();
       _routineTimerController.terminate();
       _sessionTimerController.terminate();
     }
@@ -97,15 +92,16 @@ class _SessionPageState extends State<SessionPage> {
   void _back() {
     _routineTimerController.restart();
     _session.previous();
-    setState(() {
-      _currentSet = _session.getCurrentSet();
-      _currentRoutine = _session.getCurrentRoutine();
-    });
+    _updateState();
   }
 
-  void _skipRoutine() {
+  void _skip() {
     _routineTimerController.restart();
     _session.skip();
+    _updateState();
+  }
+
+  void _updateState() {
     setState(() {
       _currentSet = _session.getCurrentSet();
       _currentRoutine = _session.getCurrentRoutine();
@@ -211,7 +207,7 @@ class _SessionPageState extends State<SessionPage> {
                                   textBaseline: TextBaseline.alphabetic,
                                   children: <Widget>[
                                     Text(
-                                      (_currentSet + 1).toString(),
+                                      _currentSet.toString(),
                                       style: kLargeBoldTextStyle1x,
                                     ),
                                     Text(
@@ -257,7 +253,7 @@ class _SessionPageState extends State<SessionPage> {
                                     ? null
                                     : () => _back(),
                             child: Text("BACK", style: kButtonTextFontStyle),
-                            color: kOrangeButtonColor,
+                            color: kRedButtonColor,
                           ),
                         ),
                         SizedBox(width: kSizedBoxHeight),
@@ -265,11 +261,12 @@ class _SessionPageState extends State<SessionPage> {
                         Expanded(
                           child: RaisedButton(
                             onPressed:
-                                _session.isPaused ? null : () => _skipRoutine(),
+                                _session.isPaused || _session.isLastRoutine()
+                                    ? null
+                                    : () => _skip(),
                             child: Text("SKIP",
-                                style: kButtonTextFontStyle.copyWith(
-                                    color: Colors.black)),
-                            color: kCardBackground,
+                                style: kButtonTextFontStyle.copyWith()),
+                            color: kAmberButtonColor,
                           ),
                         ),
                       ],
@@ -289,15 +286,10 @@ class _SessionPageState extends State<SessionPage> {
                     ),
                     SizedBox(height: kSmallSizedBoxHeight),
                     Container(
-                        child: !_session.isLastRoutine()
-                            ? Text(
-                                _session.getNextRoutine().exercise.name,
-                                style: kMediumBoldTextStyle,
-                              )
-                            : Text(
-                                "Last Routine",
-                                style: kMediumBoldTextStyle,
-                              )),
+                        child: Text(
+                      _session.getNextRoutine().exercise.name,
+                      style: kMediumBoldTextStyle,
+                    )),
                   ],
                 ),
               ),
@@ -331,7 +323,6 @@ class _SessionPageState extends State<SessionPage> {
               ? BottomNavigationButton(
                   label: "END",
                   action: () {
-                    _session.next();
                     _showSessionConfirmationDialogBox();
                   },
                   color: kRedButtonColor,

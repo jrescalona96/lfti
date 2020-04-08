@@ -35,6 +35,7 @@ final kGreenButtonColor = Colors.green;
 final kBlueButtonColor = Colors.blueAccent[700];
 final kRedButtonColor = Colors.redAccent[700];
 final kOrangeButtonColor = Colors.orangeAccent[700];
+final kAmberButtonColor = Colors.amberAccent[700];
 final kIconColor = Color(0xFF404040);
 const kGrayTextColor = Colors.white60;
 final kFloatingActionButtonColor = Colors.blue;
