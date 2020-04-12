@@ -16,9 +16,7 @@ class DashboardPage extends StatefulWidget {
   DashboardPage(this._currentUser);
 
   @override
-  _DashboardPageState createState() {
-    return _DashboardPageState(_currentUser);
-  }
+  _DashboardPageState createState() => _DashboardPageState(_currentUser);
 }
 
 class _DashboardPageState extends State<DashboardPage> {

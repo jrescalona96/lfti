@@ -1,5 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:lfti_app/classes/Constants.dart';
+import "package:flutter/material.dart";
+import "package:lfti_app/classes/Constants.dart";
+import "package:shared_preferences/shared_preferences.dart";
+
+// Load user email and password to local storage
+void _login(BuildContext context) async {
+  String email, pw;
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  email = prefs.get("email");
+  pw = prefs.get("password");
+  Navigator.pushNamed(
+    context,
+    '/login',
+    arguments: {
+      "email": email != null ? email : "",
+      "pw": pw != null ? pw : ""
+    },
+  );
+}
 
 class HomePage extends StatelessWidget {
   @override
@@ -30,12 +47,7 @@ class HomePage extends StatelessWidget {
                     children: <Widget>[
                       RaisedButton(
                         onPressed: () {
-                          // TODO: add shared preferences here
-                          Navigator.pushNamed(
-                            context,
-                            '/login',
-                            arguments: {"email": "", "pw": ""},
-                          );
+                          _login(context);
                         },
                         child: Container(
                           child: Text(

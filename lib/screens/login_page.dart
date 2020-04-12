@@ -1,9 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// library imports
 import 'package:flutter/material.dart';
-import 'package:lfti_app/classes/Constants.dart';
-import 'package:lfti_app/classes/Loader.dart';
-import "package:lfti_app/classes/User.dart";
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:firebase_auth/firebase_auth.dart";
+import "package:shared_preferences/shared_preferences.dart";
+
+// class imports
+import 'package:lfti_app/classes/Constants.dart';
+import 'package:lfti_app/components/loader.dart';
+import "package:lfti_app/classes/User.dart";
+
+import "dart:async";
 
 class LoginPage extends StatefulWidget {
   final Map<String, String> _emailAndPassword;
@@ -14,14 +20,22 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   Map<String, String> _userCredentials;
-  _LoginPageState(this._userCredentials);
-  final _emailTextController = TextEditingController();
-  final _passwordTextController = TextEditingController();
-  final _loader = Loader();
+  final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+  final Loader _loader = Loader();
 
-  void _init() {
+  _LoginPageState(this._userCredentials);
+
+  void _initState() {
     _emailTextController.text = _userCredentials["email"];
     _passwordTextController.text = _userCredentials["pw"];
+  }
+
+  // Store user email and password to local storage
+  void _updateLocalStorage(String email, String pw) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("email", email);
+    prefs.setString("password", pw);
   }
 
   Future<User> _login(String email, String password) async {
@@ -49,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    _init();
+    _initState();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -64,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Center(
             child: Column(
               children: <Widget>[
-                Text('Welcome Back!', style: kMediumBoldTextStyle),
+                Text("Welcome Back!", style: kMediumBoldTextStyle),
                 Center(
                   child: SingleChildScrollView(
                     padding: kContentPadding,
@@ -89,23 +103,31 @@ class _LoginPageState extends State<LoginPage> {
                               "LOGIN",
                               style: kButtonTextFontStyle,
                             ),
-                            onPressed: () async {
-                              try {
-                                _login(_emailTextController.text.trim(),
-                                        _passwordTextController.text)
-                                    .then(
-                                      (val) => Navigator.pushNamed(
-                                          context, "/dashboard",
-                                          arguments: val),
-                                    )
-                                    .catchError(
-                                      (e) => print("Error: Log In Failed"),
-                                    );
-                                _loader.showLoadingDialog(context);
-                              } catch (e) {
-                                _loader.showAlertDialog("Failed to Log In!",
-                                    "Please try again.", context);
-                                print("Error: User Initialization Failed! $e");
+                            onPressed: () {
+                              if (_emailTextController.text.isNotEmpty &&
+                                  _passwordTextController.text.isNotEmpty) {
+                                try {
+                                  _login(_emailTextController.text.trim(),
+                                          _passwordTextController.text)
+                                      .then((user) {
+                                    _updateLocalStorage(
+                                        this._emailTextController.text.trim(),
+                                        this._passwordTextController.text);
+                                    Navigator.pushNamed(context, "/dashboard",
+                                        arguments: user);
+                                  }).catchError(
+                                          (e) => print("Error: Log In Failed"));
+                                  // show loading while procecssing login
+                                  _loader.showLoadingDialog(context);
+                                } catch (e) {
+                                  _loader.showAlertDialog("Failed to Log In!",
+                                      "Please try again.", context);
+                                  print(
+                                      "Error: User Initialization Failed! $e");
+                                }
+                              } else {
+                                _loader.showAlertDialog("Whoops...",
+                                    "Enter Email and/or Password", context);
                               }
                             }),
                       ],
