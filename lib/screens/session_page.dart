@@ -231,47 +231,50 @@ class _SessionPageState extends State<SessionPage> {
               ),
 
               // Routine Navigation Buttons Section
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    // Next Button
-                    RaisedButton(
-                      onPressed: _session.isPaused || _session.isFinished()
-                          ? null
-                          : () => _next(),
-                      child: Text("NEXT", style: kButtonTextFontStyle),
-                    ),
-                    SizedBox(height: kSizedBoxHeight),
-                    Row(
-                      children: <Widget>[
-                        // Back Button
-                        Expanded(
-                          child: RaisedButton(
-                            onPressed:
-                                _session.isPaused || _isFirstRoutineAndSet()
-                                    ? null
-                                    : () => _back(),
-                            child: Text("BACK", style: kButtonTextFontStyle),
-                            color: kRedButtonColor,
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // Next Button
+                      RaisedButton(
+                        onPressed: _session.isPaused || _session.isFinished()
+                            ? null
+                            : () => _next(),
+                        child: Text("NEXT", style: kButtonTextFontStyle),
+                      ),
+                      SizedBox(height: kSizedBoxHeight),
+                      Row(
+                        children: <Widget>[
+                          // Back Button
+                          Expanded(
+                            child: RaisedButton(
+                              onPressed:
+                                  _session.isPaused || _isFirstRoutineAndSet()
+                                      ? null
+                                      : () => _back(),
+                              child: Text("BACK", style: kButtonTextFontStyle),
+                              color: kRedButtonColor,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: kSizedBoxHeight),
-                        // Skip Button
-                        Expanded(
-                          child: RaisedButton(
-                            onPressed:
-                                _session.isPaused || _session.isLastRoutine()
-                                    ? null
-                                    : () => _skip(),
-                            child: Text("SKIP",
-                                style: kButtonTextFontStyle.copyWith()),
-                            color: kAmberButtonColor,
+                          SizedBox(width: kSizedBoxHeight),
+                          // Skip Button
+                          Expanded(
+                            child: RaisedButton(
+                              onPressed:
+                                  _session.isPaused || _session.isLastRoutine()
+                                      ? null
+                                      : () => _skip(),
+                              child: Text("SKIP",
+                                  style: kButtonTextFontStyle.copyWith()),
+                              color: kAmberButtonColor,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
