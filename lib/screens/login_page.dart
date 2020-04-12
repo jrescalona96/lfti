@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/Loader.dart';
 import "package:lfti_app/classes/User.dart";
+import "package:firebase_auth/firebase_auth.dart";
 
 class LoginPage extends StatefulWidget {
   final Map<String, String> _emailAndPassword;
@@ -13,15 +15,36 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   Map<String, String> _userCredentials;
   _LoginPageState(this._userCredentials);
-
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-  final _currentUser = User();
   final _loader = Loader();
 
   void _init() {
     _emailTextController.text = _userCredentials["email"];
     _passwordTextController.text = _userCredentials["pw"];
+  }
+
+  Future<User> _login(String email, String password) async {
+    User _currentUser = User();
+    AuthResult auth;
+    DocumentReference ref;
+    DocumentSnapshot ds;
+    FirebaseAuth _auth = FirebaseAuth.instance;
+    try {
+      auth = await _auth.signInWithEmailAndPassword(
+          email: email.trim(), password: password);
+      ref = Firestore.instance.collection("users").document(auth.user.uid);
+      ds = await ref.get();
+      _currentUser.setAuthResult(auth);
+      _currentUser.setDatabaseReference(ref);
+      _currentUser.setDocumentSnapshot(ds);
+      _currentUser.initUserData();
+      print("Success: Logged in complete!");
+      return Future.value(_currentUser);
+    } catch (e) {
+      print("Error: Unable to Log in! $e");
+      return Future.error(e);
+    }
   }
 
   @override
@@ -68,21 +91,21 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             onPressed: () async {
                               try {
-                                await _currentUser.login(
-                                    _emailTextController.text.trim(),
-                                    _passwordTextController.text);
-                                await _currentUser.setDatabaseReference();
-                                await _currentUser.setDocumentSnapshot();
-                                await _currentUser.initUserData();
-                                if (_currentUser.isLoggedIn()) {
-                                  Navigator.pushNamed(context, "/dashboard",
-                                      arguments: _currentUser);
-                                } else {
-                                  _loader.showAlertDialog("Failed to Log In!",
-                                      "Invalid Email / Password", context);
-                                }
+                                _login(_emailTextController.text.trim(),
+                                        _passwordTextController.text)
+                                    .then(
+                                      (val) => Navigator.pushNamed(
+                                          context, "/dashboard",
+                                          arguments: val),
+                                    )
+                                    .catchError(
+                                      (e) => print("Error: Log In Failed"),
+                                    );
+                                _loader.showLoadingDialog(context);
                               } catch (e) {
-                                print("Error: Failed to Log in! $e");
+                                _loader.showAlertDialog("Failed to Log In!",
+                                    "Please try again.", context);
+                                print("Error: User Initialization Failed! $e");
                               }
                             }),
                       ],

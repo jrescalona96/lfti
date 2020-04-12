@@ -30,6 +30,7 @@ class HomePage extends StatelessWidget {
                     children: <Widget>[
                       RaisedButton(
                         onPressed: () {
+                          // TODO: add shared preferences here
                           Navigator.pushNamed(
                             context,
                             '/login',
