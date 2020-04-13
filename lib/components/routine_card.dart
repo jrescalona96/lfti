@@ -63,7 +63,7 @@ class RoutineCard extends StatelessWidget {
                         style: kMediumBoldTextStyle,
                       ),
                     ),
-                    this.optionsIcon == null
+                    this.onOptionsTap == null
                         ? SizedBox(height: 0.0)
                         : Expanded(
                             child: GestureDetector(
@@ -99,7 +99,7 @@ class RoutineCard extends StatelessWidget {
                   "Target: " + _generateTargetString(),
                   style: kMediumLabelTextStyle,
                 ),
-                this.dupOptionIcon == null
+                this.onDupOptionTap == null
                     ? SizedBox(height: 0.0)
                     : Expanded(
                         child: GestureDetector(
