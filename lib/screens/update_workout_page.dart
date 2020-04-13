@@ -163,8 +163,8 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
           RoutineCard(
             dottedBorder: true,
             key: Key(_routineList[i].id + i.toString()),
-            onOptionsTap: () => _removeWorkoutAt(i),
-            optionsIcon: Icons.delete,
+            onOptionsTap: () => _removeRoutineAt(i),
+            onDupOptionTap: () => _duplicateRoutine(i),
             routine: _routineList[i],
             onTap: _routineList[i] is TimedRoutine
                 ? () => _showUpdateRestTimeDialog(i)
@@ -176,9 +176,17 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     return routines;
   }
 
-  void _removeWorkoutAt(int index) {
+  void _removeRoutineAt(int index) {
     setState(() {
       _routineList.removeAt(index);
+    });
+  }
+
+  void _duplicateRoutine(int index) {
+    int nextIndex = index + 1;
+    Routine routine = _routineList[index];
+    setState(() {
+      _routineList.insert(nextIndex, routine);
     });
   }
 

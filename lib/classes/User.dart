@@ -175,6 +175,7 @@ class User {
       return w;
     } catch (e) {
       print("Error: Unable to Build workout list! " + e.toString());
+      return e;
     }
   }
 
@@ -188,6 +189,7 @@ class User {
       );
     } catch (e) {
       print("Error: Failed to build workout " + e.toString());
+      return e;
     }
   }
 

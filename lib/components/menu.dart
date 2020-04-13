@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
@@ -66,7 +67,9 @@ class Menu extends StatelessWidget {
               "Log out",
               style: kSmallTextStyle,
             ),
-            onTap: () {
+            onTap: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.clear();
               Navigator.pushNamed(context, "/");
             },
           ),

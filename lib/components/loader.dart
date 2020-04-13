@@ -44,4 +44,8 @@ class Loader {
       },
     );
   }
+
+  void dismissDialog(context) {
+    Navigator.pop(context);
+  }
 }

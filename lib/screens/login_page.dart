@@ -24,21 +24,30 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordTextController = TextEditingController();
   final Loader _loader = Loader();
 
-  _LoginPageState(this._userCredentials);
-
-  void _initState() {
+  _LoginPageState(this._userCredentials) {
     _emailTextController.text = _userCredentials["email"];
     _passwordTextController.text = _userCredentials["pw"];
+    if (_emailTextController.text != "" && _passwordTextController.text != "") {
+      _login(_emailTextController.text.trim(), _passwordTextController.text);
+    }
+  }
+
+  void _login(String email, String pw) async {
+    _initUser(_emailTextController.text.trim(), _passwordTextController.text)
+        .then((user) =>
+            Navigator.pushNamed(context, "/dashboard", arguments: user))
+        .catchError((e) => print("Error: AutoLogin Error $e"));
   }
 
   // Store user email and password to local storage
-  void _updateLocalStorage(String email, String pw) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("email", email);
-    prefs.setString("password", pw);
+  void _updateLocalStorage(String email, String pw) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("email", email);
+      prefs.setString("password", pw);
+    });
   }
 
-  Future<User> _login(String email, String password) async {
+  Future<User> _initUser(String email, String password) async {
     User _currentUser = User();
     AuthResult auth;
     DocumentReference ref;
@@ -63,7 +72,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    _initState();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -107,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                               if (_emailTextController.text.isNotEmpty &&
                                   _passwordTextController.text.isNotEmpty) {
                                 try {
-                                  _login(_emailTextController.text.trim(),
+                                  _initUser(_emailTextController.text.trim(),
                                           _passwordTextController.text)
                                       .then((user) {
                                     _updateLocalStorage(
@@ -115,8 +123,12 @@ class _LoginPageState extends State<LoginPage> {
                                         this._passwordTextController.text);
                                     Navigator.pushNamed(context, "/dashboard",
                                         arguments: user);
-                                  }).catchError(
-                                          (e) => print("Error: Log In Failed"));
+                                  }).catchError((e) {
+                                    _loader.dismissDialog(context);
+                                    _loader.showAlertDialog("Failed to Log In!",
+                                        "Please try again.", context);
+                                    print("Error: Log In Failed");
+                                  });
                                   // show loading while procecssing login
                                   _loader.showLoadingDialog(context);
                                 } catch (e) {

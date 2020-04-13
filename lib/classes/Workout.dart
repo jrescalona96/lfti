@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:lfti_app/classes/Routine.dart";
-import "package:lfti_app/classes/TimedRoutine.dart";
 import "package:intl/intl.dart";
 import "package:lfti_app/classes/Constants.dart";
 
