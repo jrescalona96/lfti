@@ -1,6 +1,8 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "User.dart";
 import "TimedRoutine.dart";
+import "package:intl/intl.dart";
+import "package:lfti_app/classes/Constants.dart";
 
 class Crud {
   User _user;
@@ -10,6 +12,117 @@ class Crud {
     String ref = "workouts";
     List data = _generateWorkoutListQueryMap();
     _updateFireStore(ref, data);
+  }
+
+  void signUp() {
+    var sampleWorkoutList = [
+      {
+        "id": "W" + DateFormat(kFormatDateId).format(DateTime.now()),
+        "name": "Chestday",
+        "description": "Monday Workout",
+        "routines": [
+          {
+            "type": "COUNTED",
+            "exercise": {"name": "Barbell Bench Press", "focus": "Chest"},
+            "reps": 10,
+            "sets": 3
+          },
+          {
+            "type": "TIMED",
+            "exercise": {"name": "Rest", "focus": null},
+            "timeToPerformInSeconds": 60
+          },
+          {
+            "type": "COUNTED",
+            "exercise": {"name": "Dumbell Press", "focus": "Chest"},
+            "reps": 10,
+            "sets": 3
+          },
+          {
+            "type": "TIMED",
+            "exercise": {"name": "Rest", "focus": null},
+            "timeToPerformInSeconds": 60
+          },
+          {
+            "type": "COUNTED",
+            "exercise": {"name": "Dumbell Fly", "focus": "Chest"},
+            "reps": 10,
+            "sets": 3
+          },
+          {
+            "type": "TIMED",
+            "exercise": {"name": "Rest", "focus": null},
+            "timeToPerformInSeconds": 60
+          },
+          {
+            "type": "COUNTED",
+            "exercise": {"name": "Push Up", "focus": "Chest"},
+            "reps": 10,
+            "sets": 3
+          },
+          {
+            "type": "TIMED",
+            "exercise": {"name": "Rest", "focus": null},
+            "timeToPerformInSeconds": 60
+          },
+          {
+            "type": "COUNTED",
+            "exercise": {"name": "Fly", "focus": "Chest"},
+            "reps": 10,
+            "sets": 3
+          },
+          {
+            "type": "TIMED",
+            "exercise": {"name": "Rest", "focus": null},
+            "timeToPerformInSeconds": 60
+          },
+          {
+            "type": "COUNTED",
+            "exercise": {
+              "name": "Decline dumbbell bench press",
+              "focus": "Chest"
+            },
+            "reps": 10,
+            "sets": 3
+          },
+          {
+            "type": "TIMED",
+            "exercise": {"name": "Rest", "focus": null},
+            "timeToPerformInSeconds": 60
+          },
+          {
+            "type": "COUNTED",
+            "exercise": {"name": "Dumbell pullover", "focus": "Chest"},
+            "reps": 10,
+            "sets": 3
+          },
+          {
+            "type": "TIMED",
+            "exercise": {"name": "Rest", "focus": null},
+            "timeToPerformInSeconds": 60
+          },
+          {
+            "type": "COUNTED",
+            "exercise": {"name": "Cable Iron Cross", "focus": "Chest"},
+            "reps": 10,
+            "sets": 3
+          }
+        ]
+      }
+    ];
+    var data = {
+      "firstName": _user.getFirstName().toString(),
+      "lastName": _user.getLastName().toString(),
+      "email": _user.getEmail().toString(),
+      "workouts": sampleWorkoutList.toList()
+    };
+
+    print(data.runtimeType);
+    _user
+        .getFirestoreReference()
+        .setData(data)
+        .then((val) => print("Sucess: Initial Data has been set!"))
+        .catchError((e) => print("Error: Failed to write data! $e"));
   }
 
   List _generateWorkoutListQueryMap() {

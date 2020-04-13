@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/components/loader.dart";
+import "package:lfti_app/classes/Crud.dart";
+import "package:lfti_app/classes/User.dart";
 
 // firebase imports
 import "package:firebase_auth/firebase_auth.dart";
@@ -18,47 +20,27 @@ class _SignUpPageState extends State<SignUpPage> {
   final _firstNameTextController = TextEditingController();
   final _lastNameTextController = TextEditingController();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _usersRef = Firestore.instance.collection("users");
-
-  AuthResult _newUser;
-  DocumentReference _userDocumentRef;
   Loader _loader = Loader();
+  User _user = User();
 
-  void _signUp() async {
-    setState(() async {
-      try {
-        _newUser = await _auth.createUserWithEmailAndPassword(
-            email: _emailTextController.text,
-            password: _passwordTextController.text);
-        print("Sign Up Successfull. UID : " + _newUser.user.uid.toString());
-        _initUser();
-      } catch (e) {
-        print(e.toString());
-      }
-    });
-  }
-
-  void _initUser() {
-    print("Adding new user id : " + _newUser.user.uid.toString());
-    setState(() {
-      _userDocumentRef = _usersRef.document(_newUser.user.uid.toString());
-    });
-
-    _userDocumentRef == null
-        ? print("Error: Document Reference not Set!")
-        : print("Document Reference Set!");
-
-    // initialize user database
-    _userDocumentRef.setData({
-      "firstName": _firstNameTextController.text,
-      "lastName": _lastNameTextController.text,
-      "email": _emailTextController.text.trim(),
-    }).then((res) {
-      print("User Added!");
-    }).catchError((e) {
-      print("Failed to Add User! " + e.toString());
-    });
+  void _signUp() {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    _auth
+        .createUserWithEmailAndPassword(
+            email: _emailTextController.text.trim(),
+            password: _passwordTextController.text)
+        .then((res) {
+      this._user.setAuthResult(res);
+      this._user.setDatabaseReference(
+          Firestore.instance.collection("users").document(res.user.uid));
+      this._user.setFirstName(_firstNameTextController.text.trim());
+      this._user.setLastName(_lastNameTextController.text.trim());
+      this._user.setEmail(_emailTextController.text.trim());
+      Crud(this._user).signUp();
+      print("Sign Up Successfull. UID : " + this._user.getUID());
+      _loader.dismissDialog(context);
+    }).catchError((e) => print("Error: Failed to sign up! $e"));
+    _loader.showLoadingDialog(context);
   }
 
   bool _isAllInputNotEmpty() {

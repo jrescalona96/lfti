@@ -43,21 +43,20 @@ class User {
   }
 
   /// setters
-  void setAuthResult(var res) {
-    this._authRes = res;
-  }
+  void setFirstName(String s) => this._firstName = s;
 
-  void setDatabaseReference(DocumentReference ref) {
-    this._firestoreReference = ref;
-  }
+  void setLastName(String s) => this._lastName = s;
 
-  void setDocumentSnapshot(DocumentSnapshot ds) async {
-    this._document = ds;
-  }
+  void setEmail(String s) => this._email = s;
 
-  void setLastSession(Map data) {
-    this._lastSession = data;
-  }
+  void setAuthResult(var res) => this._authRes = res;
+
+  void setDatabaseReference(DocumentReference ref) =>
+      this._firestoreReference = ref;
+
+  void setDocumentSnapshot(DocumentSnapshot ds) async => this._document = ds;
+
+  void setLastSession(Map data) => this._lastSession = data;
 
   void setSession(Session s) {
     if (s != null)
@@ -78,90 +77,50 @@ class User {
     this._workouts[index] = w;
   }
 
-  bool isLoggedIn() {
-    return getDocument() != null && getAuth() != null;
-  }
+  bool isLoggedIn() => getDocument() != null && getAuth() != null;
 
-  void addWorkout(Workout w) {
-    this._workouts.add(w);
-  }
+  void addWorkout(Workout w) => this._workouts.add(w);
 
-  void deleteRoutineAt(int workoutIndex, int routineIndex) {
-    _workouts[workoutIndex].deleteRoutine(routineIndex);
-  }
+  void deleteRoutineAt(int workoutIndex, int routineIndex) =>
+      _workouts[workoutIndex].deleteRoutine(routineIndex);
 
-  void deleteWorkoutAt(int index) {
-    this._workouts.removeAt(index);
-  }
+  void deleteWorkoutAt(int index) => this._workouts.removeAt(index);
 
-  void addChecklistItem(String s) {
-    this._checklist.add(s);
-  }
+  void addChecklistItem(String s) => this._checklist.add(s);
 
-  void setChecklistItemAt(int index, String s) {
-    this._checklist[index] = s;
-  }
+  void setChecklistItemAt(int index, String s) => this._checklist[index] = s;
 
   /// getters
-  AuthResult getAuth() {
-    return _authRes;
-  }
+  AuthResult getAuth() => _authRes;
 
-  String getUID() {
-    return this._uid;
-  }
+  String getUID() => this._uid;
 
-  DocumentReference getFirestoreReference() {
-    return _firestoreReference;
-  }
+  DocumentReference getFirestoreReference() => _firestoreReference;
 
-  DocumentSnapshot getDocument() {
-    return _document;
-  }
+  DocumentSnapshot getDocument() => _document;
 
-  String getFirstName() {
-    return _firstName;
-  }
+  String getFirstName() => _firstName;
 
-  String getLastName() {
-    return _lastName;
-  }
+  String getLastName() => _lastName;
 
-  String getEmail() {
-    return _email;
-  }
+  String getEmail() => _email;
 
-  Map getLastSession() {
-    return _lastSession == null
-        ? getDocument().data["lastSession"]
-        : _lastSession;
-  }
+  Map getLastSession() =>
+      _lastSession == null ? getDocument().data["lastSession"] : _lastSession;
 
-  Map getNextSession() {
-    return _lastSession != null
-        ? getDocument().data["nextSession"]
-        : _lastSession;
-  }
+  Map getNextSession() =>
+      _lastSession != null ? getDocument().data["nextSession"] : _lastSession;
 
-  List getChecklist() {
-    return _checklist == null ? getDocument().data["checklist"] : _checklist;
-  }
+  List getChecklist() =>
+      _checklist == null ? getDocument().data["checklist"] : _checklist;
 
-  List<Workout> getWorkoutList() {
-    return this._workouts;
-  }
+  List<Workout> getWorkoutList() => this._workouts;
 
-  Workout getWorkoutAt(int index) {
-    return this._workouts[index];
-  }
+  Workout getWorkoutAt(int index) => this._workouts[index];
 
-  Session getSession() {
-    return this._currentSession;
-  }
+  Session getSession() => this._currentSession;
 
-  Workout getLastWorkout() {
-    return getWorkoutAt(this._workouts.length - 1);
-  }
+  Workout getLastWorkout() => getWorkoutAt(this._workouts.length - 1);
 
   /// helper methods
   List<Workout> _buildWorkoutList() {
