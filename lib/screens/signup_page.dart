@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:lfti_app/classes/Constants.dart";
+import "package:lfti_app/components/loader.dart";
 
 // firebase imports
 import "package:firebase_auth/firebase_auth.dart";
@@ -22,6 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   AuthResult _newUser;
   DocumentReference _userDocumentRef;
+  Loader _loader = Loader();
 
   void _signUp() async {
     setState(() async {
@@ -31,7 +33,6 @@ class _SignUpPageState extends State<SignUpPage> {
             password: _passwordTextController.text);
         print("Sign Up Successfull. UID : " + _newUser.user.uid.toString());
         _initUser();
-        _login();
       } catch (e) {
         print(e.toString());
       }
@@ -52,28 +53,11 @@ class _SignUpPageState extends State<SignUpPage> {
     _userDocumentRef.setData({
       "firstName": _firstNameTextController.text,
       "lastName": _lastNameTextController.text,
-//      "dob": {
-//        "month": int.parse(
-//            _monthTextController.text.isEmpty ? 1 : _monthTextController.text),
-//        "day": int.parse(_dayTextController.text.isEmpty
-//            ? 1
-//            : _dayTextController.text.isEmpty),
-//        "year": int.parse(
-//            _yearTextController.text.isEmpty ? 1990 : _yearTextController.text)
-//      },
       "email": _emailTextController.text.trim(),
     }).then((res) {
       print("User Added!");
     }).catchError((e) {
       print("Failed to Add User! " + e.toString());
-    });
-  }
-
-  void _login() {
-    print("Loggin in as : " + _newUser.user.uid);
-    Navigator.pushNamed(context, "/login", arguments: {
-      "email": _emailTextController.text.trim(),
-      "pw": _passwordTextController.text
     });
   }
 
@@ -138,8 +122,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       onPressed: () async {
                         if (_isAllInputNotEmpty()) {
                           _signUp();
+                          Navigator.pushNamed(context, "/login", arguments: {
+                            "email": _emailTextController.text.trim(),
+                            "pw": _passwordTextController.text
+                          });
                         } else {
-                          // TODO: implement alert dialog box
+                          _loader.showAlertDialog(
+                              "Incomplete", "Please complete form!", context);
                           print("Alert: Empty Fields");
                         }
                       }),

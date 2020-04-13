@@ -19,6 +19,17 @@ import 'package:flutter/material.dart';
 // const kIconColor = Colors.white70;
 // const kGrayTextColor = Colors.white60;
 
+final kThemeData = ThemeData(
+  brightness: Brightness.light,
+  buttonTheme: ButtonThemeData(
+    minWidth: double.infinity,
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+    padding: kButtonPadding,
+    buttonColor: kBlueButtonColor,
+  ),
+);
+
 const kContentMargin = EdgeInsets.all(10.0);
 const kCardMargin = EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0);
 const kContentPadding = EdgeInsets.all(20.0);

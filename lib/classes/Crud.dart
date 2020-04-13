@@ -1,10 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "User.dart";
-import "Routine.dart";
 import "TimedRoutine.dart";
-import "Workout.dart";
-import "Session.dart";
-import "Exercise.dart";
 
 class Crud {
   User _user;

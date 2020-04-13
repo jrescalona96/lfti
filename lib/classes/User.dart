@@ -1,4 +1,5 @@
 import "dart:core";
+
 // firebase imports
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -12,8 +13,8 @@ import "package:lfti_app/classes/Exercise.dart";
 
 class User {
   // user credentials
-  FirebaseAuth _auth = FirebaseAuth.instance;
   AuthResult _authRes;
+  String _uid;
   DocumentReference _firestoreReference;
   DocumentSnapshot _document;
 
@@ -23,38 +24,17 @@ class User {
   String _firstName;
   String _lastName;
   String _email;
-  int _age = 29;
-  // TODO: set up date formatter or create own class
-  Map<String, int> _dob = {"month": 9, "day": 6, "year": 1990};
   Session _currentSession;
   Map _lastSession;
-  Map _nextSession;
-
-  void login(String email, String password) async {
-    try {
-      AuthResult res = await _auth.signInWithEmailAndPassword(
-          email: email.trim(), password: password);
-      _setAuthResult(res);
-      print("Success: Loggin in as " + _authRes.user.uid);
-    } catch (e) {
-      print("Error: Unable to Log in! " + e.toString());
-    }
-  }
 
   void initUserData() {
     try {
+      this._uid = _authRes.user.uid;
       this._workouts = _buildWorkoutList();
       this._firstName = getDocument().data["firstName"];
       this._lastName = getDocument().data["lastName"];
       this._email = getDocument().data["email"];
-      this._age = 29; // TODO: write algo to compute age
-      this._dob = {
-        "month": getDocument().data["dob"]["month"],
-        "day": getDocument().data["dob"]["day"],
-        "year": getDocument().data["dob"]["year"]
-      };
       this._lastSession = getDocument().data["lastSession"];
-      this._nextSession = getDocument().data["nextSession"];
       this._checklist = getDocument().data["checklist"];
       print("Success: User Initialized!");
     } catch (e) {
@@ -63,35 +43,16 @@ class User {
   }
 
   /// setters
-  void _setAuthResult(var res) {
+  void setAuthResult(var res) {
     this._authRes = res;
   }
 
-  void setDatabaseReference() {
-    try {
-      this._firestoreReference =
-          Firestore.instance.collection("users").document(_authRes.user.uid);
-      print("Success: Document References set!");
-    } catch (e) {
-      print("Error: Document Reference not set! " + e.toString());
-    }
+  void setDatabaseReference(DocumentReference ref) {
+    this._firestoreReference = ref;
   }
 
-  void setDocumentSnapshot() async {
-    try {
-      this._document = await _firestoreReference.get();
-      print("Success: Document Snapshot set!");
-    } catch (e) {
-      print("Error: Document Snapshot not set! " + e.toString());
-    }
-  }
-
-  void _setDOB() {
-    this._dob = {
-      "month": getDocument().data["dob"]["month"],
-      "day": getDocument().data["dob"]["day"],
-      "year": getDocument().data["dob"]["year"]
-    };
+  void setDocumentSnapshot(DocumentSnapshot ds) async {
+    this._document = ds;
   }
 
   void setLastSession(Map data) {
@@ -146,6 +107,10 @@ class User {
     return _authRes;
   }
 
+  String getUID() {
+    return this._uid;
+  }
+
   DocumentReference getFirestoreReference() {
     return _firestoreReference;
   }
@@ -166,10 +131,6 @@ class User {
     return _email;
   }
 
-  Map getDOB() {
-    return _dob;
-  }
-
   Map getLastSession() {
     return _lastSession == null
         ? getDocument().data["lastSession"]
@@ -188,10 +149,6 @@ class User {
 
   List<Workout> getWorkoutList() {
     return this._workouts;
-  }
-
-  int getAge() {
-    return _age;
   }
 
   Workout getWorkoutAt(int index) {
@@ -218,6 +175,7 @@ class User {
       return w;
     } catch (e) {
       print("Error: Unable to Build workout list! " + e.toString());
+      return e;
     }
   }
 
@@ -231,6 +189,7 @@ class User {
       );
     } catch (e) {
       print("Error: Failed to build workout " + e.toString());
+      return e;
     }
   }
 
