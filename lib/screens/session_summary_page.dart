@@ -64,12 +64,12 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
   List<charts.Series<CountedSets, String>> _generateChartData() {
     final data = [
       CountedSets(
-        category: "PERFORM",
+        category: "PERFORMED",
         data: this._session.getPerformedSets(),
         color: kBlueButtonColor,
       ),
       CountedSets(
-        category: "SKIP",
+        category: "SKIPPED",
         data: this._session.getSkippedSets(),
         color: kRedButtonColor.withOpacity(0.6),
       ),
