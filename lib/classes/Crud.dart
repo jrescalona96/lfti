@@ -11,7 +11,7 @@ class Crud {
   void updateWorkoutList() {
     String ref = "workouts";
     List data = _generateWorkoutListQueryMap();
-    _updateFireStore(ref, data);
+    updateFireStore(ref, data);
   }
 
   void signUp() {
@@ -160,7 +160,7 @@ class Crud {
     }
   }
 
-  void _updateFireStore(String ref, var data) {
+  void updateFireStore(String ref, var data) {
     Firestore.instance.runTransaction((transaction) async {
       transaction
           .update(_user.getFirestoreReference(), {ref: data})

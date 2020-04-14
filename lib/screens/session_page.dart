@@ -97,7 +97,7 @@ class _SessionPageState extends State<SessionPage> {
 
   void _skip() {
     _routineTimerController.restart();
-    _session.skip();
+    _session.nextRoutine();
     _updateState();
   }
 

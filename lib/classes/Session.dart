@@ -103,8 +103,6 @@ class Session {
         _isNotRestRoutine(routine)) {
       this._performedRoutines.add(routine);
     }
-
-    printValues();
   }
 
   void previous() {
@@ -115,13 +113,6 @@ class Session {
     } else {
       previousRoutine();
     }
-
-    printValues();
-  }
-
-  void skip() {
-    nextRoutine();
-    printValues();
   }
 
   void nextRoutine() {
