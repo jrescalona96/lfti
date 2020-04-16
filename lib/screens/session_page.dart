@@ -131,150 +131,143 @@ class _SessionPageState extends State<SessionPage> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: <Widget>[
               // Excercise Section
-              Expanded(
-                flex: 2,
-                child: CustomCard(
-                  cardChild: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      // Exercise Name Section
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "EXERCISE",
-                            style: kLabelTextStyle,
-                          ),
-                          SizedBox(height: kSmallSizedBoxHeight),
-                          Text(
-                            _session.getCurrentRoutine().exercise.name,
-                            style: kMediumBoldTextStyle,
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          // Target Section
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "TARGET",
-                                  style: kLabelTextStyle,
-                                ),
-                                Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: <Widget>[
-                                    Text(
-                                        _currentRoutine is TimedRoutine
-                                            ? _currentRoutine
-                                                .timeToPerformInSeconds
-                                                .toString()
-                                            : _currentRoutine.reps.toString(),
-                                        style: kLargeBoldTextStyle1x),
-                                    Text(
+              SizedBox(height: kSmallSizedBoxHeight * 10),
+              CustomCard(
+                cardChild: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    // Exercise Name Section
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "EXERCISE",
+                          style: kLabelTextStyle,
+                        ),
+                        SizedBox(height: kSmallSizedBoxHeight),
+                        Text(
+                          _session.getCurrentRoutine().exercise.name,
+                          style: kMediumBoldTextStyle,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: kSmallSizedBoxHeight * 5),
+                    Row(
+                      children: <Widget>[
+                        // Target Section
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "TARGET",
+                                style: kLabelTextStyle,
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: <Widget>[
+                                  Text(
                                       _currentRoutine is TimedRoutine
-                                          ? " seconds"
-                                          : " reps",
-                                      style: kUnitLabelTextStyle,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                          ? _currentRoutine
+                                              .timeToPerformInSeconds
+                                              .toString()
+                                          : _currentRoutine.reps.toString(),
+                                      style: kLargeBoldTextStyle1x),
+                                  Text(
+                                    _currentRoutine is TimedRoutine
+                                        ? " seconds"
+                                        : " reps",
+                                    style: kUnitLabelTextStyle,
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                          // Sets Section
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "SETS",
-                                  style: kLabelTextStyle,
-                                ),
-                                Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: <Widget>[
-                                    Text(
-                                      _currentSet.toString(),
-                                      style: kLargeBoldTextStyle1x,
-                                    ),
-                                    Text(
-                                      " / " + _currentRoutine.sets.toString(),
-                                      style: kLargeBoldTextStyle1x,
-                                    ),
-                                    Text(
-                                      " sets",
-                                      style: kUnitLabelTextStyle,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
+                        ),
+                        // Sets Section
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                "SETS",
+                                style: kLabelTextStyle,
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: <Widget>[
+                                  Text(
+                                    _currentSet.toString(),
+                                    style: kLargeBoldTextStyle1x,
+                                  ),
+                                  Text(
+                                    " / " + _currentRoutine.sets.toString(),
+                                    style: kLargeBoldTextStyle1x,
+                                  ),
+                                  Text(
+                                    " sets",
+                                    style: kUnitLabelTextStyle,
+                                  )
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
 
               // Routine Navigation Buttons Section
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      // Next Button
-                      RaisedButton(
-                        onPressed: _session.isPaused || _session.isFinished()
-                            ? null
-                            : () => _next(),
-                        child: Text("NEXT", style: kButtonTextFontStyle),
-                      ),
-                      SizedBox(height: kSizedBoxHeight),
-                      Row(
-                        children: <Widget>[
-                          // Back Button
-                          Expanded(
-                            child: RaisedButton(
-                              onPressed:
-                                  _session.isPaused || _isFirstRoutineAndSet()
-                                      ? null
-                                      : () => _back(),
-                              child: Text("BACK", style: kButtonTextFontStyle),
-                              color: kRedButtonColor,
-                            ),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    // Next Button
+                    RaisedButton(
+                      onPressed: _session.isPaused || _session.isFinished()
+                          ? null
+                          : () => _next(),
+                      child: Text("NEXT", style: kButtonTextFontStyle),
+                    ),
+                    SizedBox(height: kSizedBoxHeight),
+                    Row(
+                      children: <Widget>[
+                        // Back Button
+                        Expanded(
+                          child: RaisedButton(
+                            onPressed:
+                                _session.isPaused || _isFirstRoutineAndSet()
+                                    ? null
+                                    : () => _back(),
+                            child: Text("BACK", style: kButtonTextFontStyle),
+                            color: kRedButtonColor,
                           ),
-                          SizedBox(width: kSizedBoxHeight),
-                          // Skip Button
-                          Expanded(
-                            child: RaisedButton(
-                              onPressed:
-                                  _session.isPaused || _session.isLastRoutine()
-                                      ? null
-                                      : () => _skip(),
-                              child: Text("SKIP",
-                                  style: kButtonTextFontStyle.copyWith()),
-                              color: kAmberButtonColor,
-                            ),
+                        ),
+                        SizedBox(width: kSizedBoxHeight),
+                        // Skip Button
+                        Expanded(
+                          child: RaisedButton(
+                            onPressed:
+                                _session.isPaused || _session.isLastRoutine()
+                                    ? null
+                                    : () => _skip(),
+                            child: Text("SKIP",
+                                style: kButtonTextFontStyle.copyWith()),
+                            color: kAmberButtonColor,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
 
@@ -300,6 +293,7 @@ class _SessionPageState extends State<SessionPage> {
               // Timer Section
               Container(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
                       child: CustomCard(

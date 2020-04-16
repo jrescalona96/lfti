@@ -161,7 +161,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
       for (int i = 0; i < this._routineList.length; i++) {
         routines.add(
           RoutineCard(
-            dottedBorder: true,
+            shadowOn: true,
             key: Key(_routineList[i].id + i.toString()),
             onOptionsTap: () => _removeRoutineAt(i),
             onDupOptionTap: () => _duplicateRoutine(i),

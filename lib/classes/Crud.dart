@@ -126,38 +126,34 @@ class Crud {
   }
 
   List _generateWorkoutListQueryMap() {
-    try {
-      return _user
-          .getWorkoutList()
-          .map((w) => {
-                "id": w.id,
-                "name": w.name,
-                "description": w.description,
-                "routines": w.routines
-                    .map((r) => (r is TimedRoutine)
-                        ? {
-                            "type": "TIMED",
-                            "exercise": {
-                              "name": r.exercise.name,
-                              "focus": r.exercise.focus
-                            },
-                            "timeToPerformInSeconds": r.timeToPerformInSeconds
-                          }
-                        : {
-                            "type": "COUNTED",
-                            "exercise": {
-                              "name": r.exercise.name,
-                              "focus": r.exercise.focus
-                            },
-                            "reps": r.reps,
-                            "sets": r.sets
-                          })
-                    .toList()
-              })
-          .toList();
-    } catch (e) {
-      print("Error: Failed to create Workout List Query! " + e.toString());
-    }
+    return _user
+        .getWorkoutList()
+        .map((w) => {
+              "id": w.id,
+              "name": w.name,
+              "description": w.description,
+              "routines": w.routines
+                  .map((r) => (r is TimedRoutine)
+                      ? {
+                          "type": "TIMED",
+                          "exercise": {
+                            "name": r.exercise.name,
+                            "focus": r.exercise.focus
+                          },
+                          "timeToPerformInSeconds": r.timeToPerformInSeconds
+                        }
+                      : {
+                          "type": "COUNTED",
+                          "exercise": {
+                            "name": r.exercise.name,
+                            "focus": r.exercise.focus
+                          },
+                          "reps": r.reps,
+                          "sets": r.sets
+                        })
+                  .toList()
+            })
+        .toList();
   }
 
   void updateFireStore(String ref, var data) {

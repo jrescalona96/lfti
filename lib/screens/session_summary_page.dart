@@ -134,7 +134,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
               label: "",
               data: _session.getWorkout().name,
               subData: _session.getWorkout().description,
-              style: kLargeBoldTextStyle1x,
+              style: kMediumBoldTextStyle,
             ),
             Container(
               child: _getTimeWidget(),

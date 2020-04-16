@@ -140,6 +140,7 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                     Widget item;
                     if (index < _workoutList.length) {
                       item = WorkoutCard(
+                          shadowOn: true,
                           onOptionsTap: () =>
                               _showDeleteConfirmationDialog(index),
                           optionsIcon: Icons.delete,

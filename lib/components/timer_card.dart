@@ -9,7 +9,7 @@ class TimerCard extends StatefulWidget {
 
   final _timerCardState = _TimerCardState();
   _TimerCardState createState() {
-    _timerCardState.setCardLabel(cardLabel);
+    _timerCardState.setCardLabel(this.cardLabel);
     return _timerCardState;
   }
 
@@ -39,11 +39,11 @@ class _TimerCardState extends State<TimerCard> {
   Stopwatch _stopwatch = Stopwatch();
   String _timerString = '00:00';
   final _duration = const Duration(seconds: 1);
-  var label = 'Elapse Time';
+  var _label = 'Elapse Time';
   var timer;
 
   void setCardLabel(String l) {
-    this.label = l;
+    this._label = l;
   }
 
   void _startTimer() {
@@ -95,13 +95,15 @@ class _TimerCardState extends State<TimerCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(label, style: kLabelTextStyle, textAlign: TextAlign.center),
-        SizedBox(height: kSmallSizedBoxHeight),
-        Text(_timerString,
-            style: kMediumBoldTextStyle, textAlign: TextAlign.center),
-      ],
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Text(_label, style: kLabelTextStyle, textAlign: TextAlign.center),
+          SizedBox(height: kSmallSizedBoxHeight),
+          Text(_timerString,
+              style: kMediumBoldTextStyle, textAlign: TextAlign.center)
+        ],
+      ),
     );
   }
 }

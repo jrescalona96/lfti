@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import "package:flutter/material.dart";
 import "package:numberpicker/numberpicker.dart";
 
@@ -8,7 +6,6 @@ import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/Routine.dart";
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/User.dart";
-import "package:lfti_app/classes/TimedRoutine.dart";
 
 // component imports
 import "package:lfti_app/components/bottom_navigation_button.dart";
@@ -30,8 +27,8 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   int _workoutIndex;
   int _routineIndex;
   TextEditingController _nameTextController;
-  String _exerciseName, _exerciseFocus;
-  int _sets, _reps, _timeToPerformInSeconds;
+  String _exerciseFocus;
+  int _sets, _reps;
 
   _UpdateRoutinePageState(Map args) {
     this._currentUser = args["user"];
@@ -144,7 +141,8 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     );
   }
 
-  void _showTargetOptionDialog() async {
+  // TODO: Implement change workout type
+  /* void _showTargetOptionDialog() async {
     var _dropdown = CustomDropdownMenu(
       initialValue: "Rep Count",
       items: ["Rep Count", "Time"],
@@ -182,7 +180,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
         );
       },
     );
-  }
+  } */
 
   Widget _buildRepsTargetOptionSection() {
     return CustomCard(

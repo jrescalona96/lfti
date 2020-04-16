@@ -31,7 +31,7 @@ final kThemeData = ThemeData(
 );
 
 const kContentMargin = EdgeInsets.all(10.0);
-const kCardMargin = EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0);
+const kCardMargin = EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0);
 const kContentPadding = EdgeInsets.all(20.0);
 const kButtonPadding = EdgeInsets.all(20.0);
 const kStartButtonHeight = 100.0;

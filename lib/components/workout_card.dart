@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:lfti_app/classes/Workout.dart';
 import 'package:lfti_app/classes/Constants.dart';
 import 'package:lfti_app/classes/User.dart';
-import "package:lfti_app/classes/Routine.dart";
 
 // component imports
 import 'package:lfti_app/components/custom_card.dart';
@@ -14,10 +13,11 @@ class WorkoutCard extends StatelessWidget {
   final User user;
   Workout _workout;
   final Function onTap;
-  bool dottedBorder;
+  final bool dottedBorder;
   final Function onOptionsTap;
-  IconData optionsIcon;
+  final IconData optionsIcon;
   int numberOfExercices;
+  final shadowOn;
   WorkoutCard({
     this.user,
     this.index,
@@ -25,6 +25,7 @@ class WorkoutCard extends StatelessWidget {
     this.dottedBorder = false,
     this.onOptionsTap,
     this.optionsIcon,
+    this.shadowOn = false,
   }) {
     this._workout = this.user.getWorkoutAt(index);
   }
@@ -46,16 +47,17 @@ class WorkoutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cardColor = _isIncompleteWorkout()
-        ? kBlueButtonColor.withOpacity(0.2)
-        : kRedButtonColor.withOpacity(0.2);
+        ? kBlueButtonColor.withOpacity(0.4)
+        : kRedButtonColor.withOpacity(0.4);
     var _workoutNameTextStyle = kMediumBoldTextStyle;
     var _descriptionTextStyle = kLabelTextStyle;
     var _routineCountTextStyle = kSmallBoldTextStyle;
     var _numberOfExercices = _setNumberOfExercises();
 
     return CustomCard(
-      onTap: this.onTap,
+      shadow: this.shadowOn,
       color: cardColor,
+      onTap: this.onTap,
       dottedBorder: this.dottedBorder,
       cardChild: Column(
         mainAxisAlignment: MainAxisAlignment.center,
