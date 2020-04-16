@@ -141,47 +141,6 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     );
   }
 
-  // TODO: Implement change workout type
-  /* void _showTargetOptionDialog() async {
-    var _dropdown = CustomDropdownMenu(
-      initialValue: "Rep Count",
-      items: ["Rep Count", "Time"],
-    );
-    showDialog<int>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Choose Completion Target"),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          ),
-          content: _dropdown,
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                "Cancel",
-                style: kSmallTextStyle,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text(
-                "Confirm",
-                style: kSmallTextStyle,
-              ),
-              onPressed: () {
-                _updateMuscleGroupFocus(_dropdown.getValue());
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  } */
-
   Widget _buildRepsTargetOptionSection() {
     return CustomCard(
       cardChild: Column(
@@ -278,7 +237,8 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Update Routine", style: kSmallTextStyle),
+        title: Text("Update Routine",
+            style: kSmallTextStyle.copyWith(color: Colors.white)),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -325,3 +285,44 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   }
   //======================================CONTENT SECTION======================================//
 }
+
+// TODO: Implement change workout type
+/* void _showTargetOptionDialog() async {
+    var _dropdown = CustomDropdownMenu(
+      initialValue: "Rep Count",
+      items: ["Rep Count", "Time"],
+    );
+    showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Choose Completion Target"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          content: _dropdown,
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "Cancel",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Confirm",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                _updateMuscleGroupFocus(_dropdown.getValue());
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  } */
