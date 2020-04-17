@@ -35,7 +35,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<List<Map<String, dynamic>>> _fetchLocations() async {
     var client = http.Client();
-    const String placesKey = Keys.placesKey;
+    const String placesKey = Keys.placesAPI;
     const double distance = 16093.4;
     const String searchKey = "la+fitness";
     final loc = List<Map<String, dynamic>>();
