@@ -134,7 +134,6 @@ class _SessionPageState extends State<SessionPage> {
           child: ListView(
             children: <Widget>[
               // Excercise Section
-              SizedBox(height: kSmallSizedBoxHeight * 10),
               CustomCard(
                 cardChild: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,17 +147,16 @@ class _SessionPageState extends State<SessionPage> {
                           "EXERCISE",
                           style: kLabelTextStyle,
                         ),
-                        SizedBox(height: kSmallSizedBoxHeight),
                         Text(
                           _session.getCurrentRoutine().exercise.name,
                           style: kMediumBoldTextStyle,
                         ),
                       ],
                     ),
-                    SizedBox(height: kSmallSizedBoxHeight * 5),
+                    // Weight Section
+                    SizedBox(height: kSmallSizedBoxHeight * 3),
                     Row(
                       children: <Widget>[
-                        // Target Section
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +178,7 @@ class _SessionPageState extends State<SessionPage> {
                                       style: kLargeBoldTextStyle1x),
                                   Text(
                                     _currentRoutine is TimedRoutine
-                                        ? " seconds"
+                                        ? " sec"
                                         : " reps",
                                     style: kUnitLabelTextStyle,
                                   ),
@@ -189,35 +187,66 @@ class _SessionPageState extends State<SessionPage> {
                             ],
                           ),
                         ),
-                        // Sets Section
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "SETS",
-                                style: kLabelTextStyle,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: <Widget>[
-                                  Text(
-                                    _currentSet.toString(),
-                                    style: kLargeBoldTextStyle1x,
-                                  ),
-                                  Text(
-                                    " / " + _currentRoutine.sets.toString(),
-                                    style: kLargeBoldTextStyle1x,
-                                  ),
-                                  Text(
-                                    " sets",
-                                    style: kUnitLabelTextStyle,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
+                        Container(
+                          child: _session.getCurrentRoutine().weight != null
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "WEIGHT",
+                                      style: kLabelTextStyle,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.baseline,
+                                      textBaseline: TextBaseline.alphabetic,
+                                      children: <Widget>[
+                                        Text(
+                                          _session
+                                              .getCurrentRoutine()
+                                              .weight
+                                              .toString(),
+                                          style: kLargeBoldTextStyle1x,
+                                        ),
+                                        Text(
+                                          " lbs",
+                                          style: kUnitLabelTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : SizedBox(height: 0.0),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: kSmallSizedBoxHeight * 3),
+                    // status section
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "STATUS",
+                          style: kLabelTextStyle,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: <Widget>[
+                            Text(
+                              _currentSet.toString(),
+                              style: kLargeBoldTextStyle1x,
+                            ),
+                            Text(
+                              " / " + _currentRoutine.sets.toString(),
+                              style: kLargeBoldTextStyle1x,
+                            ),
+                            Text(
+                              " sets",
+                              style: kUnitLabelTextStyle,
+                            )
+                          ],
                         ),
                       ],
                     ),
@@ -276,16 +305,26 @@ class _SessionPageState extends State<SessionPage> {
                 cardChild: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "NEXT ROUTINE",
-                      style: kLabelTextStyle,
-                    ),
-                    SizedBox(height: kSmallSizedBoxHeight),
-                    Container(
-                        child: Text(
-                      _session.getNextRoutine().exercise.name,
-                      style: kMediumBoldTextStyle,
-                    )),
+                    Text("NEXT ROUTINE", style: kLabelTextStyle),
+                    Text(_session.getNextRoutine().exercise.name,
+                        style: kMediumBoldTextStyle),
+                    _session.getNextRoutine().weight != null
+                        ? Column(
+                            children: <Widget>[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: <Widget>[
+                                  Text(
+                                    _session.getNextRoutine().weight.toString(),
+                                    style: kMediumBoldTextStyle,
+                                  ),
+                                  Text(" lbs", style: kUnitLabelTextStyle),
+                                ],
+                              ),
+                            ],
+                          )
+                        : SizedBox(height: 0.0)
                   ],
                 ),
               ),

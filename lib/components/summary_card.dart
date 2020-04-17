@@ -7,12 +7,13 @@ class SummaryCard extends StatelessWidget {
   final String subData;
   final String sub;
   final TextStyle style;
-  SummaryCard(
-      {@required this.label,
-      @required this.data,
-      this.subData,
-      this.sub = "",
-      this.style: kLargeBoldTextStyle1x});
+  SummaryCard({
+    @required this.label,
+    @required this.data,
+    this.subData = "",
+    this.sub = "",
+    this.style: kLargeBoldTextStyle1x,
+  });
 
   @override
   Widget build(BuildContext context) {

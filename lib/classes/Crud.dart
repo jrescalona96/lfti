@@ -25,7 +25,8 @@ class Crud {
             "type": "COUNTED",
             "exercise": {"name": "Barbell Bench Press", "focus": "Chest"},
             "reps": 10,
-            "sets": 3
+            "sets": 3,
+            "weight": 25.0
           },
           {
             "type": "TIMED",
@@ -36,7 +37,8 @@ class Crud {
             "type": "COUNTED",
             "exercise": {"name": "Dumbell Press", "focus": "Chest"},
             "reps": 10,
-            "sets": 3
+            "sets": 3,
+            "weight": 25.0
           },
           {
             "type": "TIMED",
@@ -47,7 +49,8 @@ class Crud {
             "type": "COUNTED",
             "exercise": {"name": "Dumbell Fly", "focus": "Chest"},
             "reps": 10,
-            "sets": 3
+            "sets": 3,
+            "weight": 25.0
           },
           {
             "type": "TIMED",
@@ -58,7 +61,8 @@ class Crud {
             "type": "COUNTED",
             "exercise": {"name": "Push Up", "focus": "Chest"},
             "reps": 10,
-            "sets": 3
+            "sets": 3,
+            "weight": 25.0
           },
           {
             "type": "TIMED",
@@ -69,7 +73,8 @@ class Crud {
             "type": "COUNTED",
             "exercise": {"name": "Fly", "focus": "Chest"},
             "reps": 10,
-            "sets": 3
+            "sets": 3,
+            "weight": 25.0
           },
           {
             "type": "TIMED",
@@ -83,7 +88,8 @@ class Crud {
               "focus": "Chest"
             },
             "reps": 10,
-            "sets": 3
+            "sets": 3,
+            "weight": 25.0
           },
           {
             "type": "TIMED",
@@ -94,7 +100,8 @@ class Crud {
             "type": "COUNTED",
             "exercise": {"name": "Dumbell pullover", "focus": "Chest"},
             "reps": 10,
-            "sets": 3
+            "sets": 3,
+            "weight": 25.0
           },
           {
             "type": "TIMED",
@@ -105,7 +112,8 @@ class Crud {
             "type": "COUNTED",
             "exercise": {"name": "Cable Iron Cross", "focus": "Chest"},
             "reps": 10,
-            "sets": 3
+            "sets": 3,
+            "weight": 25.0
           }
         ]
       }
@@ -149,7 +157,8 @@ class Crud {
                             "focus": r.exercise.focus
                           },
                           "reps": r.reps,
-                          "sets": r.sets
+                          "sets": r.sets,
+                          "weight": r.weight
                         })
                   .toList()
             })

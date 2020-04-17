@@ -10,7 +10,7 @@ import "package:lfti_app/classes/User.dart";
 // component imports
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/custom_dropdown_menu.dart";
-import "package:lfti_app/components/custom_card.dart";
+import "package:lfti_app/components/routine_data_card.dart";
 import "package:lfti_app/components/custom_text_form_field.dart";
 
 class UpdateRoutinePage extends StatefulWidget {
@@ -29,6 +29,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   TextEditingController _nameTextController;
   String _exerciseFocus;
   int _sets, _reps;
+  double _weight;
 
   _UpdateRoutinePageState(Map args) {
     this._currentUser = args["user"];
@@ -42,6 +43,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
         TextEditingController(text: this._routine.exercise.name);
     this._sets = this._routine.sets;
     this._reps = this._routine.reps;
+    this._weight = this._routine.weight;
     this._exerciseFocus = this._routine.exercise.focus.toString();
   }
 
@@ -79,26 +81,48 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     });
   }
 
-  void _updateMuscleGroupFocus(String val) {
-    setState(() {
-      _exerciseFocus = val;
-    });
-  }
-
-  void _updateReps(int val) {
-    if (this._reps != val) {
-      setState(() {
-        this._reps = val;
-      });
-    }
-  }
-
-  void _updateSets(int val) {
-    if (this._sets != val) {
-      setState(() {
-        this._sets = val;
-      });
-    }
+  void _showWeightInputBox() async {
+    var currentWeight =
+        _routine.weight != null ? _routine.weight.toString() : "0.0";
+    final weightTextController = TextEditingController(text: currentWeight);
+    await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Muscle Group"),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          content: TextFormField(
+            controller: weightTextController,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            textAlign: TextAlign.center,
+            onTap: () => weightTextController.clear(),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "Cancel",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Confirm",
+                style: kSmallTextStyle,
+              ),
+              onPressed: () {
+                _updateWeight(weightTextController.text);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showMuscleGroupOptionDialog() async {
@@ -117,98 +141,60 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
           content: _dropdown,
           actions: <Widget>[
             FlatButton(
-              child: Text(
-                "Cancel",
-                style: kSmallTextStyle,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+                child: Text(
+                  "Cancel",
+                  style: kSmallTextStyle,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
             FlatButton(
-              child: Text(
-                "Confirm",
-                style: kSmallTextStyle,
-              ),
-              onPressed: () {
-                _updateMuscleGroupFocus(_dropdown.getValue());
-                Navigator.of(context).pop();
-              },
-            ),
+                child: Text(
+                  "Confirm",
+                  style: kSmallTextStyle,
+                ),
+                onPressed: () {
+                  _updateMuscleGroupFocus(_dropdown.getValue());
+                  Navigator.of(context).pop();
+                }),
           ],
         );
       },
     );
   }
 
-  Widget _buildRepsTargetOptionSection() {
-    return CustomCard(
-      cardChild: Column(
-        children: <Widget>[
-          Text("Counted Routined"),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: SizedBox(),
-              ),
-              // reps section
-              Expanded(
-                flex: 10,
-                child: GestureDetector(
-                  onTap: () => _showRepsOptionDialog(),
-                  child: CustomCard(
-                    color: kIconColor.withOpacity(0.1),
-                    cardChild: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Reps", style: kLabelTextStyle),
-                          Text(
-                            this._reps.toString(),
-                            style: kMediumTextStyle,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: SizedBox(),
-              ),
-              // sets section
-              Expanded(
-                flex: 10,
-                child: GestureDetector(
-                  onTap: () => _showSetsOptionDialog(),
-                  child: CustomCard(
-                    color: kIconColor.withOpacity(0.1),
-                    cardChild: Center(
-                      child: Column(
-                        children: <Widget>[
-                          Text("Sets", style: kLabelTextStyle),
-                          Text(
-                            this._sets.toString(),
-                            style: kMediumTextStyle,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: SizedBox(),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+  void _updateReps(int val) {
+    if (this._reps != val) {
+      setState(() {
+        this._reps = val;
+      });
+    }
+  }
+
+  void _updateSets(int val) {
+    if (this._sets != val) {
+      setState(() {
+        this._sets = val;
+      });
+    }
+  }
+
+  void _updateWeight(String val) {
+    try {
+      double w = double.parse(val.trim());
+      setState(() {
+        this._routine.weight = w;
+        this._weight = w;
+      });
+    } catch (e) {
+      print("Error:" + val + "is not a number! $e");
+    }
+  }
+
+  void _updateMuscleGroupFocus(String val) {
+    setState(() {
+      _exerciseFocus = val;
+    });
   }
 
   void _saveChanges() {
@@ -218,13 +204,11 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     _routine.exercise.focus = this._exerciseFocus;
     _routine.sets = this._sets;
     _routine.reps = this._reps;
+    _routine.weight = this._weight;
 
     Workout workout = _currentUser.getWorkoutAt(this._workoutIndex);
     workout.setRoutineAt(this._routineIndex, this._routine);
-    this._currentUser.setWorkoutAt(
-          this._workoutIndex,
-          workout,
-        );
+    this._currentUser.setWorkoutAt(this._workoutIndex, workout);
     Navigator.pushNamed(
       context,
       "/updateWorkout",
@@ -232,49 +216,66 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     );
   }
 
-  //======================================CONTENT SECTION======================================//
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Update Routine",
-            style: kSmallTextStyle.copyWith(color: Colors.white)),
+        title: Text(
+          "Update Routine",
+          style: kSmallTextStyle.copyWith(color: Colors.white),
+        ),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SizedBox(height: kSizedBoxHeight),
-            CustomTextFormField(
-              textController: _nameTextController,
-              label: "Name",
-            ),
-
-            // muscle group section
-            CustomCard(
-              cardChild: GestureDetector(
-                onTap: () => _showMuscleGroupOptionDialog(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Padding(
+          padding: kContentPadding,
+          child: ListView(
+            children: <Widget>[
+              CustomTextFormField(
+                textController: _nameTextController,
+                label: "Name",
+              ),
+              Container(
+                child: Row(
+                  // muscle group section
                   children: <Widget>[
-                    Text("Major Muscle Group", style: kLabelTextStyle),
-                    Text(
-                      this._exerciseFocus,
-                      style: kSmallBoldTextStyle,
-                      textAlign: TextAlign.center,
+                    RoutineDataCard(
+                      label: "FOCUS",
+                      data: this._exerciseFocus,
+                      onTap: () => _showMuscleGroupOptionDialog(),
+                    ),
+                    RoutineDataCard(
+                      label: "WEIGHT",
+                      data: this._weight != null
+                          ? this._weight.toString()
+                          : "Add weight",
+                      onTap: () => _showWeightInputBox(),
                     ),
                   ],
                 ),
               ),
-            ),
-            Container(
-              child: _buildRepsTargetOptionSection(),
-            ),
-          ],
+              Container(
+                child: Row(
+                  // muscle group section
+                  children: <Widget>[
+                    RoutineDataCard(
+                      label: "REPS",
+                      data: this._reps.toString(),
+                      onTap: () => _showRepsOptionDialog(),
+                    ),
+                    RoutineDataCard(
+                      label: "SETS",
+                      data: this._sets.toString(),
+                      onTap: () => _showSetsOptionDialog(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationButton(
@@ -283,7 +284,6 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
           color: kBlueButtonColor),
     );
   }
-  //======================================CONTENT SECTION======================================//
 }
 
 // TODO: Implement change workout type

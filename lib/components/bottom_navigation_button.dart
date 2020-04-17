@@ -17,7 +17,7 @@ class BottomNavigationButton extends StatelessWidget {
       onTap: action,
       child: Container(
         color: color,
-        height: kStartButtonHeight,
+        height: kBottomButtonHeight,
         child: Center(
           child: Text(
             label,

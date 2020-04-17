@@ -86,10 +86,15 @@ class _TimerCardState extends State<TimerCard> {
 
   void _updatedTimeString() {
     int _seconds = (_stopwatch.elapsedMilliseconds ~/ 1000);
+    int hour = _seconds ~/ 3600;
+    int min = ((_seconds % 3600) - (hour * 60)) ~/ 60;
+    int sec = (_seconds - (60 * min)) % 60;
     setState(() {
-      _timerString = ((_seconds ~/ 60).toString().padLeft(2, '0') +
+      _timerString = hour.toString().padLeft(2, '0') +
+          ":" +
+          min.toString().padLeft(2, '0') +
           ':' +
-          (_seconds % 60).toString().padLeft(2, '0'));
+          sec.toString().padLeft(2, '0');
     });
   }
 
@@ -99,9 +104,8 @@ class _TimerCardState extends State<TimerCard> {
       child: Column(
         children: <Widget>[
           Text(_label, style: kLabelTextStyle, textAlign: TextAlign.center),
-          SizedBox(height: kSmallSizedBoxHeight),
           Text(_timerString,
-              style: kMediumBoldTextStyle, textAlign: TextAlign.center)
+              style: kMediumBoldTextStyle, textAlign: TextAlign.center),
         ],
       ),
     );

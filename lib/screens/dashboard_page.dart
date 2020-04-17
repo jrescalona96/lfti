@@ -62,7 +62,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       : "You have not done anyting yet."),
             ),
             CustomCard(
-              // short circuit evaluation
+              // short circuit eval
               cardChild: _currentUser.getChecklist() != null &&
                       _currentUser.getChecklist().length > 0
                   ? _buildChecklist()

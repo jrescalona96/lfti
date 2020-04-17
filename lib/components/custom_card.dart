@@ -10,6 +10,8 @@ class CustomCard extends StatelessWidget {
   final bool dottedBorder;
   final Key key;
   final bool shadow;
+  final double width;
+  final double height;
 
   CustomCard({
     @required this.cardChild,
@@ -18,6 +20,8 @@ class CustomCard extends StatelessWidget {
     this.color = kCardBackground,
     this.key,
     this.shadow = false,
+    this.height,
+    this.width,
   });
 
   @override
@@ -26,6 +30,8 @@ class CustomCard extends StatelessWidget {
       onTap: this.onTap,
       child: Container(
         margin: kCardMargin,
+        height: this.height,
+        width: this.width,
         decoration: BoxDecoration(
           boxShadow: shadow == true
               ? [

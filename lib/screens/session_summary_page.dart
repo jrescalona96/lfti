@@ -32,29 +32,31 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
   }
 
   Widget _getTimeWidget() {
-    RegExp exp = new RegExp(r"(\d\d)");
-    Iterable<RegExpMatch> matches = exp.allMatches(_session.getElapseTime());
-    String min = matches.elementAt(0).group(0).replaceAll("0", "");
-    String sec = matches.elementAt(1).group(0);
     String label = "TIME";
     Widget widget;
+    Map<String, String> time = this._session.getElapseTime();
 
-    if (min == "") {
-      widget = SummaryCard(
-        label: label,
-        data: sec,
-        sub: "SEC",
+    Widget minWidget = SummaryCard(label: "", data: time["min"], sub: "MIN");
+    Widget secWidget = SummaryCard(label: "", data: time["sec"], sub: "SEC");
+
+    if (time["hour"] == "0" && time["min"] == "0") {
+      widget = SummaryCard(label: label, data: time["sec"], sub: "SEC");
+    } else if (time["hour"] == "0") {
+      widget = Row(
+        children: <Widget>[
+          SummaryCard(label: label, data: time["min"], sub: "MIN"),
+          SizedBox(width: kSizedBoxHeight),
+          secWidget
+        ],
       );
     } else {
       widget = Row(
         children: <Widget>[
-          SummaryCard(label: label, data: min, sub: "MIN"),
+          SummaryCard(label: label, data: time["hour"], sub: "HR"),
           SizedBox(width: kSizedBoxHeight),
-          SummaryCard(
-            label: "",
-            data: sec,
-            sub: "SEC",
-          )
+          minWidget,
+          SizedBox(width: kSizedBoxHeight),
+          secWidget
         ],
       );
     }
@@ -64,14 +66,14 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
   List<charts.Series<CountedSets, String>> _generateChartData() {
     final data = [
       CountedSets(
-        category: "PERFORM",
+        category: "PERFORMED",
         data: this._session.getPerformedSets(),
         color: kBlueButtonColor,
       ),
       CountedSets(
-        category: "SKIP",
+        category: "",
         data: this._session.getSkippedSets(),
-        color: kRedButtonColor.withOpacity(0.6),
+        color: kAmberButtonColor,
       ),
     ];
     return [
@@ -93,10 +95,10 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
       "name": _session.getWorkout().name,
       "description": "Date: " +
           _session.date +
-          " Time: " +
-          _session.getElapseTime() +
-          " sec",
-      "date": _session.date
+          "\nTime: " +
+          _session.getFormattedElapseTime(),
+      "date": _session.date,
+      "duration": _session.getElapseTime()
     });
     Crud(this._currentUser).updateFireStore(
       "lastSession",
