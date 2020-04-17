@@ -47,12 +47,14 @@ class ViewRoutinesPage extends StatelessWidget {
         ),
         bottomNavigationBar: BottomNavigationButton(
           label: "START SESSION",
-          action: () {
-            _currentUser.setSession(Session(_workout));
-            Navigator.pushNamed(context, '/startSession',
-                arguments: _currentUser);
-          },
-          color: kBlueButtonColor,
+          action: _workout.routines.isNotEmpty
+              ? () {
+                  _currentUser.setSession(Session(_workout));
+                  Navigator.pushNamed(context, '/startSession',
+                      arguments: _currentUser);
+                }
+              : null,
+          color: _workout.routines.isNotEmpty ? kBlueButtonColor : Colors.grey,
         ));
   }
 }
