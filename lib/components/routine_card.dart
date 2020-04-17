@@ -43,9 +43,8 @@ class RoutineCard extends StatelessWidget {
       shadow: this.shadowOn,
       key: Key(routine.id),
       onTap: this.onTap,
-      color: routine.exercise.name == "Rest"
-          ? kCardBackground
-          : kBlueButtonColor.withOpacity(0.5),
+      color:
+          routine.exercise.name == "Rest" ? kCardBackground : kAmberButtonColor,
       dottedBorder: this.dottedBorder,
       cardChild: Container(
         child: Column(
@@ -60,9 +59,7 @@ class RoutineCard extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        routine.exercise.name == null
-                            ? "Null"
-                            : routine.exercise.name,
+                        routine.exercise.name,
                         style: kMediumBoldTextStyle,
                       ),
                     ),
@@ -90,7 +87,7 @@ class RoutineCard extends StatelessWidget {
                           routine.exercise.focus == null
                               ? "Null"
                               : routine.exercise.focus,
-                          style: kMediumLabelTextStyle,
+                          style: kSmallTextStyle,
                         ),
                 ),
               ],

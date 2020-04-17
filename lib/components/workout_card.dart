@@ -31,7 +31,7 @@ class WorkoutCard extends StatelessWidget {
   }
 
   bool _isIncompleteWorkout() {
-    return _workout.name.isNotEmpty || _workout.routines.isEmpty;
+    return _workout.name.isEmpty || _workout.routines.isEmpty;
   }
 
   int _setNumberOfExercises() {
@@ -47,8 +47,8 @@ class WorkoutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cardColor = _isIncompleteWorkout()
-        ? kBlueButtonColor.withOpacity(0.4)
-        : kRedButtonColor.withOpacity(0.4);
+        ? kRedButtonColor.withOpacity(0.8)
+        : kAmberButtonColor;
     var _workoutNameTextStyle = kMediumBoldTextStyle;
     var _descriptionTextStyle = kLabelTextStyle;
     var _routineCountTextStyle = kSmallBoldTextStyle;
