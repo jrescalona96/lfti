@@ -1,12 +1,16 @@
 import "package:flutter/material.dart";
-// class imports
+import "dart:convert";
+import "package:http/http.dart" as http;
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter/services.dart';
 
+// class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
 
 // component imports
 import "package:lfti_app/components/checklist.dart";
-import "package:lfti_app/components/dashboard_card_tile.dart";
+import "package:lfti_app/components/dashboard_card.dart";
 import "package:lfti_app/components/custom_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/menu.dart";
@@ -21,14 +25,54 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   User _currentUser;
-  _DashboardPageState(this._currentUser);
+  List<Map<String, dynamic>> _nearbyLocations;
+  String _deviceLocation;
+  bool _isDataReady = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return _buildDashboardPage(context);
+  _DashboardPageState(this._currentUser) {
+    init();
   }
 
-  Scaffold _buildDashboardPage(BuildContext context) {
+  Future<List<Map<String, dynamic>>> _fetchLocations() async {
+    var client = http.Client();
+    const String placesKey = "AIzaSyCfO4r4jmzKyd_Lc_sjCyqoCqmWZrU_hPg";
+    const double distance = 16093.4;
+    const String searchKey = "la+fitness";
+    final loc = List<Map<String, dynamic>>();
+    const url =
+        "https://maps.googleapis.com/maps/api/place/textsearch/json?query=$searchKey&radius=$distance&key=$placesKey";
+    try {
+      http.Response uriResponse = await client.get(url);
+      if (uriResponse.statusCode == 200) {
+        var res = json.decode(uriResponse.body);
+
+        for (var item in res["results"]) {
+          loc.add({
+            "address": item["formatted_address"],
+            "place_id": item["place_id"],
+            "name": item["name"],
+            "location": item["geometry"]["location"]
+          });
+        }
+      } else {
+        throw Exception("Error: Failed to load fetch locations");
+      }
+    } finally {
+      client.close();
+    }
+    return loc.toList();
+  }
+
+  void init() async {
+    _fetchLocations().then((val) {
+      setState(() {
+        this._isDataReady = true;
+        this._nearbyLocations = val;
+      });
+    });
+  }
+
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -48,25 +92,63 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       drawer: Menu(_currentUser),
       body: Container(
+        margin: kContentMargin,
         child: ListView(
           children: <Widget>[
-            SizedBox(height: kSmallSizedBoxHeight),
-            Container(
-              child: DashboardCardTile(
-                  heading: "LAST SESSION",
-                  mainInfo: _currentUser.getLastSession() != null
-                      ? _currentUser.getLastSession()["name"]
-                      : "Nothing here!",
-                  details: _currentUser.getLastSession() != null
-                      ? _currentUser.getLastSession()["description"]
-                      : "You have not done anyting yet."),
+            DashboardCard(
+              heading: "LAST SESSION",
+              mainInfo: _currentUser.getLastSession() != null
+                  ? _currentUser.getLastSession()["name"]
+                  : "Nothing here!",
+              details: _currentUser.getLastSession() != null
+                  ? _currentUser.getLastSession()["description"]
+                  : "You have not done anyting yet.",
             ),
+            _isDataReady
+                ? Builder(
+                    builder: (context) => GestureDetector(
+                      onLongPress: () {
+                        Clipboard.setData(ClipboardData(
+                          text: _nearbyLocations[0]["address"].toString(),
+                        ));
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          duration: Duration(seconds: 1),
+                          content: Text(
+                            "Copied to Clipboard",
+                            style:
+                                kSmallTextStyle.copyWith(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                        ));
+                      },
+                      child: DashboardCard(
+                        heading: "NEAREST GYM",
+                        mainInfo: _nearbyLocations[0]["name"].toString(),
+                        details: _nearbyLocations[0]["address"].toString(),
+                      ),
+                    ),
+                  )
+                : CustomCard(
+                    cardChild: Container(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            "Looking for Nearby Gyms",
+                            style: kLabelTextStyle,
+                          ),
+                          SizedBox(height: kSizedBoxHeight),
+                          CircularProgressIndicator()
+                        ],
+                      ),
+                    ),
+                  ),
             CustomCard(
-              // short circuit evaluation
+              // short circuit eval
               cardChild: _currentUser.getChecklist() != null &&
                       _currentUser.getChecklist().length > 0
                   ? _buildChecklist()
-                  : DashboardCardTile(
+                  : DashboardCard(
                       heading: "CHECKLIST",
                       mainInfo: "Nothing here.",
                       details: "Add items to your checklist!",
@@ -77,11 +159,11 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       bottomNavigationBar: BottomNavigationButton(
           label: "LET'S GO!",
+          color: kBlueButtonColor,
           action: () {
             Navigator.pushNamed(context, "/viewWorkouts",
                 arguments: _currentUser);
-          },
-          color: kBlueButtonColor),
+          }),
     );
   }
 
@@ -90,10 +172,45 @@ class _DashboardPageState extends State<DashboardPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Center(child: Text("CHECKLIST", style: kLabelTextStyle)),
+          Text("CHECKLIST", style: kLabelTextStyle),
           Checklist(_currentUser.getChecklist())
         ],
       ),
     );
   }
 }
+
+// // TODO: location
+// Future<String> _getNearestLocation(List l) async {
+//   var client = http.Client();
+//   String nearest = "";
+//   List locations = l;
+//   const String distanceMatrixKey = "AIzaSyC3ItHefNpbUVcYNTYpJKxO4ogIbQ9F9mI";
+//   String destination = "ChIJA45Qe3Qvw4ARYAYpVTITVcw";
+//   destination = destination.substring(0, 5) +
+//       "-" +
+//       destination.substring(5, destination.length);
+//   print(destination);
+//   String url =
+//       "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=$_deviceLocation&destinations=$destination&key=$distanceMatrixKey";
+//   try {
+//     http.Response uriResponse = await client.get(url);
+//     var res = json.decode(uriResponse.body);
+//     print(res);
+//   } catch (e) {
+//     print("Error: Failed to get destinations $e");
+//   } finally {
+//     client.close();
+//   }
+//   return nearest;
+// }
+
+// // TODO: location
+// Future<String> _getDeviceLocation() async {
+//   String loc;
+//   Position position = await Geolocator()
+//       .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+//   loc = position.latitude.toString() + "," + position.longitude.toString();
+//   print(loc);
+//   return Future.value(loc);
+// }

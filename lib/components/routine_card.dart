@@ -12,6 +12,7 @@ class RoutineCard extends StatelessWidget {
   final IconData optionsIcon;
   final IconData dupOptionIcon;
   final Function onDupOptionTap;
+  final bool shadowOn;
   RoutineCard(
       {@required this.routine,
       this.onTap,
@@ -20,6 +21,7 @@ class RoutineCard extends StatelessWidget {
       this.onOptionsTap,
       this.dupOptionIcon = Icons.content_copy,
       this.onDupOptionTap,
+      this.shadowOn = false,
       this.key});
 
   String _generateTargetString() {
@@ -38,11 +40,12 @@ class RoutineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
+      shadow: this.shadowOn,
       key: Key(routine.id),
       onTap: this.onTap,
       color: routine.exercise.name == "Rest"
           ? kCardBackground
-          : kBlueButtonColor.withOpacity(0.3),
+          : kBlueButtonColor.withOpacity(0.5),
       dottedBorder: this.dottedBorder,
       cardChild: Container(
         child: Column(

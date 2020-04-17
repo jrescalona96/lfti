@@ -162,6 +162,7 @@ class User {
                 name: r["exercise"]["name"], focus: r["exercise"]["focus"]),
             reps: r["reps"],
             sets: r["sets"],
+            weight: r["weight"],
           ),
         );
       } else {

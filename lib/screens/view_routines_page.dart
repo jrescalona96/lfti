@@ -4,7 +4,6 @@ import "package:flutter/material.dart";
 // component imports
 import "package:lfti_app/components/routine_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
-import "package:lfti_app/components/menu.dart";
 
 // class imports
 import "package:lfti_app/classes/Workout.dart";
@@ -35,6 +34,7 @@ class ViewRoutinesPage extends StatelessWidget {
                   Widget item;
                   if (index < _workout.routines.length) {
                     item = RoutineCard(
+                      shadowOn: false,
                       routine: _workout.routines[index],
                       onTap: null,
                     );

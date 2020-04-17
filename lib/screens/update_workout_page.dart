@@ -161,7 +161,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
       for (int i = 0; i < this._routineList.length; i++) {
         routines.add(
           RoutineCard(
-            dottedBorder: true,
+            shadowOn: true,
             key: Key(_routineList[i].id + i.toString()),
             onOptionsTap: () => _removeRoutineAt(i),
             onDupOptionTap: () => _duplicateRoutine(i),
@@ -184,10 +184,20 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
 
   void _duplicateRoutine(int index) {
     int nextIndex = index + 1;
-    Routine routine = _routineList[index];
+    Exercise e = Exercise(
+        name: _routineList[index].exercise.name,
+        focus: _routineList[index].exercise.focus);
+    Routine r = Routine(
+      exercise: e,
+      sets: _routineList[index].sets,
+      reps: _routineList[index].reps,
+    );
     setState(() {
-      _routineList.insert(nextIndex, routine);
+      _routineList.insert(nextIndex, r);
     });
+    for (var item in _routineList) {
+      print(item.exercise.name);
+    }
   }
 
   void _onReorder(int oldIndex, int newIndex) {

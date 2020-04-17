@@ -4,7 +4,7 @@ import "package:intl/intl.dart";
 import "package:lfti_app/classes/Constants.dart";
 
 class Workout {
-  String id; // TODO: rethink the use of ID (can be used in updating workouts)
+  String id;
   String name;
   List routines;
   String description;
