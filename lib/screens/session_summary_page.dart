@@ -123,7 +123,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
           },
         ),
         title: Text(
-          "Session Summary",
+          "SESSION SUMMARY",
           style: kSmallTextStyle.copyWith(color: Colors.white),
         ),
       ),
