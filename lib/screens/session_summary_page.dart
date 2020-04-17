@@ -71,11 +71,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
         color: kBlueButtonColor,
       ),
       CountedSets(
-<<<<<<< HEAD
-        category: "SKIPPED",
-=======
         category: "",
->>>>>>> dev
         data: this._session.getSkippedSets(),
         color: kAmberButtonColor,
       ),
