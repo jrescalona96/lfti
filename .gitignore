@@ -12,6 +12,7 @@ design/
 GoogleService-Info.plist
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+lib/classes/Keys.dart
 
 # IntelliJ related
 *.iml

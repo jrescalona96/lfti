@@ -1,12 +1,12 @@
 import "package:flutter/material.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
+import "package:lfti_app/classes/Keys.dart";
 
 // component imports
 import "package:lfti_app/components/checklist.dart";
@@ -35,7 +35,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<List<Map<String, dynamic>>> _fetchLocations() async {
     var client = http.Client();
-    const String placesKey = "AIzaSyCfO4r4jmzKyd_Lc_sjCyqoCqmWZrU_hPg";
+    const String placesKey = Keys.placesKey;
     const double distance = 16093.4;
     const String searchKey = "la+fitness";
     final loc = List<Map<String, dynamic>>();
@@ -179,38 +179,3 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 }
-
-// // TODO: location
-// Future<String> _getNearestLocation(List l) async {
-//   var client = http.Client();
-//   String nearest = "";
-//   List locations = l;
-//   const String distanceMatrixKey = "AIzaSyC3ItHefNpbUVcYNTYpJKxO4ogIbQ9F9mI";
-//   String destination = "ChIJA45Qe3Qvw4ARYAYpVTITVcw";
-//   destination = destination.substring(0, 5) +
-//       "-" +
-//       destination.substring(5, destination.length);
-//   print(destination);
-//   String url =
-//       "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=$_deviceLocation&destinations=$destination&key=$distanceMatrixKey";
-//   try {
-//     http.Response uriResponse = await client.get(url);
-//     var res = json.decode(uriResponse.body);
-//     print(res);
-//   } catch (e) {
-//     print("Error: Failed to get destinations $e");
-//   } finally {
-//     client.close();
-//   }
-//   return nearest;
-// }
-
-// // TODO: location
-// Future<String> _getDeviceLocation() async {
-//   String loc;
-//   Position position = await Geolocator()
-//       .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-//   loc = position.latitude.toString() + "," + position.longitude.toString();
-//   print(loc);
-//   return Future.value(loc);
-// }
