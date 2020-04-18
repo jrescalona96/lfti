@@ -6,6 +6,7 @@ import "package:charts_flutter/flutter.dart" as charts;
 import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/summary_card.dart";
 import "package:lfti_app/components/menu.dart";
+import "package:lfti_app/components/custom_card.dart";
 
 // class imports
 import "package:lfti_app/classes/Constants.dart";
@@ -71,7 +72,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
         color: kBlueButtonColor,
       ),
       CountedSets(
-        category: "",
+        category: "SKIPPED",
         data: this._session.getSkippedSets(),
         color: kAmberButtonColor,
       ),
@@ -100,7 +101,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
       "date": _session.date,
       "duration": _session.getElapseTime()
     });
-    Crud(this._currentUser).updateFireStore(
+    Crud(this._currentUser).updateDatabase(
       "lastSession",
       _currentUser.getLastSession(),
     );
@@ -123,78 +124,88 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
           },
         ),
         title: Text(
-          "SESSION SUMMARY",
+          "Session Summary",
           style: kSmallTextStyle.copyWith(color: Colors.white),
         ),
       ),
       drawer: Menu(_currentUser),
-      body: Container(
-        margin: kContentPadding,
-        child: ListView(
-          children: <Widget>[
-            SummaryCard(
-              label: "",
+      body: ListView(
+        children: <Widget>[
+          CustomCard(
+            cardChild: SummaryCard(
+              label: "WORKOUT",
               data: _session.getWorkout().name,
               subData: _session.getWorkout().description,
               style: kMediumBoldTextStyle,
             ),
-            Container(
-              child: _getTimeWidget(),
-            ),
-            Row(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    SummaryCard(
-                      label: "PERFORMED",
-                      data: _session.getPerformedRoutines().length.toString(),
-                      sub: "EXERCISES",
-                    ),
-                    SummaryCard(
-                      label: "SKIPPED",
-                      data: _session.getSkippedRoutines().length.toString(),
-                      sub: "EXERCISES",
-                    ),
-                  ],
-                ),
-                SizedBox(width: kSizedBoxHeight * 3),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SummaryCard(
-                        label: "",
-                        data: _session.getPerformedSets().toString(),
-                        sub: "SETS"),
-                    SummaryCard(
-                        label: "",
-                        data: _session.getSkippedSets().toString(),
-                        sub: "SETS"),
-                  ],
-                ),
-              ],
-            ),
-            Container(
-              height: 300.0,
-              width: 300.0,
-              child: charts.PieChart(
-                _generateChartData(),
-                defaultRenderer:
-                    charts.ArcRendererConfig(arcRendererDecorators: [
-                  charts.ArcLabelDecorator(
-                    insideLabelStyleSpec: charts.TextStyleSpec(
-                      fontSize: 16,
-                      color: charts.ColorUtil.fromDartColor(Colors.white),
-                    ),
-                    outsideLabelStyleSpec: charts.TextStyleSpec(
-                      fontSize: 16,
-                      color: charts.ColorUtil.fromDartColor(Colors.black),
+          ),
+          CustomCard(cardChild: _getTimeWidget()),
+          Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: CustomCard(
+                      cardChild: SummaryCard(
+                          label: "PERFORMED",
+                          data:
+                              _session.getPerformedRoutines().length.toString(),
+                          sub: "EXERCISES"),
                     ),
                   ),
-                ]),
+                  Expanded(
+                    child: CustomCard(
+                      cardChild: SummaryCard(
+                          label: "PERFORMED",
+                          data: _session.getPerformedSets().toString(),
+                          sub: "SETS"),
+                    ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
+              Container(
+                height: 220.0,
+                child: charts.PieChart(
+                  _generateChartData(),
+                  defaultRenderer:
+                      charts.ArcRendererConfig(arcRendererDecorators: [
+                    charts.ArcLabelDecorator(
+                      insideLabelStyleSpec: charts.TextStyleSpec(
+                        fontSize: 14,
+                        color: charts.ColorUtil.fromDartColor(Colors.white),
+                      ),
+                      outsideLabelStyleSpec: charts.TextStyleSpec(
+                        fontSize: 14,
+                        color: charts.ColorUtil.fromDartColor(Colors.black),
+                      ),
+                    ),
+                  ]),
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: CustomCard(
+                      cardChild: SummaryCard(
+                          label: "SKIPPED",
+                          data: _session.getSkippedRoutines().length.toString(),
+                          sub: "EXERCISES"),
+                    ),
+                  ),
+                  Expanded(
+                    child: CustomCard(
+                      cardChild: SummaryCard(
+                          label: "SKIPPED",
+                          data: _session.getSkippedSets().toString(),
+                          sub: "SETS"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationButton(
           label: "DONE",

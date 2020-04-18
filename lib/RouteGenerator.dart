@@ -18,6 +18,7 @@ import "package:lfti_app/screens/update_routine_page.dart";
 import "package:lfti_app/screens/view_workouts_page.dart";
 import "package:lfti_app/screens/update_workout_page.dart";
 import "package:lfti_app/screens/create_workout_page.dart";
+import "package:lfti_app/screens/account_page.dart";
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -30,6 +31,13 @@ class RouteGenerator {
       case "/login":
         if (args is Map<String, String>) {
           return MaterialPageRoute(builder: (_) => LoginPage(args));
+        } else {
+          return _errorRoute();
+        }
+        break;
+      case "/account":
+        if (args is User) {
+          return MaterialPageRoute(builder: (_) => AccountPage(args));
         } else {
           return _errorRoute();
         }

@@ -67,7 +67,7 @@ class WorkoutCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                flex: 4,
+                flex: 8,
                 child: Text(
                   this._workout.name,
                   style: _workoutNameTextStyle,
@@ -85,16 +85,16 @@ class WorkoutCard extends StatelessWidget {
                     )
             ],
           ),
-          SizedBox(height: kSmallSizedBoxHeight),
+          Divider(thickness: 3),
           Text(
             this._workout.description,
             style: _descriptionTextStyle,
           ),
           SizedBox(height: kSizedBoxHeight),
           Text(
-            this._workout == null
-                ? "No Routines yet"
-                : _workout.routines.length > 1
+            this._workout == null || this._workout.routines.isEmpty
+                ? "No Routines Created"
+                : _workout.routines.isNotEmpty
                     ? _numberOfExercices.toString() + " Exercise Routines"
                     : _numberOfExercices.toString() + " Exercise Routine",
             style: _routineCountTextStyle,

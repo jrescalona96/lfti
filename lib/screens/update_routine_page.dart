@@ -81,10 +81,10 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     });
   }
 
-  void _showWeightInputBox() async {
+  void _showWeightInputDialog() async {
     var currentWeight =
         _routine.weight != null ? _routine.weight.toString() : "0.0";
-    final weightTextController = TextEditingController(text: currentWeight);
+    final inputTextController = TextEditingController(text: currentWeight);
     await showDialog<int>(
       context: context,
       builder: (BuildContext context) {
@@ -94,10 +94,10 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
           ),
           content: TextFormField(
-            controller: weightTextController,
+            controller: inputTextController,
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             textAlign: TextAlign.center,
-            onTap: () => weightTextController.clear(),
+            onTap: () => inputTextController.clear(),
           ),
           actions: <Widget>[
             FlatButton(
@@ -115,7 +115,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
                 style: kSmallTextStyle,
               ),
               onPressed: () {
-                _updateWeight(weightTextController.text);
+                _updateWeight(inputTextController.text);
                 Navigator.of(context).pop();
               },
             ),
@@ -220,10 +220,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Update Routine",
-          style: kSmallTextStyle.copyWith(color: Colors.white),
-        ),
+        title: Text("Update Routine"),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -252,7 +249,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
                       data: this._weight != null
                           ? this._weight.toString()
                           : "Add weight",
-                      onTap: () => _showWeightInputBox(),
+                      onTap: () => _showWeightInputDialog(),
                     ),
                   ],
                 ),

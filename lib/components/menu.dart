@@ -11,68 +11,48 @@ class Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _navigateTo(String route) {
+      Navigator.pushNamed(context, route, arguments: _currentUser);
+    }
+
     return Drawer(
       child: Column(
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text(
-              _currentUser.getFirstName() + " " + _currentUser.getLastName(),
-              style: kMediumTextStyle,
-            ),
-            accountEmail: Text(
-              _currentUser.getEmail(),
-              style: kLabelTextStyle,
-            ),
+                _currentUser.getFirstName() + " " + _currentUser.getLastName(),
+                style: kMediumTextStyle),
+            accountEmail: Text(_currentUser.getEmail(),
+                style: kLabelTextStyle.copyWith(
+                    color: Colors.white, fontStyle: FontStyle.italic)),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Text(
-                _currentUser.getFirstName()[0] + _currentUser.getLastName()[0],
-                style:
-                    kLargeBoldTextStyle1x.copyWith(fontStyle: FontStyle.italic),
-              ),
+                  _currentUser.getFirstName()[0] +
+                      _currentUser.getLastName()[0],
+                  style: kLargeBoldTextStyle1x),
             ),
           ),
           ListTile(
-            title: Text(
-              "Dashboard",
-              style: kSmallTextStyle,
-            ),
-            onTap: () {
-              Navigator.pushNamed(context, "/dashboard",
-                  arguments: _currentUser);
-            },
-          ),
+              title: Text("Dashboard", style: kSmallTextStyle),
+              onTap: () => _navigateTo("/dashboard")),
           ListTile(
-            title: Text(
-              "Checklist",
-              style: kSmallTextStyle,
-            ),
-            onTap: () {
-              Navigator.pushNamed(context, "/updateChecklist",
-                  arguments: _currentUser);
-            },
-          ),
+              title: Text("Checklist", style: kSmallTextStyle),
+              onTap: () => _navigateTo("/updateChecklist")),
           ListTile(
-            title: Text(
-              "Workouts",
-              style: kSmallTextStyle,
-            ),
-            onTap: () {
-              Navigator.pushNamed(context, "/workouts",
-                  arguments: _currentUser);
-            },
-          ),
+              title: Text("Workouts", style: kSmallTextStyle),
+              onTap: () => _navigateTo("/workouts")),
           ListTile(
-            title: Text(
-              "Log out",
-              style: kSmallTextStyle,
-            ),
-            onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.clear();
-              Navigator.pushNamed(context, "/");
-            },
-          ),
+              title: Text("Account", style: kSmallTextStyle),
+              onTap: () => _navigateTo("/account")),
+          ListTile(
+              title: Text("Log out", style: kSmallTextStyle),
+              onTap: () {
+                SharedPreferences.getInstance().then((val) {
+                  val.clear();
+                  _navigateTo("/");
+                });
+              }),
         ],
       ),
     );

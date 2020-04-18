@@ -7,42 +7,43 @@ class SummaryCard extends StatelessWidget {
   final String subData;
   final String sub;
   final TextStyle style;
+
   SummaryCard({
     @required this.label,
     @required this.data,
-    this.subData = "",
+    this.subData,
     this.sub = "",
-    this.style: kLargeBoldTextStyle1x,
+    this.style = kLargeBoldTextStyle1x,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(bottom: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(label, style: kLabelTextStyle),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: <Widget>[
-              Text(
-                data,
-                style: style,
-              ),
-              Text(
-                "  $sub",
-                style: kLabelTextStyle,
-              ),
-            ],
-          ),
-          Text(
-            subData == null ? "" : subData,
-            style: kMediumLabelTextStyle,
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(label, style: kLabelTextStyle),
+        Divider(thickness: 2),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: <Widget>[
+            Text(
+              data,
+              style: style,
+            ),
+            Text(
+              "  $sub",
+              style: kLabelTextStyle,
+            ),
+          ],
+        ),
+        subData != null
+            ? Text(
+                subData.toString(),
+                style: kMediumLabelTextStyle,
+              )
+            : SizedBox(height: 0.0),
+      ],
     );
   }
 }

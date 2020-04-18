@@ -26,6 +26,7 @@ class User {
   String _email;
   Session _currentSession;
   Map _lastSession;
+  String _gymMembership;
 
   void initUserData() {
     try {
@@ -36,6 +37,7 @@ class User {
       this._email = getDocument().data["email"];
       this._lastSession = getDocument().data["lastSession"];
       this._checklist = getDocument().data["checklist"];
+      this._gymMembership = getDocument().data["gymMembership"];
       print("Success: User Initialized!");
     } catch (e) {
       print("Error: Failed to initialize user! " + e.toString());
@@ -50,6 +52,8 @@ class User {
   void setEmail(String s) => this._email = s;
 
   void setAuthResult(var res) => this._authRes = res;
+
+  void setGymMembership(String s) => this._gymMembership = s;
 
   void setDatabaseReference(DocumentReference ref) =>
       this._firestoreReference = ref;
@@ -91,28 +95,33 @@ class User {
   void setChecklistItemAt(int index, String s) => this._checklist[index] = s;
 
   /// getters
-  AuthResult getAuth() => _authRes;
+  AuthResult getAuth() => this._authRes;
 
   String getUID() => this._uid;
 
-  DocumentReference getFirestoreReference() => _firestoreReference;
+  DocumentReference getFirestoreReference() => this._firestoreReference;
 
-  DocumentSnapshot getDocument() => _document;
+  DocumentSnapshot getDocument() => this._document;
 
-  String getFirstName() => _firstName;
+  String getFirstName() => this._firstName;
 
-  String getLastName() => _lastName;
+  String getLastName() => this._lastName;
 
-  String getEmail() => _email;
+  String getEmail() => this._email;
 
-  Map getLastSession() =>
-      _lastSession == null ? getDocument().data["lastSession"] : _lastSession;
+  String getGymMembership() => this._gymMembership;
 
-  Map getNextSession() =>
-      _lastSession != null ? getDocument().data["nextSession"] : _lastSession;
+  Map getLastSession() => this._lastSession == null
+      ? getDocument().data["lastSession"]
+      : this._lastSession;
 
-  List getChecklist() =>
-      _checklist == null ? getDocument().data["checklist"] : _checklist;
+  Map getNextSession() => this._lastSession != null
+      ? getDocument().data["nextSession"]
+      : this._lastSession;
+
+  List getChecklist() => this._checklist == null
+      ? getDocument().data["checklist"]
+      : this._checklist;
 
   List<Workout> getWorkoutList() => this._workouts;
 
@@ -156,21 +165,18 @@ class User {
     var routines = List<Routine>();
     for (var r in list) {
       if (r["type"] == "COUNTED") {
-        routines.add(
-          Routine(
-            exercise: Exercise(
-                name: r["exercise"]["name"], focus: r["exercise"]["focus"]),
-            reps: r["reps"],
-            sets: r["sets"],
-            weight: r["weight"],
-          ),
-        );
+        routines.add(Routine(
+          exercise: Exercise(
+              name: r["exercise"]["name"], focus: r["exercise"]["focus"]),
+          reps: r["reps"],
+          sets: r["sets"],
+          weight: r["weight"],
+        ));
       } else {
-        routines.add(
-          TimedRoutine(
-              timeToPerformInSeconds: r["timeToPerformInSeconds"],
-              exercise: Exercise(name: "Rest", focus: "--")),
-        );
+        routines.add(TimedRoutine(
+          timeToPerformInSeconds: r["timeToPerformInSeconds"],
+          exercise: Exercise(name: "Rest", focus: "--"),
+        ));
       }
     }
     return routines;

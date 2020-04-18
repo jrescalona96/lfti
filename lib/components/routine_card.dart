@@ -58,8 +58,9 @@ class RoutineCard extends StatelessWidget {
                 Row(
                   children: <Widget>[
                     Expanded(
+                      flex: 8,
                       child: Text(
-                        routine.exercise.name,
+                        this.routine.exercise.name.toString(),
                         style: kMediumBoldTextStyle,
                       ),
                     ),
@@ -76,17 +77,15 @@ class RoutineCard extends StatelessWidget {
                           ),
                   ],
                 ),
-                SizedBox(
-                  height: kSmallSizedBoxHeight,
-                ),
+                Divider(thickness: 3),
                 // Exercise Description
                 Container(
-                  child: routine is TimedRoutine
+                  child: this.routine is TimedRoutine
                       ? null
                       : Text(
-                          routine.exercise.focus == null
+                          this.routine.exercise.focus == null
                               ? "Null"
-                              : routine.exercise.focus,
+                              : this.routine.exercise.focus,
                           style: kSmallTextStyle,
                         ),
                 ),

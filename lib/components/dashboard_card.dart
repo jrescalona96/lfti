@@ -22,7 +22,9 @@ class DashboardCard extends StatelessWidget {
                 this.heading,
                 style: kLabelTextStyle,
               ),
-              SizedBox(height: kTextSpacerSizedBoxHeight),
+              Divider(
+                thickness: 3,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[

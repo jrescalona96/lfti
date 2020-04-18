@@ -43,9 +43,7 @@ class _ViewWorkoutsPageState extends State<ViewWorkoutsPage> {
             );
           },
         ),
-        title: Text(
-          "WORKOUTS",
-        ),
+        title: Text("Workouts"),
       ),
       drawer: Menu(_currentUser),
       body: _workoutList.length > 0

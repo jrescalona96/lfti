@@ -167,42 +167,39 @@ class _ChecklistPageState extends State<ChecklistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-              );
+      appBar: AppBar(
+        leading: Builder(builder: (BuildContext context) {
+          return IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
             },
-          ),
-          title: Text(
-            "CHECKLIST",
-          ),
-        ),
-        drawer: Menu(this._currentUser),
-        body: this._checklist.isNotEmpty
-            ? ReorderableListView(
-                onReorder: _onReorder,
-                children: _getChecklistItems(),
-              )
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    EmptyStateNotification(
-                        sub: "Add Items to your Checklist first."),
-                  ],
-                ),
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          );
+        }),
+        title: Text("Checklist"),
+      ),
+      drawer: Menu(this._currentUser),
+      body: this._checklist.isNotEmpty
+          ? ReorderableListView(
+              onReorder: _onReorder,
+              children: _getChecklistItems(),
+            )
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  EmptyStateNotification(
+                      sub: "Add Items to your Checklist first."),
+                ],
               ),
-        floatingActionButton: CustomFloatingActionButton(
-          icon: Icons.add,
-          onPressed: () => _showAddChecklistDialog(),
-        ),
-        bottomNavigationBar: BottomNavigationButton(
-            label: "SAVE", action: _saveChanges, color: kBlueButtonColor));
+            ),
+      floatingActionButton: CustomFloatingActionButton(
+        icon: Icons.add,
+        onPressed: () => _showAddChecklistDialog(),
+      ),
+      bottomNavigationBar: BottomNavigationButton(
+          label: "SAVE", action: _saveChanges, color: kBlueButtonColor),
+    );
   }
 }

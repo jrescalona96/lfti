@@ -115,20 +115,16 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
-        ),
-        title: Text(
-          "WORKOUTS",
-        ),
+        leading: Builder(builder: (BuildContext context) {
+          return IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          );
+        }),
+        title: Text("Workouts"),
       ),
       drawer: Menu(_currentUser),
       body: _workoutList.isNotEmpty

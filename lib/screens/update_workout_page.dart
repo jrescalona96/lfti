@@ -61,15 +61,6 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
           ),
           actions: <Widget>[
             CustomDialogButton(
-              label: "DELETE",
-              onPressed: () {
-                setState(() {
-                  this._currentUser.deleteRoutineAt(this._workoutIndex, index);
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-            CustomDialogButton(
               label: "CONFIRM",
               onPressed: () {
                 setState(() {

@@ -8,18 +8,13 @@ class Crud {
   User _user;
   Crud(this._user);
 
-  void updateWorkoutList() {
-    String ref = "workouts";
-    List data = _generateWorkoutListQueryMap();
-    updateFireStore(ref, data);
-  }
-
   void signUp() {
     var sampleWorkoutList = [
       {
         "id": "W" + DateFormat(kFormatDateId).format(DateTime.now()),
         "name": "Chestday",
         "description": "Monday Workout",
+        "gymMembership": "",
         "routines": [
           {
             "type": "COUNTED",
@@ -133,6 +128,12 @@ class Crud {
         .catchError((e) => print("Error: Failed to write data! $e"));
   }
 
+  void updateWorkoutList() {
+    String ref = "workouts";
+    List data = _generateWorkoutListQueryMap();
+    updateDatabase(ref, data);
+  }
+
   List _generateWorkoutListQueryMap() {
     return _user
         .getWorkoutList()
@@ -165,14 +166,17 @@ class Crud {
         .toList();
   }
 
-  void updateFireStore(String ref, var data) {
+  void updateDatabase(String ref, var data) {
     Firestore.instance.runTransaction((transaction) async {
       transaction
           .update(_user.getFirestoreReference(), {ref: data})
           .then((val) => print("Success: Database uccessfully updated!"))
-          .catchError((e) => print(
+          .catchError(
+            (e) => print(
               "Error: Failed to update new data! ref:$ref\ndata:\n\n$data\n\n : " +
-                  e.toString()));
+                  e.toString(),
+            ),
+          );
     });
   }
 }
