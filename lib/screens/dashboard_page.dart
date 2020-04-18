@@ -35,12 +35,14 @@ class _DashboardPageState extends State<DashboardPage> {
   Future<List<Map<String, dynamic>>> _fetchLocations() async {
     var client = http.Client();
     final String placesKey = Keys.placesAPI;
-    final double distance = 16093.4; // distance in meters
-    final String searchKey =
-        _currentUser.getGymMembership().toString().replaceAll(" ", "+");
+    final double radius = 24140.2; // (meters) 15 miles
+    final String searchKey = _currentUser.getGymMembership() != ""
+        ? _currentUser.getGymMembership().toString().replaceAll(" ", "+")
+        : "gym+wightlifting+la+fitness+24+hr+crunch+planet+fitness";
+
     final loc = List<Map<String, dynamic>>();
     final url =
-        "https://maps.googleapis.com/maps/api/place/textsearch/json?query=$searchKey&radius=$distance&key=$placesKey";
+        "https://maps.googleapis.com/maps/api/place/textsearch/json?query=$searchKey&radius=$radius&key=$placesKey";
     try {
       http.Response uriResponse = await client.get(url);
       if (uriResponse.statusCode == 200) {
@@ -103,9 +105,11 @@ class _DashboardPageState extends State<DashboardPage> {
               ? Builder(
                   builder: (context) => GestureDetector(
                     onLongPress: () {
-                      Clipboard.setData(ClipboardData(
-                        text: _nearbyLocations[0]["address"].toString(),
-                      ));
+                      Clipboard.setData(
+                        ClipboardData(
+                          text: _nearbyLocations[0]["address"].toString(),
+                        ),
+                      );
                       Scaffold.of(context).showSnackBar(SnackBar(
                         duration: Duration(seconds: 1),
                         content: Text(
@@ -115,11 +119,17 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                       ));
                     },
-                    child: DashboardCard(
-                      heading: "NEAREST GYM",
-                      mainInfo: _nearbyLocations[0]["name"].toString(),
-                      details: _nearbyLocations[0]["address"].toString(),
-                    ),
+                    child: _nearbyLocations.isNotEmpty
+                        ? DashboardCard(
+                            heading: "NEARBY FITNESS CENTER",
+                            mainInfo: _nearbyLocations[0]["name"].toString(),
+                            details: _nearbyLocations[0]["address"].toString(),
+                          )
+                        : DashboardCard(
+                            heading: "NEARBY FITNESS CENTER",
+                            mainInfo:
+                                "No nearby fitness centers within 15 miles",
+                          ),
                   ),
                 )
               : CustomCard(
@@ -137,10 +147,11 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                 ),
+          // checklist section
           CustomCard(
-            // short circuit eval
+            // short circuit
             cardChild: _currentUser.getChecklist() != null &&
-                    _currentUser.getChecklist().length > 0
+                    _currentUser.getChecklist().isNotEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
