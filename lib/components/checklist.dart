@@ -23,9 +23,9 @@ class _ChecklistState extends State<Checklist> {
     return Column(
       children: _checklist.map((item) {
         var style = item.isChecked()
-            ? kMediumTextStyle.copyWith(
+            ? kSmallTextStyle.copyWith(
                 color: Colors.grey, decoration: TextDecoration.lineThrough)
-            : kMediumTextStyle;
+            : kSmallBoldTextStyle;
         return Column(
           children: <Widget>[
             CheckboxListTile(

@@ -46,11 +46,10 @@ class WorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var cardColor = _isIncompleteWorkout()
-        ? kRedButtonColor.withOpacity(0.8)
-        : kAmberButtonColor;
+    var cardColor =
+        _isIncompleteWorkout() ? kAmberAccentColor : kBlueAccentColor.shade100;
     var _workoutNameTextStyle = kMediumBoldTextStyle;
-    var _descriptionTextStyle = kLabelTextStyle;
+    var _descriptionTextStyle = kSmallTextStyle;
     var _routineCountTextStyle = kSmallBoldTextStyle;
     var _numberOfExercices = _setNumberOfExercises();
 
@@ -60,6 +59,7 @@ class WorkoutCard extends StatelessWidget {
       onTap: this.onTap,
       dottedBorder: this.dottedBorder,
       cardChild: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -90,7 +90,6 @@ class WorkoutCard extends StatelessWidget {
             this._workout.description,
             style: _descriptionTextStyle,
           ),
-          SizedBox(height: kSizedBoxHeight),
           Text(
             this._workout == null || this._workout.routines.isEmpty
                 ? "No Routines Created"

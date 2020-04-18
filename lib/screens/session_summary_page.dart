@@ -69,12 +69,12 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
       CountedSets(
         category: "PERFORMED",
         data: this._session.getPerformedSets(),
-        color: kBlueButtonColor,
+        color: kBlueAccentColor.shade100,
       ),
       CountedSets(
         category: "SKIPPED",
         data: this._session.getSkippedSets(),
-        color: kAmberButtonColor,
+        color: kAmberAccentColor,
       ),
     ];
     return [
@@ -147,46 +147,52 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
                 children: <Widget>[
                   Expanded(
                     child: CustomCard(
+                      color: kBlueAccentColor.shade100,
                       cardChild: SummaryCard(
-                          label: "PERFORMED",
-                          data:
-                              _session.getPerformedRoutines().length.toString(),
-                          sub: "EXERCISES"),
+                        label: "PERFORMED",
+                        data: _session.getPerformedRoutines().length.toString(),
+                        sub: "EXERCISES",
+                      ),
                     ),
                   ),
                   Expanded(
                     child: CustomCard(
+                      color: kBlueAccentColor.shade100,
                       cardChild: SummaryCard(
-                          label: "PERFORMED",
-                          data: _session.getPerformedSets().toString(),
-                          sub: "SETS"),
+                        label: "PERFORMED",
+                        data: _session.getPerformedSets().toString(),
+                        sub: "SETS",
+                      ),
                     ),
                   ),
                 ],
               ),
+              // pie chart
               Container(
                 height: 220.0,
                 child: charts.PieChart(
                   _generateChartData(),
-                  defaultRenderer:
-                      charts.ArcRendererConfig(arcRendererDecorators: [
-                    charts.ArcLabelDecorator(
-                      insideLabelStyleSpec: charts.TextStyleSpec(
-                        fontSize: 14,
-                        color: charts.ColorUtil.fromDartColor(Colors.white),
+                  defaultRenderer: charts.ArcRendererConfig(
+                      //     arcRendererDecorators: [
+                      // charts.ArcLabelDecorator(
+                      //   insideLabelStyleSpec: charts.TextStyleSpec(
+                      //     fontSize: 14,
+                      //     color: charts.ColorUtil.fromDartColor(Colors.white),
+                      //   ),
+                      //   outsideLabelStyleSpec: charts.TextStyleSpec(
+                      //     fontSize: 14,
+                      //     color: charts.ColorUtil.fromDartColor(Colors.black),
+                      //   ),
+                      // ),
+                      // ]
                       ),
-                      outsideLabelStyleSpec: charts.TextStyleSpec(
-                        fontSize: 14,
-                        color: charts.ColorUtil.fromDartColor(Colors.black),
-                      ),
-                    ),
-                  ]),
                 ),
               ),
               Row(
                 children: <Widget>[
                   Expanded(
                     child: CustomCard(
+                      color: kAmberAccentColor,
                       cardChild: SummaryCard(
                           label: "SKIPPED",
                           data: _session.getSkippedRoutines().length.toString(),
@@ -195,6 +201,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
                   ),
                   Expanded(
                     child: CustomCard(
+                      color: kAmberAccentColor,
                       cardChild: SummaryCard(
                           label: "SKIPPED",
                           data: _session.getSkippedSets().toString(),

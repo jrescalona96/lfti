@@ -357,14 +357,16 @@ class _SessionPageState extends State<SessionPage> {
           onLongPress: () => _showSessionConfirmationDialogBox(),
           child: _session.isFinished()
               ? BottomNavigationButton(
-                  label: "END",
+                  label: "",
+                  icon: Icons.stop,
                   action: () {
                     _showSessionConfirmationDialogBox();
                   },
                   color: kRedButtonColor,
                 )
               : BottomNavigationButton(
-                  label: _session.isPaused ? "CONTINUE" : "PAUSE",
+                  label: _session.isPaused ? "" : "",
+                  icon: _session.isPaused ? Icons.play_arrow : Icons.pause,
                   action: () => _togglePause(),
                   color:
                       _session.isPaused ? kGreenButtonColor : kBlueButtonColor,

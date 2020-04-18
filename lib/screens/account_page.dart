@@ -134,15 +134,26 @@ class ContentCard extends StatelessWidget {
           Text(label.toString()),
           Divider(thickness: 3),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                content == "" ? "Not Specified" : content.toString(),
-                style: content == ""
-                    ? kSmallTextStyle.copyWith(
-                        fontStyle: FontStyle.italic, color: Colors.grey)
-                    : kSmallBoldTextStyle,
+              Expanded(
+                flex: 10,
+                child: Text(
+                  content == "" ? "Not Specified" : content.toString(),
+                  style: content == ""
+                      ? kSmallTextStyle.copyWith(
+                          fontStyle: FontStyle.italic, color: Colors.grey)
+                      : kSmallBoldTextStyle,
+                ),
               ),
-              FlatButton(onPressed: onTap, child: Text("edit"))
+              onTap != null
+                  ? Expanded(
+                      child: GestureDetector(
+                        onTap: onTap,
+                        child: Icon(Icons.edit),
+                      ),
+                    )
+                  : SizedBox()
             ],
           )
         ],

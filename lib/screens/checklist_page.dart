@@ -167,9 +167,12 @@ class _ChecklistPageState extends State<ChecklistPage> {
       ),
       drawer: Menu(this._currentUser),
       body: this._checklist.isNotEmpty
-          ? ReorderableListView(
-              onReorder: _onReorder,
-              children: _getChecklistItems(),
+          ? Theme(
+              data: ThemeData(canvasColor: Colors.transparent),
+              child: ReorderableListView(
+                onReorder: _onReorder,
+                children: _getChecklistItems(),
+              ),
             )
           : EmptyStateNotification(sub: "Add Items to your Checklist first."),
       floatingActionButton: CustomFloatingActionButton(

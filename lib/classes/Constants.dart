@@ -32,6 +32,8 @@ final kAmberButtonColor = Colors.amberAccent[700];
 final kIconColor = Color(0xFF404040);
 const kGrayTextColor = Colors.white60;
 final kFloatingActionButtonColor = Colors.blue;
+final kAmberAccentColor = Colors.amberAccent;
+final kBlueAccentColor = Colors.blueAccent;
 
 const kLabelTextStyle = TextStyle(
   fontSize: 12.0,

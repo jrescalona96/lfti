@@ -43,8 +43,9 @@ class RoutineCard extends StatelessWidget {
       shadow: this.shadowOn,
       key: Key(routine.id),
       onTap: this.onTap,
-      color:
-          routine.exercise.name == "Rest" ? kCardBackground : kAmberButtonColor,
+      color: routine.exercise.name == "Rest"
+          ? kCardBackground
+          : kBlueAccentColor.shade100,
       dottedBorder: this.dottedBorder,
       cardChild: Container(
         child: Column(
@@ -91,7 +92,6 @@ class RoutineCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: kSizedBoxHeight),
             Row(
               children: <Widget>[
                 Text(

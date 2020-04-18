@@ -34,18 +34,23 @@ class Menu extends StatelessWidget {
             ),
           ),
           ListTile(
+              trailing: Icon(Icons.dashboard),
               title: Text("Dashboard", style: kSmallTextStyle),
               onTap: () => _navigateTo("/dashboard")),
           ListTile(
+              trailing: Icon(Icons.check),
               title: Text("Checklist", style: kSmallTextStyle),
               onTap: () => _navigateTo("/updateChecklist")),
           ListTile(
+              trailing: Icon(Icons.fitness_center),
               title: Text("Workouts", style: kSmallTextStyle),
               onTap: () => _navigateTo("/workouts")),
           ListTile(
+              trailing: Icon(Icons.account_circle),
               title: Text("Account", style: kSmallTextStyle),
               onTap: () => _navigateTo("/account")),
           ListTile(
+              trailing: Icon(Icons.exit_to_app),
               title: Text("Log out", style: kSmallTextStyle),
               onTap: () {
                 SharedPreferences.getInstance().then((val) {

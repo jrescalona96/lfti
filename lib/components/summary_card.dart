@@ -7,7 +7,8 @@ class SummaryCard extends StatelessWidget {
   final String subData;
   final String sub;
   final TextStyle style;
-
+  final TextStyle labelTextStyle =
+      kLabelTextStyle.copyWith(color: Colors.black);
   SummaryCard({
     @required this.label,
     @required this.data,
@@ -21,8 +22,8 @@ class SummaryCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(label, style: kLabelTextStyle),
-        Divider(thickness: 2),
+        Text(label, style: labelTextStyle),
+        Divider(thickness: 3),
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
@@ -33,14 +34,14 @@ class SummaryCard extends StatelessWidget {
             ),
             Text(
               "  $sub",
-              style: kLabelTextStyle,
+              style: labelTextStyle,
             ),
           ],
         ),
         subData != null
             ? Text(
                 subData.toString(),
-                style: kMediumLabelTextStyle,
+                style: labelTextStyle,
               )
             : SizedBox(height: 0.0),
       ],
