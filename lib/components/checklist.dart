@@ -22,12 +22,16 @@ class _ChecklistState extends State<Checklist> {
   Widget build(BuildContext context) {
     return Column(
       children: _checklist.map((item) {
+        var style = item.isChecked()
+            ? kMediumTextStyle.copyWith(
+                color: Colors.grey, decoration: TextDecoration.lineThrough)
+            : kMediumTextStyle;
         return Column(
           children: <Widget>[
             CheckboxListTile(
                 dense: true,
                 value: item.isChecked(),
-                title: Text(item.getDescription(), style: kSmallBoldTextStyle),
+                title: Text(item.getDescription(), style: style),
                 onChanged: (newStatus) {
                   setState(() {
                     item.setStatus(newStatus);
