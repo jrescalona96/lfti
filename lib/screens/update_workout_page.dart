@@ -142,7 +142,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
       "user": this._currentUser,
       "workoutIndex": this._workoutIndex,
       "routineIndex": index
-    });
+    }).then((val) => this._currentUser = val);
   }
 
   List<Widget> _getRoutineCards() {
@@ -234,7 +234,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                 CustomTextFormField(
                   textController: _nameTextController,
                   label: "Name",
-                ), // workout description
+                ),
                 CustomTextFormField(
                   textController: _descriptionTextController,
                   label: "Description",
@@ -252,7 +252,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
                             kLineDivider,
                           ],
                         )
-                      : null,
+                      : SizedBox(),
                 ),
               ],
             ),
@@ -269,7 +269,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
         label: "SAVE CHANGES",
         action: () {
           _saveChanges();
-          Navigator.pushNamed(context, "/workouts", arguments: _currentUser);
+          Navigator.pop(context, _currentUser);
         },
         color: kBlueButtonColor,
       ),

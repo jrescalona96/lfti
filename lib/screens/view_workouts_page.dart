@@ -8,6 +8,7 @@ import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/components/workout_card.dart";
 import "package:lfti_app/components/menu.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
+import "package:lfti_app/components/custom_snackbar.dart";
 
 class ViewWorkoutsPage extends StatefulWidget {
   final User _currentUser;
@@ -43,10 +44,10 @@ class _ViewWorkoutsPageState extends State<ViewWorkoutsPage> {
             );
           },
         ),
-        title: Text("Workouts"),
+        title: Text("Choose Workout"),
       ),
       drawer: Menu(_currentUser),
-      body: _workoutList.length > 0
+      body: _workoutList.isNotEmpty
           ? CustomScrollView(
               slivers: <Widget>[
                 SliverList(
@@ -54,16 +55,26 @@ class _ViewWorkoutsPageState extends State<ViewWorkoutsPage> {
                       (BuildContext context, int index) {
                     Widget item;
                     if (index < _currentUser.getWorkoutList().length) {
+                      var workout = this._currentUser.getWorkoutAt(index);
                       item = WorkoutCard(
-                          user: _currentUser,
-                          index: index,
-                          onTap: () {
-                            Navigator.of(context)
-                                .pushNamed('/viewRoutines', arguments: {
-                              "user": this._currentUser,
-                              "workout": this._currentUser.getWorkoutAt(index)
-                            });
-                          });
+                        user: _currentUser,
+                        index: index,
+                        onTap: workout.routines.isNotEmpty
+                            ? () {
+                                Navigator.of(context).pushNamed('/viewRoutines',
+                                    arguments: {
+                                      "user": this._currentUser,
+                                      "workout": workout
+                                    });
+                              }
+                            : () {
+                                return Scaffold.of(context).showSnackBar(
+                                  CustomSnackBar(
+                                          message: "Create routines first!")
+                                      .build(context),
+                                );
+                              },
+                      );
                     }
                     return item;
                   }),

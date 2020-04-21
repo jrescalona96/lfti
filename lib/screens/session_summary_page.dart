@@ -129,90 +129,95 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
         ),
       ),
       drawer: Menu(_currentUser),
-      body: ListView(
-        children: <Widget>[
-          CustomCard(
-            cardChild: SummaryCard(
-              label: "WORKOUT",
-              data: _session.getWorkout().name,
-              subData: _session.getWorkout().description,
-              style: kMediumBoldTextStyle,
+      body: WillPopScope(
+        onWillPop: () => Future.value(false),
+        child: ListView(
+          children: <Widget>[
+            CustomCard(
+              cardChild: SummaryCard(
+                label: "WORKOUT",
+                data: _session.getWorkout().name,
+                subData: _session.getWorkout().description,
+                style: kMediumBoldTextStyle,
+              ),
             ),
-          ),
-          CustomCard(cardChild: _getTimeWidget()),
-          Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: CustomCard(
-                      color: kBlueAccentColor.shade100,
-                      cardChild: SummaryCard(
-                        label: "PERFORMED",
-                        data: _session.getPerformedRoutines().length.toString(),
-                        sub: "EXERCISES",
+            CustomCard(cardChild: _getTimeWidget()),
+            Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: CustomCard(
+                        color: kBlueAccentColor.shade100,
+                        cardChild: SummaryCard(
+                          label: "PERFORMED",
+                          data:
+                              _session.getPerformedRoutines().length.toString(),
+                          sub: "EXERCISES",
+                        ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: CustomCard(
-                      color: kBlueAccentColor.shade100,
-                      cardChild: SummaryCard(
-                        label: "PERFORMED",
-                        data: _session.getPerformedSets().toString(),
-                        sub: "SETS",
+                    Expanded(
+                      child: CustomCard(
+                        color: kBlueAccentColor.shade100,
+                        cardChild: SummaryCard(
+                          label: "PERFORMED",
+                          data: _session.getPerformedSets().toString(),
+                          sub: "SETS",
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              // pie chart
-              Container(
-                height: 220.0,
-                child: charts.PieChart(
-                  _generateChartData(),
-                  defaultRenderer: charts.ArcRendererConfig(
-                      //     arcRendererDecorators: [
-                      // charts.ArcLabelDecorator(
-                      //   insideLabelStyleSpec: charts.TextStyleSpec(
-                      //     fontSize: 14,
-                      //     color: charts.ColorUtil.fromDartColor(Colors.white),
-                      //   ),
-                      //   outsideLabelStyleSpec: charts.TextStyleSpec(
-                      //     fontSize: 14,
-                      //     color: charts.ColorUtil.fromDartColor(Colors.black),
-                      //   ),
-                      // ),
-                      // ]
-                      ),
+                  ],
                 ),
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: CustomCard(
-                      color: kAmberAccentColor,
-                      cardChild: SummaryCard(
-                          label: "SKIPPED",
-                          data: _session.getSkippedRoutines().length.toString(),
-                          sub: "EXERCISES"),
-                    ),
+                // pie chart
+                Container(
+                  height: 220.0,
+                  child: charts.PieChart(
+                    _generateChartData(),
+                    defaultRenderer: charts.ArcRendererConfig(
+                        //     arcRendererDecorators: [
+                        // charts.ArcLabelDecorator(
+                        //   insideLabelStyleSpec: charts.TextStyleSpec(
+                        //     fontSize: 14,
+                        //     color: charts.ColorUtil.fromDartColor(Colors.white),
+                        //   ),
+                        //   outsideLabelStyleSpec: charts.TextStyleSpec(
+                        //     fontSize: 14,
+                        //     color: charts.ColorUtil.fromDartColor(Colors.black),
+                        //   ),
+                        // ),
+                        // ]
+                        ),
                   ),
-                  Expanded(
-                    child: CustomCard(
-                      color: kAmberAccentColor,
-                      cardChild: SummaryCard(
-                          label: "SKIPPED",
-                          data: _session.getSkippedSets().toString(),
-                          sub: "SETS"),
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: CustomCard(
+                        color: kAmberAccentColor,
+                        cardChild: SummaryCard(
+                            label: "SKIPPED",
+                            data:
+                                _session.getSkippedRoutines().length.toString(),
+                            sub: "EXERCISES"),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+                    Expanded(
+                      child: CustomCard(
+                        color: kAmberAccentColor,
+                        cardChild: SummaryCard(
+                            label: "SKIPPED",
+                            data: _session.getSkippedSets().toString(),
+                            sub: "SETS"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationButton(
           label: "DONE",

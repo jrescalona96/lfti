@@ -209,11 +209,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     Workout workout = _currentUser.getWorkoutAt(this._workoutIndex);
     workout.setRoutineAt(this._routineIndex, this._routine);
     this._currentUser.setWorkoutAt(this._workoutIndex, workout);
-    Navigator.pushNamed(
-      context,
-      "/updateWorkout",
-      arguments: {"user": _currentUser, "index": _workoutIndex},
-    );
+    Navigator.pop(context, {"user": _currentUser, "index": _workoutIndex});
   }
 
   @override

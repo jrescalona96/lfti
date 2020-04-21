@@ -10,6 +10,7 @@ import "package:lfti_app/classes/Keys.dart";
 
 // component imports
 import "package:lfti_app/components/checklist.dart";
+import 'package:lfti_app/components/custom_snackbar.dart';
 import "package:lfti_app/components/dashboard_card.dart";
 import "package:lfti_app/components/custom_card.dart";
 import "package:lfti_app/components/bottom_navigation_button.dart";
@@ -110,14 +111,10 @@ class _DashboardPageState extends State<DashboardPage> {
                           text: _nearbyLocations[0]["address"].toString(),
                         ),
                       );
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        duration: Duration(seconds: 1),
-                        content: Text(
-                          "Copied to Clipboard",
-                          style: kSmallTextStyle.copyWith(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                      ));
+                      Scaffold.of(context).showSnackBar(
+                        CustomSnackBar(message: "Copied to Clipboard")
+                            .build(context),
+                      );
                     },
                     child: _nearbyLocations.isNotEmpty
                         ? DashboardCard(
