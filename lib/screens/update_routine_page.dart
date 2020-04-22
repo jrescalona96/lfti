@@ -4,8 +4,6 @@ import "package:numberpicker/numberpicker.dart";
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/Routine.dart";
-import "package:lfti_app/classes/Workout.dart";
-import "package:lfti_app/classes/User.dart";
 
 // component imports
 import "package:lfti_app/components/bottom_navigation_button.dart";
@@ -14,7 +12,7 @@ import "package:lfti_app/components/routine_data_card.dart";
 import "package:lfti_app/components/custom_text_form_field.dart";
 
 class UpdateRoutinePage extends StatefulWidget {
-  final Map _args;
+  final Routine _args;
   UpdateRoutinePage(this._args);
 
   @override
@@ -22,23 +20,14 @@ class UpdateRoutinePage extends StatefulWidget {
 }
 
 class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
-  User _currentUser;
   Routine _routine;
-  int _workoutIndex;
-  int _routineIndex;
   TextEditingController _nameTextController;
   String _exerciseFocus;
   int _sets, _reps;
   double _weight;
 
-  _UpdateRoutinePageState(Map args) {
-    this._currentUser = args["user"];
-    this._workoutIndex = args["workoutIndex"];
-    this._routineIndex = args["routineIndex"];
-    this._routine = this
-        ._currentUser
-        .getWorkoutAt(this._workoutIndex)
-        .routines[this._routineIndex];
+  _UpdateRoutinePageState(Routine r) {
+    this._routine = r;
     this._nameTextController =
         TextEditingController(text: this._routine.exercise.name);
     this._sets = this._routine.sets;
@@ -126,7 +115,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
   }
 
   void _showMuscleGroupOptionDialog() async {
-    var _dropdown = CustomDropdownMenu(
+    var _dropdownMenu = CustomDropdownMenu(
       initialValue: this._routine.exercise.focus,
       items: ["Chest", "Back", "Bicep", "Tricep", "Legs", "Shoulder", "--"],
     );
@@ -136,9 +125,9 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
         return AlertDialog(
           title: Text("Choose Muscle Group"),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
-          content: _dropdown,
+          content: _dropdownMenu,
           actions: <Widget>[
             FlatButton(
                 child: Text(
@@ -154,7 +143,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
                   style: kSmallTextStyle,
                 ),
                 onPressed: () {
-                  _updateMuscleGroupFocus(_dropdown.getValue());
+                  _updateMuscleGroupFocus(_dropdownMenu.getValue());
                   Navigator.of(context).pop();
                 }),
           ],
@@ -183,7 +172,6 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     try {
       double w = double.parse(val.trim());
       setState(() {
-        this._routine.weight = w;
         this._weight = w;
       });
     } catch (e) {
@@ -197,7 +185,7 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     });
   }
 
-  void _saveChanges() {
+  void _updateUser() {
     _routine.exercise.name = _nameTextController.text.isEmpty
         ? "Unnamed Routine"
         : _nameTextController.text.toString();
@@ -205,11 +193,10 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     _routine.sets = this._sets;
     _routine.reps = this._reps;
     _routine.weight = this._weight;
+  }
 
-    Workout workout = _currentUser.getWorkoutAt(this._workoutIndex);
-    workout.setRoutineAt(this._routineIndex, this._routine);
-    this._currentUser.setWorkoutAt(this._workoutIndex, workout);
-    Navigator.pop(context, {"user": _currentUser, "index": _workoutIndex});
+  void _navigateBack() {
+    Navigator.pop(context, this._routine);
   }
 
   @override
@@ -217,6 +204,10 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Update Routine"),
+        automaticallyImplyLeading: false,
+        leading: BackButton(
+          onPressed: () => _navigateBack(),
+        ),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -272,8 +263,11 @@ class _UpdateRoutinePageState extends State<UpdateRoutinePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationButton(
-          label: "SAVE CHANGES",
-          action: () => _saveChanges(),
+          label: "SAVE",
+          action: () {
+            _updateUser();
+            _navigateBack();
+          },
           color: kBlueButtonColor),
     );
   }

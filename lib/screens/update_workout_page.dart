@@ -18,7 +18,7 @@ import "package:lfti_app/components/custom_dialog_button.dart";
 import "package:lfti_app/components/custom_text_form_field.dart";
 
 class UpdateWorkoutPage extends StatefulWidget {
-  final Map _args;
+  final Workout _args;
   UpdateWorkoutPage(this._args);
 
   @override
@@ -26,24 +26,18 @@ class UpdateWorkoutPage extends StatefulWidget {
 }
 
 class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
-  User _currentUser;
   Workout _workout;
-  int _workoutIndex;
-  List<Routine> _routineList;
+  List<dynamic> _routineList;
   String _name, _description;
   TextEditingController _nameTextController, _descriptionTextController;
-  Crud crudController;
 
-  _UpdateWorkoutPageState(Map args) {
-    this._currentUser = args["user"];
-    this._workoutIndex = args["index"];
-    this._workout = this._currentUser.getWorkoutAt(this._workoutIndex);
+  _UpdateWorkoutPageState(Workout args) {
+    this._workout = args;
     this._routineList = this._workout.routines;
     this._name = this._workout.name;
     this._description = this._workout.description;
     this._nameTextController = TextEditingController(text: _name);
     this._descriptionTextController = TextEditingController(text: _description);
-    crudController = Crud(_currentUser);
   }
 
   void _showUpdateRestTimeDialog(int index) async {
@@ -138,11 +132,11 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
   }
 
   void _updateExerciseRoutine(int index) {
-    Navigator.pushNamed(context, "/updateRoutine", arguments: {
-      "user": this._currentUser,
-      "workoutIndex": this._workoutIndex,
-      "routineIndex": index
-    }).then((val) => this._currentUser = val);
+    Navigator.pushNamed(context, "/updateRoutine",
+            arguments: this._workout.routines[index])
+        .then((val) {
+      setState(() => this._workout.routines[index] = val);
+    });
   }
 
   List<Widget> _getRoutineCards() {
@@ -174,27 +168,24 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
 
   void _duplicateRoutine(int index) {
     int nextIndex = index + 1;
-    Exercise e = Exercise(
-        name: _routineList[index].exercise.name,
-        focus: _routineList[index].exercise.focus);
-    Routine r = Routine(
-      exercise: e,
-      sets: _routineList[index].sets,
-      reps: _routineList[index].reps,
-    );
+    var r = _routineList[index];
+    Exercise ex = Exercise(name: r.exercise.name, focus: r.exercise.focus);
+    var dup = r is TimedRoutine
+        ? TimedRoutine(
+            timeToPerformInSeconds: r.getTimeToPerformInSeconds(),
+            exercise: ex,
+          )
+        : Routine(exercise: ex, sets: r.sets, reps: r.reps, weight: r.weight);
     setState(() {
-      _routineList.insert(nextIndex, r);
+      _routineList.insert(nextIndex, dup);
     });
-    for (var item in _routineList) {
-      print(item.exercise.name);
-    }
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
     setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
       var r = this._routineList.removeAt(oldIndex);
       this._routineList.insert(newIndex, r);
     });
@@ -208,8 +199,6 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
         ? ""
         : _descriptionTextController.text.toString());
     this._workout.setRoutines(this._routineList);
-    this._currentUser.setWorkoutAt(this._workoutIndex, _workout);
-    crudController.updateWorkoutList();
   }
 
   @override
@@ -217,6 +206,7 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Workout"),
+        automaticallyImplyLeading: false,
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -266,10 +256,10 @@ class _UpdateWorkoutPageState extends State<UpdateWorkoutPage> {
         onPressed: () => _showAddRoutineDialog(),
       ),
       bottomNavigationBar: BottomNavigationButton(
-        label: "SAVE CHANGES",
+        label: "SAVE",
         action: () {
           _saveChanges();
-          Navigator.pop(context, _currentUser);
+          Navigator.pop(context, this._workout);
         },
         color: kBlueButtonColor,
       ),

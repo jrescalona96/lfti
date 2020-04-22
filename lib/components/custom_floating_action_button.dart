@@ -12,7 +12,7 @@ class CustomFloatingActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       backgroundColor: kFloatingActionButtonColor,
-      child: Icon(this.icon, size: 40.0),
+      child: Icon(this.icon, size: 45.0),
       onPressed: () => onPressed(),
     );
   }

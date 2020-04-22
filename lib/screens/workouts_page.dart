@@ -25,14 +25,12 @@ class WorkoutsPage extends StatefulWidget {
 
 class _WorkoutsPageState extends State<WorkoutsPage> {
   User _currentUser;
-  List<Workout> _workoutList;
   Crud crudController;
 
   _WorkoutsPageState(this._currentUser) {
     if (_currentUser.getWorkoutList().isEmpty) {
       this._currentUser.setWorkoutList(List<Workout>());
     }
-    this._workoutList = _currentUser.getWorkoutList();
     crudController = Crud(_currentUser);
   }
 
@@ -96,10 +94,9 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                           routines: List<Routine>(),
                         ),
                       );
-                  Navigator.pushNamed(context, "/updateWorkout", arguments: {
-                    "user": _currentUser,
-                    "index": _currentUser.getWorkoutList().length - 1
-                  });
+                  int lastIndex = this._currentUser.getWorkoutList().length - 1;
+                  Navigator.pushNamed(context, "/updateWorkout",
+                      arguments: this._currentUser.getWorkoutAt(lastIndex));
                 } else {
                   print("Empty Name Field!");
                 }
@@ -111,38 +108,43 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
     );
   }
 
-  List<Container> getWorkoutListCards() {
-    var workouts = List<Container>();
-    for (int i = 0; i < this._workoutList.length; i++) {
-      workouts.add(
+  List<Container> _getWorkoutListCards() {
+    var _workoutList = _currentUser.getWorkoutList();
+    var contianers = List<Container>();
+    for (int i = 0; i < _workoutList.length; i++) {
+      contianers.add(
         Container(
-          key: Key(i.toString() + this._workoutList[i].name),
+          key: Key(i.toString() + _workoutList[i].name),
           child: WorkoutCard(
-            shadowOn: true,
-            onOptionsTap: () => _showDeleteConfirmationDialog(i),
-            optionsIcon: Icons.delete,
-            user: this._currentUser,
-            index: i,
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                '/updateWorkout',
-                arguments: {"user": this._currentUser, "index": i},
-              );
-            },
-          ),
+              shadowOn: true,
+              onOptionsTap: () => _showDeleteConfirmationDialog(i),
+              optionsIcon: Icons.delete,
+              user: this._currentUser,
+              index: i,
+              onTap: () {
+                Navigator.of(context)
+                    .pushNamed('/updateWorkout',
+                        arguments: _currentUser.getWorkoutAt(i))
+                    .then((val) {
+                  setState(() {
+                    this._currentUser.setWorkoutAt(i, val);
+                  });
+                });
+              }),
         ),
       );
     }
-    return workouts;
+    return contianers;
   }
 
   void _onReorder(int oldIndex, int newIndex) {
+    var workoutList = _currentUser.getWorkoutList();
     setState(() {
       if (newIndex > oldIndex) {
         newIndex -= 1;
       }
-      var r = this._workoutList.removeAt(oldIndex);
-      this._workoutList.insert(newIndex, r);
+      var r = workoutList.removeAt(oldIndex);
+      workoutList.insert(newIndex, r);
     });
   }
 
@@ -162,12 +164,12 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
         title: Text("Workouts"),
       ),
       drawer: Menu(_currentUser),
-      body: _workoutList.isNotEmpty
+      body: _currentUser.getWorkoutList().isNotEmpty
           ? Theme(
               data: ThemeData(canvasColor: Colors.transparent),
               child: ReorderableListView(
                 onReorder: _onReorder,
-                children: getWorkoutListCards(),
+                children: _getWorkoutListCards(),
               ),
             )
           : EmptyStateNotification(sub: "Create workout routines first."),

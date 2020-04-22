@@ -39,7 +39,7 @@ class CustomCard extends StatelessWidget {
                     color: Colors.black45,
                     blurRadius: 3.0,
                     spreadRadius: 1.0,
-                    offset: Offset(4.0, 2.0),
+                    offset: Offset(3.0, 2.0),
                   )
                 ]
               : null,

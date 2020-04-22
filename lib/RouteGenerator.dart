@@ -3,6 +3,8 @@ import "package:flutter/material.dart";
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import "package:lfti_app/classes/User.dart";
+import "package:lfti_app/classes/Workout.dart";
+import "package:lfti_app/classes/Routine.dart";
 
 // screen imports
 import "package:lfti_app/screens/home_page.dart";
@@ -71,7 +73,7 @@ class RouteGenerator {
         break;
       case "/updateWorkout":
         print("updateWorkout args: $args");
-        if (args is Map) {
+        if (args is Workout) {
           return MaterialPageRoute(builder: (_) => UpdateWorkoutPage(args));
         } else {
           return _errorRoute();
@@ -95,7 +97,7 @@ class RouteGenerator {
         break;
       case "/updateRoutine":
         print("updateRoutine args: $args");
-        if (args is Map) {
+        if (args is Routine) {
           return MaterialPageRoute(builder: (_) => UpdateRoutinePage(args));
         } else {
           return _errorRoute();

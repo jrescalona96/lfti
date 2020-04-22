@@ -139,11 +139,12 @@ class _ChecklistPageState extends State<ChecklistPage> {
     if (this._checklist.isNotEmpty) {
       for (int i = 0; i < this._checklist.length; i++) {
         routines.add(ChecklistItemCard(
+          index: i,
           key: Key("C" + _checklist[i] + i.toString()),
+          onTap: () => _showEditChecklistDialog(i),
           onOptionsTap: () => _removeChecklistAt(i),
           optionsIcon: Icons.delete,
           data: _checklist[i],
-          onTap: () => _showEditChecklistDialog(i),
         ));
       }
     }
@@ -156,7 +157,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
       appBar: AppBar(
         leading: Builder(builder: (BuildContext context) {
           return IconButton(
-            icon: const Icon(Icons.menu),
+            icon: Icon(Icons.menu),
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },

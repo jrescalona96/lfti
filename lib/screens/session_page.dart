@@ -135,6 +135,7 @@ class _SessionPageState extends State<SessionPage> {
             children: <Widget>[
               // Excercise Section
               CustomCard(
+                shadow: true,
                 cardChild: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -222,12 +223,13 @@ class _SessionPageState extends State<SessionPage> {
                     ),
 
                     SizedBox(height: kSmallSizedBoxHeight * 3),
+
                     // status section
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "STATUS",
+                          "Working Set",
                           style: kLabelTextStyle,
                         ),
                         Row(
@@ -282,7 +284,7 @@ class _SessionPageState extends State<SessionPage> {
                           ),
                         ),
                         SizedBox(width: kSizedBoxHeight),
-                        // Skip Button
+                        // Skip Butto
                         Expanded(
                           child: RaisedButton(
                             onPressed:
@@ -302,6 +304,7 @@ class _SessionPageState extends State<SessionPage> {
 
               // Next Routine View Section
               CustomCard(
+                shadow: true,
                 cardChild: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -336,11 +339,13 @@ class _SessionPageState extends State<SessionPage> {
                   children: <Widget>[
                     Expanded(
                       child: CustomCard(
+                        shadow: true,
                         cardChild: _routineTimerController,
                       ),
                     ),
                     Expanded(
                       child: CustomCard(
+                        shadow: true,
                         cardChild: _sessionTimerController,
                       ),
                     ),

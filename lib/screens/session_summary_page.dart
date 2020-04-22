@@ -26,10 +26,12 @@ class SessionSummaryPage extends StatefulWidget {
 class _SessionSummaryPageState extends State<SessionSummaryPage> {
   User _currentUser;
   Session _session;
+  Crud crud;
 
   _SessionSummaryPageState(Map args) {
     this._currentUser = args["user"];
     this._session = args["session"];
+    crud = Crud(this._currentUser);
   }
 
   Widget _getTimeWidget() {
@@ -90,23 +92,6 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
     ];
   }
 
-  // update session obj and database
-  void _updateLastSession() {
-    _currentUser.setLastSession({
-      "name": _session.getWorkout().name,
-      "description": "Date: " +
-          _session.date +
-          "\nTime: " +
-          _session.getFormattedElapseTime(),
-      "date": _session.date,
-      "duration": _session.getElapseTime()
-    });
-    Crud(this._currentUser).updateDatabase(
-      "lastSession",
-      _currentUser.getLastSession(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     _generateChartData();
@@ -134,6 +119,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
         child: ListView(
           children: <Widget>[
             CustomCard(
+              shadow: true,
               cardChild: SummaryCard(
                 label: "WORKOUT",
                 data: _session.getWorkout().name,
@@ -141,7 +127,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
                 style: kMediumBoldTextStyle,
               ),
             ),
-            CustomCard(cardChild: _getTimeWidget()),
+            CustomCard(shadow: true, cardChild: _getTimeWidget()),
             Column(
               children: <Widget>[
                 Row(
@@ -149,6 +135,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
                   children: <Widget>[
                     Expanded(
                       child: CustomCard(
+                        shadow: true,
                         color: kBlueAccentColor.shade100,
                         cardChild: SummaryCard(
                           label: "PERFORMED",
@@ -160,6 +147,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
                     ),
                     Expanded(
                       child: CustomCard(
+                        shadow: true,
                         color: kBlueAccentColor.shade100,
                         cardChild: SummaryCard(
                           label: "PERFORMED",
@@ -171,30 +159,33 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
                   ],
                 ),
                 // pie chart
-                Container(
-                  height: 220.0,
-                  child: charts.PieChart(
-                    _generateChartData(),
-                    defaultRenderer: charts.ArcRendererConfig(
-                        //     arcRendererDecorators: [
-                        // charts.ArcLabelDecorator(
-                        //   insideLabelStyleSpec: charts.TextStyleSpec(
-                        //     fontSize: 14,
-                        //     color: charts.ColorUtil.fromDartColor(Colors.white),
-                        //   ),
-                        //   outsideLabelStyleSpec: charts.TextStyleSpec(
-                        //     fontSize: 14,
-                        //     color: charts.ColorUtil.fromDartColor(Colors.black),
-                        //   ),
-                        // ),
-                        // ]
-                        ),
+                CustomCard(
+                  shadow: true,
+                  cardChild: Container(
+                    height: 250.0,
+                    child: charts.BarChart(
+                      _generateChartData(),
+                      // defaultRenderer:
+                      //     charts.ArcRendererConfig(arcRendererDecorators: [
+                      //   // charts.ArcLabelDecorator(
+                      //   //   insideLabelStyleSpec: charts.TextStyleSpec(
+                      //   //     fontSize: 14,
+                      //   //     color: charts.ColorUtil.fromDartColor(Colors.white),
+                      //   //   ),
+                      //   //   outsideLabelStyleSpec: charts.TextStyleSpec(
+                      //   //     fontSize: 14,
+                      //   //     color: charts.ColorUtil.fromDartColor(Colors.black),
+                      //   //   ),
+                      //   // ),
+                      // ]),
+                    ),
                   ),
                 ),
                 Row(
                   children: <Widget>[
                     Expanded(
                       child: CustomCard(
+                        shadow: true,
                         color: kAmberAccentColor,
                         cardChild: SummaryCard(
                             label: "SKIPPED",
@@ -205,6 +196,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
                     ),
                     Expanded(
                       child: CustomCard(
+                        shadow: true,
                         color: kAmberAccentColor,
                         cardChild: SummaryCard(
                             label: "SKIPPED",
@@ -216,13 +208,14 @@ class _SessionSummaryPageState extends State<SessionSummaryPage> {
                 ),
               ],
             ),
+            SizedBox(height: kSizedBoxHeight)
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationButton(
           label: "DONE",
           action: () {
-            _updateLastSession();
+            crud.updateLastSession(_session);
             Navigator.pushNamed(
               context,
               "/dashboard",

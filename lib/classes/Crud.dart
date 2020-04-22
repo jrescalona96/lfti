@@ -3,6 +3,7 @@ import "User.dart";
 import "TimedRoutine.dart";
 import "package:intl/intl.dart";
 import "package:lfti_app/classes/Constants.dart";
+import "package:lfti_app/classes/Session.dart";
 
 class Crud {
   User _user;
@@ -132,6 +133,19 @@ class Crud {
     String ref = "workouts";
     List data = _generateWorkoutListQueryMap();
     updateDatabase(ref, data);
+  }
+
+  void updateLastSession(Session session) {
+    _user.setLastSession({
+      "name": session.getWorkout().name,
+      "description": "Date: " +
+          session.date +
+          "\nTime: " +
+          session.getFormattedElapseTime(),
+      "date": session.date,
+      "duration": session.getElapseTime()
+    });
+    updateDatabase("lastSession", _user.getLastSession());
   }
 
   List _generateWorkoutListQueryMap() {

@@ -13,7 +13,7 @@ final kThemeData = ThemeData(
 
 const kContentMargin = EdgeInsets.all(10.0);
 const kCardMargin = EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0);
-const kContentPadding = EdgeInsets.all(20.0);
+const kContentPadding = EdgeInsets.all(15.0);
 const kButtonPadding = EdgeInsets.all(20.0);
 const kBottomButtonHeight = 85.0;
 const kSizedBoxHeight = 12.0;
@@ -31,7 +31,7 @@ final kOrangeButtonColor = Colors.orangeAccent[700];
 final kAmberButtonColor = Colors.amberAccent[700];
 final kIconColor = Color(0xFF404040);
 const kGrayTextColor = Colors.white60;
-final kFloatingActionButtonColor = Colors.blue;
+final kFloatingActionButtonColor = Colors.blueAccent;
 final kAmberAccentColor = Colors.amberAccent;
 final kBlueAccentColor = Colors.blueAccent;
 

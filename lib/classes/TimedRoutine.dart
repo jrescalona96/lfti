@@ -7,4 +7,7 @@ class TimedRoutine extends Routine {
   Exercise exercise;
   TimedRoutine({this.timeToPerformInSeconds = 90, @required this.exercise})
       : super(exercise: exercise);
+
+  void setTimeToPerformInSeconds(int t) => this.timeToPerformInSeconds = t;
+  int getTimeToPerformInSeconds() => this.timeToPerformInSeconds;
 }
