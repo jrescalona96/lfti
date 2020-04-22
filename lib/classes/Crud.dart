@@ -13,9 +13,8 @@ class Crud {
     var sampleWorkoutList = [
       {
         "id": "W" + DateFormat(kFormatDateId).format(DateTime.now()),
-        "name": "Chestday",
-        "description": "Monday Workout",
-        "gymMembership": "",
+        "name": "Chest Workout",
+        "description": "Template",
         "routines": [
           {
             "type": "COUNTED",
@@ -72,45 +71,6 @@ class Crud {
             "sets": 3,
             "weight": 25.0
           },
-          {
-            "type": "TIMED",
-            "exercise": {"name": "Rest", "focus": null},
-            "timeToPerformInSeconds": 60
-          },
-          {
-            "type": "COUNTED",
-            "exercise": {
-              "name": "Decline dumbbell bench press",
-              "focus": "Chest"
-            },
-            "reps": 10,
-            "sets": 3,
-            "weight": 25.0
-          },
-          {
-            "type": "TIMED",
-            "exercise": {"name": "Rest", "focus": null},
-            "timeToPerformInSeconds": 60
-          },
-          {
-            "type": "COUNTED",
-            "exercise": {"name": "Dumbell pullover", "focus": "Chest"},
-            "reps": 10,
-            "sets": 3,
-            "weight": 25.0
-          },
-          {
-            "type": "TIMED",
-            "exercise": {"name": "Rest", "focus": null},
-            "timeToPerformInSeconds": 60
-          },
-          {
-            "type": "COUNTED",
-            "exercise": {"name": "Cable Iron Cross", "focus": "Chest"},
-            "reps": 10,
-            "sets": 3,
-            "weight": 25.0
-          }
         ]
       }
     ];
@@ -118,10 +78,9 @@ class Crud {
       "firstName": _user.getFirstName().toString(),
       "lastName": _user.getLastName().toString(),
       "email": _user.getEmail().toString(),
-      "workouts": sampleWorkoutList.toList()
+      "workouts": sampleWorkoutList.toList(),
+      "gymMembership": "",
     };
-
-    print(data.runtimeType);
     _user
         .getFirestoreReference()
         .setData(data)
@@ -184,7 +143,7 @@ class Crud {
     Firestore.instance.runTransaction((transaction) async {
       transaction
           .update(_user.getFirestoreReference(), {ref: data})
-          .then((val) => print("Success: Database uccessfully updated!"))
+          .then((val) => print("Success: Database successfully updated!"))
           .catchError(
             (e) => print(
               "Error: Failed to update new data! ref:$ref\ndata:\n\n$data\n\n : " +

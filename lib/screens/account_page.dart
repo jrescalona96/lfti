@@ -55,6 +55,7 @@ class _AccountPageState extends State<AccountPage> {
                 setState(() {
                   this._gymMembership = inputTextController.text.toString();
                 });
+
                 Navigator.of(context).pop();
               },
             ),
@@ -75,6 +76,7 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    _updateUserData();
     return Scaffold(
       appBar: AppBar(
         leading: Builder(builder: (BuildContext context) {

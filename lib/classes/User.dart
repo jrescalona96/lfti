@@ -38,29 +38,43 @@ class User {
       this._lastSession = getDocument().data["lastSession"];
       this._checklist = getDocument().data["checklist"];
       this._gymMembership = getDocument().data["gymMembership"];
-      print("Success: User Initialized!");
     } catch (e) {
       print("Error: Failed to initialize user! " + e.toString());
     }
   }
 
   /// setters
-  void setFirstName(String s) => this._firstName = s;
+  void setFirstName(String s) {
+    this._firstName = s;
+  }
 
-  void setLastName(String s) => this._lastName = s;
+  void setLastName(String s) {
+    this._lastName = s;
+  }
 
-  void setEmail(String s) => this._email = s;
+  void setEmail(String s) {
+    this._email = s;
+  }
 
-  void setAuthResult(var res) => this._authRes = res;
+  void setAuthResult(var res) {
+    this._authRes = res;
+  }
 
-  void setGymMembership(String s) => this._gymMembership = s;
+  void setGymMembership(String s) {
+    this._gymMembership = s;
+  }
 
-  void setDatabaseReference(DocumentReference ref) =>
-      this._firestoreReference = ref;
+  void setDatabaseReference(DocumentReference ref) {
+    this._firestoreReference = ref;
+  }
 
-  void setDocumentSnapshot(DocumentSnapshot ds) async => this._document = ds;
+  void setDocumentSnapshot(DocumentSnapshot ds) {
+    this._document = ds;
+  }
 
-  void setLastSession(Map data) => this._lastSession = data;
+  void setLastSession(Map data) {
+    this._lastSession = data;
+  }
 
   void setSession(Session s) {
     if (s != null)
@@ -139,7 +153,6 @@ class User {
       for (var item in list) {
         w.add(_buildWorkout(item));
       }
-      print("Success: Workout List set!");
       return w;
     } catch (e) {
       print("Error: Unable to Build workout list! " + e.toString());

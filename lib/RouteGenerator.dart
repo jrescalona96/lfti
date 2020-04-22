@@ -48,7 +48,6 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SignUpPage());
         break;
       case "/dashboard":
-        print("dashboard args: $args");
         if (args is User) {
           return MaterialPageRoute(builder: (_) => DashboardPage(args));
         } else {
@@ -56,7 +55,6 @@ class RouteGenerator {
         }
         break;
       case "/workouts":
-        print("workouts args: $args ");
         if (args is User) {
           return MaterialPageRoute(builder: (_) => WorkoutsPage(args));
         } else {
@@ -64,7 +62,6 @@ class RouteGenerator {
         }
         break;
       case "/viewWorkouts":
-        print("viewWorkouts args: $args");
         if (args is User) {
           return MaterialPageRoute(builder: (_) => ViewWorkoutsPage(args));
         } else {
@@ -72,7 +69,6 @@ class RouteGenerator {
         }
         break;
       case "/updateWorkout":
-        print("updateWorkout args: $args");
         if (args is Workout) {
           return MaterialPageRoute(builder: (_) => UpdateWorkoutPage(args));
         } else {
@@ -80,7 +76,6 @@ class RouteGenerator {
         }
         break;
       case "/createWorkout":
-        print("createWorkout args: $args");
         if (args is User) {
           return MaterialPageRoute(builder: (_) => CreateWorkoutPage(args));
         } else {
@@ -88,7 +83,6 @@ class RouteGenerator {
         }
         break;
       case "/viewRoutines":
-        print("viewRoutines args: $args");
         if (args is Map) {
           return MaterialPageRoute(builder: (_) => ViewRoutinesPage(args));
         } else {
@@ -96,7 +90,6 @@ class RouteGenerator {
         }
         break;
       case "/updateRoutine":
-        print("updateRoutine args: $args");
         if (args is Routine) {
           return MaterialPageRoute(builder: (_) => UpdateRoutinePage(args));
         } else {
@@ -104,7 +97,6 @@ class RouteGenerator {
         }
         break;
       case "/updateChecklist":
-        print("updateChecklist args: $args");
         if (args is User) {
           return MaterialPageRoute(builder: (_) => ChecklistPage(args));
         } else {
@@ -112,7 +104,6 @@ class RouteGenerator {
         }
         break;
       case "/startSession":
-        print("startSession args: $args");
         if (args is User) {
           return MaterialPageRoute(
             builder: (_) => SessionPage(args),
@@ -122,7 +113,6 @@ class RouteGenerator {
         }
         break;
       case "/endSession":
-        print("endSession args: $args");
         if (args is Map) {
           return MaterialPageRoute(
             builder: (_) => SessionSummaryPage(args),
