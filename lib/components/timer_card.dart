@@ -3,7 +3,6 @@ import 'package:lfti_app/classes/Constants.dart';
 import 'dart:async';
 
 class TimerCard extends StatefulWidget {
-  @override
   final String cardLabel;
   TimerCard({this.cardLabel});
 

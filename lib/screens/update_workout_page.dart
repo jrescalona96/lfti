@@ -3,11 +3,9 @@ import "package:flutter/material.dart";
 // class imports
 import "package:lfti_app/classes/Constants.dart";
 import 'package:lfti_app/classes/Exercise.dart';
-import "package:lfti_app/classes/User.dart";
 import "package:lfti_app/classes/Workout.dart";
 import "package:lfti_app/classes/Routine.dart";
 import "package:lfti_app/classes/TimedRoutine.dart";
-import "package:lfti_app/classes/Crud.dart";
 
 // component imports
 import "package:lfti_app/components/bottom_navigation_button.dart";

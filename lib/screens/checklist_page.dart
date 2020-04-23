@@ -13,9 +13,6 @@ import "package:lfti_app/components/bottom_navigation_button.dart";
 import "package:lfti_app/components/empty_state_notification.dart";
 import "package:lfti_app/components/custom_floating_action_button.dart";
 
-// firestore import
-import "package:cloud_firestore/cloud_firestore.dart";
-
 class ChecklistPage extends StatefulWidget {
   final User _currentUser;
   ChecklistPage(this._currentUser);
