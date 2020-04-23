@@ -87,16 +87,27 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
             CustomDialogButton(
               label: "CREATE",
               onPressed: () {
-                if (_nameTextController.text != null) {
-                  this._currentUser.addWorkout(
-                        Workout(
-                          name: _nameTextController.text,
-                          routines: List<Routine>(),
-                        ),
-                      );
+                if (_nameTextController.text.isNotEmpty) {
+                  // add new wokrout to end of workoutList
+                  this._currentUser.addWorkout(Workout(
+                        name: _nameTextController.text,
+                        routines: List<Routine>(),
+                      ));
+
                   int lastIndex = this._currentUser.getWorkoutList().length - 1;
+
+                  // navigate to update workout page
                   Navigator.pushNamed(context, "/updateWorkout",
-                      arguments: this._currentUser.getWorkoutAt(lastIndex));
+                          arguments: this._currentUser.getWorkoutAt(lastIndex))
+                      .then((val) {
+                    setState(() {
+                      // update user object data
+                      this._currentUser.setWorkoutAt(lastIndex, val);
+                      // update database
+                      Crud(this._currentUser).updateWorkoutList();
+                    });
+                  }).catchError((e) =>
+                          print("Error: Failed to update new workout : $e"));
                 } else {
                   print("Empty Name Field!");
                 }
@@ -127,9 +138,12 @@ class _WorkoutsPageState extends State<WorkoutsPage> {
                         arguments: _currentUser.getWorkoutAt(i))
                     .then((val) {
                   setState(() {
+                    // update user object data
                     this._currentUser.setWorkoutAt(i, val);
+                    Crud(this._currentUser).updateWorkoutList();
                   });
-                });
+                }).catchError((e) =>
+                        print("Error: Failed to update new workout : $e"));
               }),
         ),
       );
